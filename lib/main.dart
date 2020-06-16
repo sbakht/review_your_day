@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:reviewyourday/page/CreateTracker.dart';
-import 'package:reviewyourday/page/Review.dart';
+
+import 'Navigation.dart';
 
 void main() {
   runApp(MyApp());
@@ -16,11 +16,13 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      initialRoute: '/',
-      routes: {
-        '/': (context) => CreateTracker(),
-        '/review': (context) => Review(),
-      },
+      home: Navigation(),
+//      initialRoute: '/',
+//      routes: {
+//        '/': (context) => Home(),
+//        '/create': (context) => CreateTracker(),
+//        '/review': (context) => Review(),
+//      },
     );
   }
 }
