@@ -17,7 +17,7 @@ class _NavigationState extends State<Navigation> {
         appBar: AppBar(
           title: Text(getTitle()),
         ),
-        drawer: buildDrawer(),
+        drawer: buildDrawer(context),
         body: buildPageView(),
         bottomNavigationBar: BottomNavigationBar(
           onTap: (tappedItemIndex) => setState(() {
@@ -66,28 +66,31 @@ class _NavigationState extends State<Navigation> {
     }
     return "";
   }
-}
 
-Drawer buildDrawer() {
-  return Drawer(
-    child: SafeArea(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: const <Widget>[
-          ListTile(
-            leading: Icon(Icons.message),
-            title: Text('Messages'),
-          ),
-          ListTile(
-            leading: Icon(Icons.account_circle),
-            title: Text('Profile'),
-          ),
-          ListTile(
-            leading: Icon(Icons.settings),
-            title: Text('Settings'),
-          ),
-        ],
+  Drawer buildDrawer(context) {
+    return Drawer(
+      child: SafeArea(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            ListTile(
+              leading: Icon(Icons.message),
+              title: Text('Messages'),
+            ),
+            ListTile(
+              leading: Icon(Icons.account_circle),
+              title: Text('Profile'),
+            ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('Settings'),
+              onTap: () {
+                Navigator.popAndPushNamed(context, "/settings");
+              },
+            ),
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 }

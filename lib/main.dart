@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:reviewyourday/page/CreateTracker.dart';
+import 'package:reviewyourday/page/Review.dart';
+import 'package:reviewyourday/page/Settings.dart';
 
 import 'Navigation.dart';
 
@@ -18,11 +21,12 @@ class MyApp extends StatelessWidget {
       ),
       home: Navigation(),
 //      initialRoute: '/',
-//      routes: {
+      routes: {
 //        '/': (context) => Home(),
-//        '/create': (context) => CreateTracker(),
-//        '/review': (context) => Review(),
-//      },
+        '/create': (context) => CreateTracker(),
+        '/review': (context) => Review(),
+        '/settings': (context) => Settings(),
+      },
     );
   }
 }
