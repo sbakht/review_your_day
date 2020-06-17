@@ -65,7 +65,7 @@ class TrackerBrain {
   }
 
   int getTotalCardCount() {
-    return trackers.where(notArchived).length;
+    return activeCards.length;
   }
 
   List<Tracker> _filterToActiveCards() {
