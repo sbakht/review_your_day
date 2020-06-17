@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:reviewyourday/data/Tracker.dart';
 
 import '../TestData.dart';
 import '../enums.dart';
@@ -10,11 +9,11 @@ class ReviewGame extends StatefulWidget {
 }
 
 class _ReviewGameState extends State<ReviewGame> {
+  int date = 17;
   TrackerBrain trackerBrain = new TrackerBrain();
 
   @override
   Widget build(BuildContext context) {
-    Tracker tracker = trackerBrain.currentQuestion();
     return Scaffold(
         appBar: AppBar(
           title: Text("Review Game"),
@@ -45,30 +44,29 @@ class _ReviewGameState extends State<ReviewGame> {
         ),
         body: Column(
           children: [
-            Text(tracker.title),
+            Text(trackerBrain.getCurrentQuestionText()),
             Row(
               children: [
                 FlatButton(
                   child: Text("YES"),
-//                  color: Colors.blue,
-                  color: tracker.isAlreadyAnsweredWith(17, Answer.Yes)
+                  color: trackerBrain.doesAnswerByDateEqual(date, Answer.Yes)
                       ? Colors.blueGrey
                       : null,
                   onPressed: () {
                     setState(() {
-                      answerQuestion(Answer.Yes, tracker);
+                      answerQuestion(Answer.Yes);
                       goToNextQuestion();
                     });
                   },
                 ),
                 FlatButton(
                   child: Text("NO"),
-                  color: tracker.isAlreadyAnsweredWith(17, Answer.No)
+                  color: trackerBrain.doesAnswerByDateEqual(date, Answer.No)
                       ? Colors.blueGrey
                       : null,
                   onPressed: () {
                     setState(() {
-                      answerQuestion(Answer.No, tracker);
+                      answerQuestion(Answer.No);
                       goToNextQuestion();
                     });
                   },
@@ -79,8 +77,8 @@ class _ReviewGameState extends State<ReviewGame> {
         ));
   }
 
-  void answerQuestion(Answer ans, Tracker tracker) {
-    tracker.setUserAnswer(ans);
+  void answerQuestion(Answer ans) {
+    trackerBrain.answerCurrentQuestion(date, ans);
   }
 
   bool isFirstQuestion() {

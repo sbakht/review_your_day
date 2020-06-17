@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:reviewyourday/data/Tracker.dart';
-
-import '../enums.dart';
 
 class Review extends StatefulWidget {
   @override
@@ -19,9 +16,5 @@ class _ReviewState extends State<Review> {
         },
       ),
     );
-  }
-
-  void answerQuestion(Answer ans, Tracker tracker) {
-    tracker.setUserAnswer(ans);
   }
 }

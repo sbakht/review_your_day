@@ -9,11 +9,11 @@ class Tracker {
     this.userResponsesByDate = {};
   }
 
-  void setUserAnswer(Answer ans) {
-    userResponsesByDate[17] = ans;
+  void setUserAnswerByDate(int date, Answer ans) {
+    userResponsesByDate[date] = ans;
   }
 
-  isAlreadyAnsweredWith(int date, Answer ans) {
+  doesAnswerByDateEqual(int date, Answer ans) {
     return this.userResponsesByDate[date] == ans;
   }
 }

@@ -32,4 +32,16 @@ class TrackerBrain {
   void previousQuestion() {
     _index = max(0, --_index);
   }
+
+  bool doesAnswerByDateEqual(int date, Answer answer) {
+    return currentQuestion().doesAnswerByDateEqual(date, answer);
+  }
+
+  String getCurrentQuestionText() {
+    return currentQuestion().title;
+  }
+
+  void answerCurrentQuestion(int date, Answer ans) {
+    currentQuestion().setUserAnswerByDate(date, ans);
+  }
 }
