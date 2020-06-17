@@ -17,6 +17,18 @@ class _ReviewGameState extends State<ReviewGame> {
     TrackerBrain trackerBrain = ModalRoute.of(context).settings.arguments;
     var index = trackerBrain.getCurrentCardIndex();
     var total = trackerBrain.getTotalCardCount();
+
+    finishedCheck() {
+      if (trackerBrain.isLastQuestion()) {
+        Navigator.pop(context);
+      }
+    }
+
+    next() {
+      finishedCheck();
+      trackerBrain.nextQuestion();
+    }
+
     return Scaffold(
         appBar: AppBar(
           title: Text("Review Game"),
@@ -26,22 +38,12 @@ class _ReviewGameState extends State<ReviewGame> {
               tooltip: 'Previous Question',
               onPressed: trackerBrain.isFirstQuestion()
                   ? null
-                  : () {
-                      setState(() {
-                        trackerBrain.previousQuestion();
-                      });
-                    },
+                  : () => setState(trackerBrain.previousQuestion),
             ),
             IconButton(
               icon: Icon(Icons.chevron_right),
               tooltip: 'Next Question',
-              onPressed: trackerBrain.isLastQuestion()
-                  ? null
-                  : () {
-                      setState(() {
-                        trackerBrain.nextQuestion();
-                      });
-                    },
+              onPressed: () => setState(next),
             ),
           ],
         ),
@@ -74,7 +76,7 @@ class _ReviewGameState extends State<ReviewGame> {
                           onPressed: () {
                             setState(() {
                               trackerBrain.answerCurrentQuestion(Answer.Yes);
-                              trackerBrain.nextQuestion();
+                              next();
                             });
                           },
                         ),
@@ -93,7 +95,7 @@ class _ReviewGameState extends State<ReviewGame> {
                           onPressed: () {
                             setState(() {
                               trackerBrain.answerCurrentQuestion(Answer.No);
-                              trackerBrain.previousQuestion();
+                              next();
                             });
                           },
                         ),

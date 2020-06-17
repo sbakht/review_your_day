@@ -15,11 +15,13 @@ class _ReviewState extends State<Review> {
 
   @override
   Widget build(BuildContext context) {
-    String date = (new Date()).getTodayFormatted();
     //TODO: this is bad setting date without constructor
+    String date = (new Date()).getTodayFormatted();
     trackerBrain.setDate(date);
+
     trackerBrain.updateActiveCards();
     int remainingCardCount = trackerBrain.remainingCardCount();
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

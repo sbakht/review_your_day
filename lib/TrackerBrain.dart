@@ -80,6 +80,7 @@ class TrackerBrain {
   void updateActiveCards() {
     _index = 0;
     this.activeCards = _filterToActiveCards();
+    //TODO: Randomize cards, setting to sort by acending category?
   }
 }
 
