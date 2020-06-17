@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reviewyourday/data/Date.dart';
 
 class Review extends StatefulWidget {
   @override
@@ -8,11 +9,12 @@ class Review extends StatefulWidget {
 class _ReviewState extends State<Review> {
   @override
   Widget build(BuildContext context) {
+    String date = (new Date()).getTodayFormatted();
     return Center(
       child: FlatButton(
         child: Text("Start Review of your Day"),
         onPressed: () {
-          Navigator.pushNamed(context, "/review");
+          Navigator.pushNamed(context, "/review", arguments: date);
         },
       ),
     );

@@ -12,11 +12,11 @@ class ReviewGame extends StatefulWidget {
 }
 
 class _ReviewGameState extends State<ReviewGame> {
-  int date = 17;
   TrackerBrain trackerBrain = new TrackerBrain();
 
   @override
   Widget build(BuildContext context) {
+    String date = ModalRoute.of(context).settings.arguments;
     return Scaffold(
         appBar: AppBar(
           title: Text("Review Game"),
@@ -69,7 +69,7 @@ class _ReviewGameState extends State<ReviewGame> {
                     ),
                     onPressed: () {
                       setState(() {
-                        answerQuestion(Answer.Yes);
+                        answerQuestion(date, Answer.Yes);
                         goToNextQuestion();
                       });
                     },
@@ -88,7 +88,7 @@ class _ReviewGameState extends State<ReviewGame> {
                     ),
                     onPressed: () {
                       setState(() {
-                        answerQuestion(Answer.No);
+                        answerQuestion(date, Answer.No);
                         goToNextQuestion();
                       });
                     },
@@ -100,7 +100,7 @@ class _ReviewGameState extends State<ReviewGame> {
         ));
   }
 
-  void answerQuestion(Answer ans) {
+  void answerQuestion(String date, Answer ans) {
     trackerBrain.answerCurrentQuestion(date, ans);
   }
 

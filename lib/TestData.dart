@@ -33,7 +33,7 @@ class TrackerBrain {
     _index = max(0, --_index);
   }
 
-  bool doesAnswerByDateEqual(int date, Answer answer) {
+  bool doesAnswerByDateEqual(String date, Answer answer) {
     return currentQuestion().doesAnswerByDateEqual(date, answer);
   }
 
@@ -41,11 +41,11 @@ class TrackerBrain {
     return currentQuestion().title;
   }
 
-  String getCurrentQuestionTextWithFlavoring(int date) {
+  String getCurrentQuestionTextWithFlavoring(String date) {
     return "Did you " + currentQuestion().title + " today?";
   }
 
-  void answerCurrentQuestion(int date, Answer ans) {
+  void answerCurrentQuestion(String date, Answer ans) {
     currentQuestion().setUserAnswerByDate(date, ans);
   }
 }

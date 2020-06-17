@@ -3,17 +3,17 @@ import '../enums.dart';
 class Tracker {
   String title;
   Answer bonusPointsAnswer;
-  Map<int, Answer> userResponsesByDate;
+  Map<String, Answer> userResponsesByDate;
 
   Tracker({this.title, this.bonusPointsAnswer}) {
     this.userResponsesByDate = {};
   }
 
-  void setUserAnswerByDate(int date, Answer ans) {
+  void setUserAnswerByDate(String date, Answer ans) {
     userResponsesByDate[date] = ans;
   }
 
-  doesAnswerByDateEqual(int date, Answer ans) {
+  doesAnswerByDateEqual(String date, Answer ans) {
     return this.userResponsesByDate[date] == ans;
   }
 }
