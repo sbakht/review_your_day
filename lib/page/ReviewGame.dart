@@ -17,19 +17,21 @@ class _ReviewGameState extends State<ReviewGame> {
   @override
   Widget build(BuildContext context) {
     String date = ModalRoute.of(context).settings.arguments;
+    var index = trackerBrain.getIndex();
+    var total = trackerBrain.getTotal();
     return Scaffold(
         appBar: AppBar(
           title: Text("Review Game"),
           actions: [
-            Center(
-                //TODO: improve contrast
-                child: Text(
-                    "(" +
-                        trackerBrain.getIndex().toString() +
-                        "/" +
-                        trackerBrain.getTotal().toString() +
-                        ")",
-                    style: TextStyle(color: kSecondaryTextColor))),
+//            Center(
+//                //TODO: improve contrast
+//                child: Text(
+//                    "(" +
+//                        (index + 1).toString() +
+//                        "/" +
+//                        trackerBrain.getTotal().toString() +
+//                        ")",
+//                    style: TextStyle(color: kSecondaryTextColor))),
             IconButton(
               icon: Icon(Icons.chevron_left),
               tooltip: 'Previous Question',
@@ -55,55 +57,62 @@ class _ReviewGameState extends State<ReviewGame> {
           ],
         ),
         body: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Container(
-              child: Text(
-                  trackerBrain.getCurrentQuestionTextWithFlavoring(date),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 30)),
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: FlatButton(
+            LinearProgressIndicator(value: index / total),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Container(
                     child: Text(
-                      "YES",
-                      style: kAnswerTextStyle.copyWith(
-                        color:
-                            trackerBrain.doesAnswerByDateEqual(date, Answer.Yes)
-                                ? kSelectedColor
-                                : null,
-                      ),
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        answerQuestion(date, Answer.Yes);
-                        goToNextQuestion();
-                      });
-                    },
+                        trackerBrain.getCurrentQuestionTextWithFlavoring(date),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 30)),
                   ),
-                ),
-                Expanded(
-                  child: FlatButton(
-                    child: Text(
-                      "NO",
-                      style: kAnswerTextStyle.copyWith(
-                        color:
-                            trackerBrain.doesAnswerByDateEqual(date, Answer.No)
-                                ? kSelectedColor
-                                : null,
+                  Row(
+                    children: [
+                      Expanded(
+                        child: FlatButton(
+                          child: Text(
+                            "YES",
+                            style: kAnswerTextStyle.copyWith(
+                              color: trackerBrain.doesAnswerByDateEqual(
+                                      date, Answer.Yes)
+                                  ? kSelectedColor
+                                  : null,
+                            ),
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              answerQuestion(date, Answer.Yes);
+                              goToNextQuestion();
+                            });
+                          },
+                        ),
                       ),
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        answerQuestion(date, Answer.No);
-                        goToNextQuestion();
-                      });
-                    },
+                      Expanded(
+                        child: FlatButton(
+                          child: Text(
+                            "NO",
+                            style: kAnswerTextStyle.copyWith(
+                              color: trackerBrain.doesAnswerByDateEqual(
+                                      date, Answer.No)
+                                  ? kSelectedColor
+                                  : null,
+                            ),
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              answerQuestion(date, Answer.No);
+                              goToNextQuestion();
+                            });
+                          },
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ));

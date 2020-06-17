@@ -55,7 +55,7 @@ class TrackerBrain {
   }
 
   int getIndex() {
-    return _index + 1;
+    return _index;
   }
 
   int getTotal() {
