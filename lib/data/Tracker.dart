@@ -4,9 +4,11 @@ class Tracker {
   String title;
   Answer bonusPointsAnswer;
   Map<String, Answer> userResponsesByDate;
+  bool archived;
 
   Tracker({this.title, this.bonusPointsAnswer}) {
     this.userResponsesByDate = {};
+    this.archived = false;
   }
 
   void setUserAnswerByDate(String date, Answer ans) {

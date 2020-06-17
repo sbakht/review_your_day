@@ -48,4 +48,17 @@ class TrackerBrain {
   void answerCurrentQuestion(String date, Answer ans) {
     currentQuestion().setUserAnswerByDate(date, ans);
   }
+
+  int remainingCardCount(String date) {
+    //TODO: update to check for date and filter the remaining unanswered
+    return trackers.length;
+  }
+
+  int getIndex() {
+    return _index + 1;
+  }
+
+  int getTotal() {
+    return trackers.length; //TODO: check on this value if its working good
+  }
 }

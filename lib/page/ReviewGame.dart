@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../TestData.dart';
+import '../TrackerBrain.dart';
 import '../constants.dart';
 import '../enums.dart';
 
@@ -21,6 +21,15 @@ class _ReviewGameState extends State<ReviewGame> {
         appBar: AppBar(
           title: Text("Review Game"),
           actions: [
+            Center(
+                //TODO: improve contrast
+                child: Text(
+                    "(" +
+                        trackerBrain.getIndex().toString() +
+                        "/" +
+                        trackerBrain.getTotal().toString() +
+                        ")",
+                    style: TextStyle(color: kSecondaryTextColor))),
             IconButton(
               icon: Icon(Icons.chevron_left),
               tooltip: 'Previous Question',
