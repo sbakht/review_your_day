@@ -18,4 +18,9 @@ class Tracker {
   doesAnswerByDateEqual(String date, Answer ans) {
     return this.userResponsesByDate[date] == ans;
   }
+
+  bool hasAnswer(date) {
+    var answer = this.userResponsesByDate[date];
+    return answer == Answer.Yes || answer == Answer.No;
+  }
 }

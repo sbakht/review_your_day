@@ -3,15 +3,16 @@ import 'dart:math';
 import 'data/Tracker.dart';
 import 'enums.dart';
 
+List<Tracker> trackers = [
+  Tracker(title: "eat oatmeal", bonusPointsAnswer: Answer.Nothing),
+  Tracker(title: "work on your sprouts", bonusPointsAnswer: Answer.Nothing),
+  Tracker(title: "think about padding", bonusPointsAnswer: Answer.Nothing),
+  Tracker(title: "go on Tumblr", bonusPointsAnswer: Answer.Nothing),
+  Tracker(title: "do at least 1 pull-up", bonusPointsAnswer: Answer.Nothing),
+];
+
 class TrackerBrain {
   int _index = 0;
-  List<Tracker> trackers = [
-    Tracker(title: "eat oatmeal", bonusPointsAnswer: Answer.Nothing),
-    Tracker(title: "work on your sprouts", bonusPointsAnswer: Answer.Nothing),
-    Tracker(title: "think about padding", bonusPointsAnswer: Answer.Nothing),
-    Tracker(title: "go on Tumblr", bonusPointsAnswer: Answer.Nothing),
-    Tracker(title: "do at least 1 pull-up", bonusPointsAnswer: Answer.Nothing),
-  ];
 
   Tracker currentQuestion() {
     return trackers[_index];
@@ -50,8 +51,7 @@ class TrackerBrain {
   }
 
   int remainingCardCount(String date) {
-    //TODO: update to check for date and filter the remaining unanswered
-    return trackers.length;
+    return trackers.where(notArchived).where(isUnanswered(date)).length;
   }
 
   int getIndex() {
@@ -62,3 +62,6 @@ class TrackerBrain {
     return trackers.length; //TODO: check on this value if its working good
   }
 }
+
+bool notArchived(Tracker t) => !t.archived;
+var isUnanswered = (date) => (Tracker t) => !t.hasAnswer(date);

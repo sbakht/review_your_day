@@ -16,21 +16,29 @@ class _ReviewState extends State<Review> {
   @override
   Widget build(BuildContext context) {
     String date = (new Date()).getTodayFormatted();
+    int remainingCardCount = trackerBrain.remainingCardCount(date);
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           RaisedButton(
             child: Text("Start Review of your Day"),
-            onPressed: () {
-              Navigator.pushNamed(context, "/review", arguments: date);
-            },
+            onPressed: remainingCardCount == 0
+                ? null
+                : () {
+                    Navigator.pushNamed(context, "/review", arguments: date)
+                        .then((value) {
+                      setState(() {
+                        // refresh state on pop
+                      });
+                    });
+                  },
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                trackerBrain.remainingCardCount(date).toString(),
+                remainingCardCount.toString(),
                 style: TextStyle(
                     color: kSecondaryTextColor, fontWeight: FontWeight.bold),
               ),
