@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reviewyourday/page/CreateTracker.dart';
-import 'package:reviewyourday/page/Review.dart';
+import 'package:reviewyourday/page/ReviewGame.dart';
 import 'package:reviewyourday/page/Settings.dart';
 
 import 'Navigation.dart';
@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
       routes: {
 //        '/': (context) => Home(),
         '/create': (context) => CreateTracker(),
-        '/review': (context) => Review(),
+        '/review': (context) => ReviewGame(),
         '/settings': (context) => Settings(),
       },
     );

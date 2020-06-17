@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:reviewyourday/data/Tracker.dart';
+
+import '../enums.dart';
 
 class Review extends StatefulWidget {
   @override
@@ -6,8 +9,21 @@ class Review extends StatefulWidget {
 }
 
 class _ReviewState extends State<Review> {
+  int _questionIndex = 0;
+
   @override
   Widget build(BuildContext context) {
-    return Container(child: Text("Review"));
+    return Center(
+      child: FlatButton(
+        child: Text("Start Review of your Day"),
+        onPressed: () {
+          Navigator.pushNamed(context, "/review");
+        },
+      ),
+    );
+  }
+
+  void answerQuestion(Answer ans, Tracker tracker) {
+    tracker.setUserAnswer(ans);
   }
 }
