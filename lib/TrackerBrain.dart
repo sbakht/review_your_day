@@ -3,7 +3,7 @@ import 'dart:math';
 import 'data/Tracker.dart';
 import 'enums.dart';
 
-List<Tracker> trackers = [
+Iterable<Tracker> trackers = [
   Tracker(title: "eat oatmeal", bonusPointsAnswer: Answer.Nothing),
   Tracker(title: "work on your sprouts", bonusPointsAnswer: Answer.Nothing),
   Tracker(title: "think about padding", bonusPointsAnswer: Answer.Nothing),
@@ -13,9 +13,15 @@ List<Tracker> trackers = [
 
 class TrackerBrain {
   int _index = 0;
+  String date;
+  List<Tracker> activeCards;
+
+  TrackerBrain() {
+    updateActiveCards();
+  }
 
   Tracker currentQuestion() {
-    return trackers[_index];
+    return this.activeCards[_index];
   }
 
   bool isFirstQuestion() {
@@ -23,18 +29,18 @@ class TrackerBrain {
   }
 
   bool isLastQuestion() {
-    return _index >= trackers.length - 1;
+    return _index >= activeCards.length - 1;
   }
 
   void nextQuestion() {
-    _index = min(trackers.length - 1, ++_index);
+    _index = min(activeCards.length - 1, ++_index);
   }
 
   void previousQuestion() {
     _index = max(0, --_index);
   }
 
-  bool doesAnswerByDateEqual(String date, Answer answer) {
+  bool doesAnswerByDateEqual(Answer answer) {
     return currentQuestion().doesAnswerByDateEqual(date, answer);
   }
 
@@ -42,24 +48,38 @@ class TrackerBrain {
     return currentQuestion().title;
   }
 
-  String getCurrentQuestionTextWithFlavoring(String date) {
+  String getCurrentQuestionTextWithFlavoring() {
     return "Did you " + currentQuestion().title + " today?";
   }
 
-  void answerCurrentQuestion(String date, Answer ans) {
+  void answerCurrentQuestion(Answer ans) {
     currentQuestion().setUserAnswerByDate(date, ans);
   }
 
-  int remainingCardCount(String date) {
-    return trackers.where(notArchived).where(isUnanswered(date)).length;
+  int remainingCardCount() {
+    return activeCards.length;
   }
 
-  int getIndex() {
+  int getCurrentCardIndex() {
     return _index;
   }
 
-  int getTotal() {
-    return trackers.length; //TODO: check on this value if its working good
+  int getTotalCardCount() {
+    return trackers.where(notArchived).length;
+  }
+
+  List<Tracker> _filterToActiveCards() {
+    return List.from(
+        trackers.where(notArchived).where(isUnanswered(this.date)));
+  }
+
+  void setDate(String date) {
+    this.date = date;
+  }
+
+  void updateActiveCards() {
+    _index = 0;
+    this.activeCards = _filterToActiveCards();
   }
 }
 

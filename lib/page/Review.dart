@@ -16,7 +16,10 @@ class _ReviewState extends State<Review> {
   @override
   Widget build(BuildContext context) {
     String date = (new Date()).getTodayFormatted();
-    int remainingCardCount = trackerBrain.remainingCardCount(date);
+    //TODO: this is bad setting date without constructor
+    trackerBrain.setDate(date);
+    trackerBrain.updateActiveCards();
+    int remainingCardCount = trackerBrain.remainingCardCount();
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -26,7 +29,8 @@ class _ReviewState extends State<Review> {
             onPressed: remainingCardCount == 0
                 ? null
                 : () {
-                    Navigator.pushNamed(context, "/review", arguments: date)
+                    Navigator.pushNamed(context, "/review",
+                            arguments: trackerBrain)
                         .then((value) {
                       setState(() {
                         // refresh state on pop

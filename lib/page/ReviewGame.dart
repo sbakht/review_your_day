@@ -12,45 +12,34 @@ class ReviewGame extends StatefulWidget {
 }
 
 class _ReviewGameState extends State<ReviewGame> {
-  TrackerBrain trackerBrain = new TrackerBrain();
-
   @override
   Widget build(BuildContext context) {
-    String date = ModalRoute.of(context).settings.arguments;
-    var index = trackerBrain.getIndex();
-    var total = trackerBrain.getTotal();
+    TrackerBrain trackerBrain = ModalRoute.of(context).settings.arguments;
+    var index = trackerBrain.getCurrentCardIndex();
+    var total = trackerBrain.getTotalCardCount();
     return Scaffold(
         appBar: AppBar(
           title: Text("Review Game"),
           actions: [
-//            Center(
-//                //TODO: improve contrast
-//                child: Text(
-//                    "(" +
-//                        (index + 1).toString() +
-//                        "/" +
-//                        trackerBrain.getTotal().toString() +
-//                        ")",
-//                    style: TextStyle(color: kSecondaryTextColor))),
             IconButton(
               icon: Icon(Icons.chevron_left),
               tooltip: 'Previous Question',
-              onPressed: isFirstQuestion()
+              onPressed: trackerBrain.isFirstQuestion()
                   ? null
                   : () {
                       setState(() {
-                        goToPreviousQuestion();
+                        trackerBrain.previousQuestion();
                       });
                     },
             ),
             IconButton(
               icon: Icon(Icons.chevron_right),
               tooltip: 'Next Question',
-              onPressed: isLastQuestion()
+              onPressed: trackerBrain.isLastQuestion()
                   ? null
                   : () {
                       setState(() {
-                        goToNextQuestion();
+                        trackerBrain.nextQuestion();
                       });
                     },
             ),
@@ -65,7 +54,7 @@ class _ReviewGameState extends State<ReviewGame> {
                 children: [
                   Container(
                     child: Text(
-                        trackerBrain.getCurrentQuestionTextWithFlavoring(date),
+                        trackerBrain.getCurrentQuestionTextWithFlavoring(),
                         textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 30)),
                   ),
@@ -76,16 +65,16 @@ class _ReviewGameState extends State<ReviewGame> {
                           child: Text(
                             "YES",
                             style: kAnswerTextStyle.copyWith(
-                              color: trackerBrain.doesAnswerByDateEqual(
-                                      date, Answer.Yes)
-                                  ? kSelectedColor
-                                  : null,
+                              color:
+                                  trackerBrain.doesAnswerByDateEqual(Answer.Yes)
+                                      ? kSelectedColor
+                                      : null,
                             ),
                           ),
                           onPressed: () {
                             setState(() {
-                              answerQuestion(date, Answer.Yes);
-                              goToNextQuestion();
+                              trackerBrain.answerCurrentQuestion(Answer.Yes);
+                              trackerBrain.nextQuestion();
                             });
                           },
                         ),
@@ -95,16 +84,16 @@ class _ReviewGameState extends State<ReviewGame> {
                           child: Text(
                             "NO",
                             style: kAnswerTextStyle.copyWith(
-                              color: trackerBrain.doesAnswerByDateEqual(
-                                      date, Answer.No)
-                                  ? kSelectedColor
-                                  : null,
+                              color:
+                                  trackerBrain.doesAnswerByDateEqual(Answer.No)
+                                      ? kSelectedColor
+                                      : null,
                             ),
                           ),
                           onPressed: () {
                             setState(() {
-                              answerQuestion(date, Answer.No);
-                              goToNextQuestion();
+                              trackerBrain.answerCurrentQuestion(Answer.No);
+                              trackerBrain.previousQuestion();
                             });
                           },
                         ),
@@ -116,25 +105,5 @@ class _ReviewGameState extends State<ReviewGame> {
             ),
           ],
         ));
-  }
-
-  void answerQuestion(String date, Answer ans) {
-    trackerBrain.answerCurrentQuestion(date, ans);
-  }
-
-  bool isFirstQuestion() {
-    return trackerBrain.isFirstQuestion();
-  }
-
-  bool isLastQuestion() {
-    return trackerBrain.isLastQuestion();
-  }
-
-  void goToNextQuestion() {
-    trackerBrain.nextQuestion();
-  }
-
-  void goToPreviousQuestion() {
-    trackerBrain.previousQuestion();
   }
 }
