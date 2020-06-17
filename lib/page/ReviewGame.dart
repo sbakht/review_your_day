@@ -33,6 +33,10 @@ class _ReviewGameState extends State<ReviewGame> {
         appBar: AppBar(
           title: Text("Review Game"),
           actions: [
+            //TODO: setting to show or hide progress and/or number progress count
+            Center(
+                child: Text(
+                    "" + (index + 1).toString() + "/" + total.toString() + "")),
             IconButton(
               icon: Icon(Icons.chevron_left),
               tooltip: 'Previous Question',
