@@ -10,11 +10,11 @@ class ReviewGame extends StatefulWidget {
 }
 
 class _ReviewGameState extends State<ReviewGame> {
-  int _questionIndex = 0;
+  TrackerBrain trackerBrain = new TrackerBrain();
 
   @override
   Widget build(BuildContext context) {
-    Tracker tracker = trackers[_questionIndex];
+    Tracker tracker = trackerBrain.currentQuestion();
     return Scaffold(
         appBar: AppBar(
           title: Text("Review Game"),
@@ -26,17 +26,18 @@ class _ReviewGameState extends State<ReviewGame> {
                   ? null
                   : () {
                       setState(() {
-                        _questionIndex--;
+                        goToPreviousQuestion();
                       });
                     },
             ),
-            FlatButton(
-              child: Text("Skip"),
+            IconButton(
+              icon: Icon(Icons.chevron_right),
+              tooltip: 'Next Question',
               onPressed: isLastQuestion()
                   ? null
                   : () {
                       setState(() {
-                        _questionIndex++;
+                        goToNextQuestion();
                       });
                     },
             ),
@@ -49,19 +50,26 @@ class _ReviewGameState extends State<ReviewGame> {
               children: [
                 FlatButton(
                   child: Text("YES"),
+//                  color: Colors.blue,
+                  color: tracker.isAlreadyAnsweredWith(17, Answer.Yes)
+                      ? Colors.blueGrey
+                      : null,
                   onPressed: () {
                     setState(() {
                       answerQuestion(Answer.Yes, tracker);
-                      _questionIndex++;
+                      goToNextQuestion();
                     });
                   },
                 ),
                 FlatButton(
                   child: Text("NO"),
+                  color: tracker.isAlreadyAnsweredWith(17, Answer.No)
+                      ? Colors.blueGrey
+                      : null,
                   onPressed: () {
                     setState(() {
                       answerQuestion(Answer.No, tracker);
-                      _questionIndex++;
+                      goToNextQuestion();
                     });
                   },
                 ),
@@ -75,12 +83,19 @@ class _ReviewGameState extends State<ReviewGame> {
     tracker.setUserAnswer(ans);
   }
 
-  isFirstQuestion() {
-    return _questionIndex == 0;
+  bool isFirstQuestion() {
+    return trackerBrain.isFirstQuestion();
   }
 
-  isLastQuestion() {
-    //TODO: move to brain file
-    return _questionIndex >= trackers.length - 1;
+  bool isLastQuestion() {
+    return trackerBrain.isLastQuestion();
+  }
+
+  void goToNextQuestion() {
+    trackerBrain.nextQuestion();
+  }
+
+  void goToPreviousQuestion() {
+    trackerBrain.previousQuestion();
   }
 }

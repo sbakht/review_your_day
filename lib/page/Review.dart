@@ -9,8 +9,6 @@ class Review extends StatefulWidget {
 }
 
 class _ReviewState extends State<Review> {
-  int _questionIndex = 0;
-
   @override
   Widget build(BuildContext context) {
     return Center(
