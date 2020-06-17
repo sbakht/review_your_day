@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../TestData.dart';
+import '../constants.dart';
 import '../enums.dart';
+
+const kAnswerTextStyle = TextStyle(fontSize: 50);
 
 class ReviewGame extends StatefulWidget {
   @override
@@ -43,33 +46,53 @@ class _ReviewGameState extends State<ReviewGame> {
           ],
         ),
         body: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Text(trackerBrain.getCurrentQuestionText()),
+            Container(
+              child: Text(
+                  trackerBrain.getCurrentQuestionTextWithFlavoring(date),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 30)),
+            ),
             Row(
               children: [
-                FlatButton(
-                  child: Text("YES"),
-                  color: trackerBrain.doesAnswerByDateEqual(date, Answer.Yes)
-                      ? Colors.blueGrey
-                      : null,
-                  onPressed: () {
-                    setState(() {
-                      answerQuestion(Answer.Yes);
-                      goToNextQuestion();
-                    });
-                  },
+                Expanded(
+                  child: FlatButton(
+                    child: Text(
+                      "YES",
+                      style: kAnswerTextStyle.copyWith(
+                        color:
+                            trackerBrain.doesAnswerByDateEqual(date, Answer.Yes)
+                                ? kSelectedColor
+                                : null,
+                      ),
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        answerQuestion(Answer.Yes);
+                        goToNextQuestion();
+                      });
+                    },
+                  ),
                 ),
-                FlatButton(
-                  child: Text("NO"),
-                  color: trackerBrain.doesAnswerByDateEqual(date, Answer.No)
-                      ? Colors.blueGrey
-                      : null,
-                  onPressed: () {
-                    setState(() {
-                      answerQuestion(Answer.No);
-                      goToNextQuestion();
-                    });
-                  },
+                Expanded(
+                  child: FlatButton(
+                    child: Text(
+                      "NO",
+                      style: kAnswerTextStyle.copyWith(
+                        color:
+                            trackerBrain.doesAnswerByDateEqual(date, Answer.No)
+                                ? kSelectedColor
+                                : null,
+                      ),
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        answerQuestion(Answer.No);
+                        goToNextQuestion();
+                      });
+                    },
+                  ),
                 ),
               ],
             ),

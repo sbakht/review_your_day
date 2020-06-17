@@ -41,6 +41,10 @@ class TrackerBrain {
     return currentQuestion().title;
   }
 
+  String getCurrentQuestionTextWithFlavoring(int date) {
+    return "Did you " + currentQuestion().title + " today?";
+  }
+
   void answerCurrentQuestion(int date, Answer ans) {
     currentQuestion().setUserAnswerByDate(date, ans);
   }
