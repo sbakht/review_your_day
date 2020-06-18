@@ -118,6 +118,10 @@ class TrackerBrain {
     Tracker t = Tracker(title: title, bonusPointsAnswer: Answer.Nothing);
     trackers.add(t);
   }
+
+  void remove(Tracker t) {
+    trackers.remove(t);
+  }
 }
 
 bool notArchived(Tracker t) => !t.archived;

@@ -113,6 +113,14 @@ class _ReviewState extends State<Review> {
                 color: index % 2 == 0 ? tableShadedColor : kBackgroundColor,
                 child: ListTile(
                   title: Text(t.title),
+                  subtitle: GestureDetector(
+                    child: Text("Delete", style: TextStyle(fontSize: 11)),
+                    onTap: () {
+                      setState(() {
+                        trackerBrain.remove(t);
+                      });
+                    },
+                  ),
                   trailing: Container(
                     child: SizedBox(
                       width: 80,
