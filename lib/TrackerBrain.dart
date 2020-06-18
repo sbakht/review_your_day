@@ -91,12 +91,23 @@ class TrackerBrain {
     return List.from(trackers.where(notArchived));
   }
 
-  List<Tracker> sorter() {
+  List<Tracker> sorter(SortBy sortMethod) {
     //TODO: move to its own sorter class
     List<Tracker> result = filterOutArchived();
     result.sort((Tracker a, Tracker b) {
       Percentage pa = new Percentage(a);
       Percentage pb = new Percentage(b);
+      if (sortMethod == SortBy.DescYes) {
+        return pb
+            .getPercentYesExclusive()
+            .compareTo(pa.getPercentYesExclusive());
+      } else if (sortMethod == SortBy.DescNo) {
+        return pb.getPercentNoExclusive().compareTo(pa.getPercentNoExclusive());
+      } else if (sortMethod == SortBy.CountYes) {
+        return b.getNumYes().compareTo(a.getNumYes());
+      } else if (sortMethod == SortBy.CountNo) {
+        return b.getNumNo().compareTo(a.getNumNo());
+      }
       return pb.getPercentYesExclusive().compareTo(pa.getPercentNoExclusive());
     });
     return result;

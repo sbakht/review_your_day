@@ -5,6 +5,7 @@ import 'package:reviewyourday/data/Tracker.dart';
 
 import '../TrackerBrain.dart';
 import '../constants.dart';
+import '../enums.dart';
 
 class Review extends StatefulWidget {
   @override
@@ -66,7 +67,8 @@ class _ReviewState extends State<Review> {
           child: Container(
               child: ListView(
             padding: const EdgeInsets.all(5),
-            children: trackerBrain.sorter().map<Widget>((Tracker t) {
+            children:
+                trackerBrain.sorter(SortBy.CountYes).map<Widget>((Tracker t) {
               Percentage percentage = new Percentage(t);
               int percentYesExcludeNA = percentage.getPercentYesExclusive();
               int percentNoExcludeNA = percentage.getPercentNoExclusive();

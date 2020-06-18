@@ -22,7 +22,7 @@ class Tracker {
     }
     if (this.title == "think about padding") {
       this.dateCreated = "6.10.2020";
-      userResponsesByDate["6.16.2020"] = Answer.Yes;
+      userResponsesByDate["6.16.2020"] = Answer.No;
     }
   }
 
