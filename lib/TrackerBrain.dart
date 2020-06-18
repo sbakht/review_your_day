@@ -1,9 +1,7 @@
-import 'dart:convert';
 import 'dart:math';
 
-import 'package:reviewyourday/constants.dart';
-import 'package:reviewyourday/data/Percentage.dart';
-
+import 'constants.dart';
+import 'data/Percentage.dart';
 import 'data/Tracker.dart';
 import 'enums.dart';
 
@@ -133,8 +131,6 @@ class TrackerBrain {
       map[i.toString()] = t.toJson();
       i++;
     });
-
-    TrackerBrain temp = TrackerBrain.fromJson(jsonDecode(jsonEncode(map)));
 
     return map;
   }

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:reviewyourday/data/Storage.dart';
-import 'package:reviewyourday/page/CreateTracker.dart';
-import 'package:reviewyourday/page/ReviewDashboard.dart';
 
 import 'TrackerBrain.dart';
+import 'data/BrainStorage.dart';
 import 'data/Tracker.dart';
+import 'page/CreateTracker.dart';
+import 'page/ReviewDashboard.dart';
 
 class Navigation extends StatefulWidget {
   final BrainStorage storage;

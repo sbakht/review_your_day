@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:reviewyourday/data/Storage.dart';
-import 'package:reviewyourday/page/CreateTracker.dart';
-import 'package:reviewyourday/page/Reviewing.dart';
-import 'package:reviewyourday/page/Settings.dart';
 
 import 'Navigation.dart';
 import 'TrackerBrain.dart';
+import 'data/BrainStorage.dart';
 import 'data/Tracker.dart';
+import 'page/CreateTracker.dart';
+import 'page/Reviewing.dart';
+import 'page/Settings.dart';
 
 void main() {
   runApp(MyApp());

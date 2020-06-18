@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:reviewyourday/data/Date.dart';
-import 'package:reviewyourday/data/Percentage.dart';
-import 'package:reviewyourday/data/Storage.dart';
-import 'package:reviewyourday/data/Tracker.dart';
 
 import '../TrackerBrain.dart';
 import '../constants.dart';
+import '../data/BrainStorage.dart';
+import '../data/Date.dart';
+import '../data/Percentage.dart';
+import '../data/Tracker.dart';
 import '../enums.dart';
 
 class Review extends StatefulWidget {

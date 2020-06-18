@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:reviewyourday/data/Storage.dart';
 
 import '../TrackerBrain.dart';
 import '../constants.dart';
+import '../data/BrainStorage.dart';
 import '../enums.dart';
 
 const kAnswerTextStyle = TextStyle(fontSize: 50);
