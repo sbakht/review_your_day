@@ -30,6 +30,8 @@ class _ReviewState extends State<Review> {
     trackerBrain.updateActiveCards();
     int remainingCardCount = trackerBrain.remainingCardCount();
 
+    var sortedCards = trackerBrain.sorter(SortBy.DescPercentYes);
+
     return Column(
       children: [
         Center(
@@ -70,66 +72,84 @@ class _ReviewState extends State<Review> {
         ),
         Expanded(
           child: Container(
-              child: ListView(
-            padding: const EdgeInsets.all(5),
-            primary: true,
-            children: trackerBrain
-                .sorter(SortBy.DescPercentYes)
-                .map<Widget>((Tracker t) {
-              Percentage percentage = new Percentage(t);
-              int percentYesExcludeNA = percentage.getPercentYesExclusive();
-              int percentNoExcludeNA = percentage.getPercentNoExclusive();
+              margin: EdgeInsets.only(top: 10),
+              child: ListView.builder(
+                padding: const EdgeInsets.all(5),
+                primary: true,
+                itemCount: sortedCards.length,
+                itemBuilder: (BuildContext context, int index) {
+                  Tracker t = sortedCards[index];
+                  Percentage percentage = new Percentage(t);
+                  int percentYesExcludeNA = percentage.getPercentYesExclusive();
+                  int percentNoExcludeNA = percentage.getPercentNoExclusive();
+                  var tableShadedColor = Colors.grey[100];
 
-              //TODO: lazy load the tiles
-              return ListTile(
-                title: Text(t.title),
-                trailing: Container(
-                  child: SizedBox(
-                    width: 80,
-                    child: Row(
-                      children: [
+                  return Container(
+                    color: index % 2 == 0 ? tableShadedColor : kBackgroundColor,
+                    child: ListTile(
+                      title: Text(t.title),
+                      trailing: Container(
+                        child: SizedBox(
+                          width: 80,
+                          child: Row(
+                            children: [
 //                        Text("Y: ",
 //                            style: TextStyle(color: kSecondaryTextColor)),
-                        Text(
-                          percentYesExcludeNA == 0 ? "00" : "",
-                          style: TextStyle(color: kBackgroundColor),
-                        ),
-                        Text(
-                          percentYesExcludeNA > 0 && percentYesExcludeNA < 100
-                              ? "0"
-                              : "",
-                          style: TextStyle(color: kBackgroundColor),
-                        ),
-                        Text(
-                          percentage.format(percentYesExcludeNA),
-                          textAlign: TextAlign.right,
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(width: 10),
+                              Text(
+                                percentYesExcludeNA == 0 ? "00" : "",
+                                style: TextStyle(
+                                    color: index % 2 == 0
+                                        ? tableShadedColor
+                                        : kBackgroundColor),
+                              ),
+                              Text(
+                                percentYesExcludeNA > 0 &&
+                                        percentYesExcludeNA < 100
+                                    ? "0"
+                                    : "",
+                                style: TextStyle(
+                                    color: index % 2 == 0
+                                        ? tableShadedColor
+                                        : kBackgroundColor),
+                              ),
+                              Text(
+                                percentage.format(percentYesExcludeNA),
+                                textAlign: TextAlign.right,
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(width: 10),
 //                        Text(" N: ",
 //                            style: TextStyle(color: kSecondaryTextColor)),
-                        Text(
-                          percentNoExcludeNA == 0 ? "00" : "",
-                          style: TextStyle(color: kBackgroundColor),
+                              Text(
+                                percentNoExcludeNA == 0 ? "00" : "",
+                                style: TextStyle(
+                                    color: index % 2 == 0
+                                        ? tableShadedColor
+                                        : kBackgroundColor),
+                              ),
+                              Text(
+                                percentNoExcludeNA > 0 &&
+                                        percentNoExcludeNA < 100
+                                    ? "0"
+                                    : "",
+                                style: TextStyle(
+                                    color: index % 2 == 0
+                                        ? tableShadedColor
+                                        : kBackgroundColor),
+                              ),
+                              Text(
+                                percentage.format(percentNoExcludeNA),
+                                textAlign: TextAlign.right,
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
                         ),
-                        Text(
-                          percentNoExcludeNA > 0 && percentNoExcludeNA < 100
-                              ? "0"
-                              : "",
-                          style: TextStyle(color: kBackgroundColor),
-                        ),
-                        Text(
-                          percentage.format(percentNoExcludeNA),
-                          textAlign: TextAlign.right,
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
-              );
-            }).toList(),
-          )),
+                  );
+                },
+              )),
         ),
       ],
     );
