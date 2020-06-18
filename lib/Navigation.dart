@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reviewyourday/TrackerBrain.dart';
 import 'package:reviewyourday/page/CreateTracker.dart';
-import 'package:reviewyourday/page/Home.dart';
 import 'package:reviewyourday/page/Review.dart';
 
 class Navigation extends StatefulWidget {
@@ -35,27 +34,25 @@ class _NavigationState extends State<Navigation> {
 
   List<BottomNavigationBarItem> buildBottomNav() {
     return [
-      BottomNavigationBarItem(
-        icon: Icon(Icons.av_timer),
-        title: Text('Home'),
-      ),
+//      BottomNavigationBarItem(
+//        icon: Icon(Icons.av_timer),
+//        title: Text('Home'),
+//      ),
       BottomNavigationBarItem(
         icon: Icon(Icons.book),
-        title: Text('Review'),
+        title: Text('Review Your Day'),
       ),
       BottomNavigationBarItem(
         icon: Icon(Icons.add),
-        title: Text('Add Tracker'),
+        title: Text('Add Activity'),
       )
     ];
   }
 
   Widget buildPageView() {
     if (_index == 0) {
-      return Home();
-    } else if (_index == 1) {
       return Review(trackerBrain: this.widget.trackerBrain);
-    } else if (_index == 2) {
+    } else if (_index == 1) {
       return CreateTracker(trackerBrain: this.widget.trackerBrain);
     }
     return null;
@@ -63,11 +60,9 @@ class _NavigationState extends State<Navigation> {
 
   String getTitle() {
     if (_index == 0) {
-      return "Home";
-    } else if (_index == 1) {
       return 'Review';
-    } else if (_index == 2) {
-      return 'Add Tracker';
+    } else if (_index == 1) {
+      return 'Add Activity';
     }
     return "";
   }
