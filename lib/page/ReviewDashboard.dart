@@ -33,6 +33,7 @@ class _ReviewState extends State<Review> {
     var sortedCards = trackerBrain.sorter(SortBy.DescPercentYes);
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Center(
           child: Column(
@@ -70,86 +71,108 @@ class _ReviewState extends State<Review> {
             ],
           ),
         ),
+        Container(
+          padding: EdgeInsets.only(left: 10, top: 20, right: 25),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Activity Statistics',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    "Yes",
+                    style: TextStyle(color: kSecondaryTextColor),
+                  ),
+                  SizedBox(width: 25),
+                  Text(
+                    "No",
+                    style: TextStyle(color: kSecondaryTextColor),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
         Expanded(
-          child: Container(
-              margin: EdgeInsets.only(top: 10),
-              child: ListView.builder(
-                padding: const EdgeInsets.all(5),
-                primary: true,
-                itemCount: sortedCards.length,
-                itemBuilder: (BuildContext context, int index) {
-                  Tracker t = sortedCards[index];
-                  Percentage percentage = new Percentage(t);
-                  int percentYesExcludeNA = percentage.getPercentYesExclusive();
-                  int percentNoExcludeNA = percentage.getPercentNoExclusive();
-                  var tableShadedColor = Colors.grey[100];
+          child: ListView.builder(
+            padding: const EdgeInsets.all(5),
+            primary: true,
+            itemCount: sortedCards.length,
+            itemBuilder: (BuildContext context, int index) {
+              Tracker t = sortedCards[index];
+              Percentage percentage = new Percentage(t);
+              int percentYesExcludeNA = percentage.getPercentYesExclusive();
+              int percentNoExcludeNA = percentage.getPercentNoExclusive();
+              var tableShadedColor = Colors.grey[100];
 
-                  return Container(
-                    color: index % 2 == 0 ? tableShadedColor : kBackgroundColor,
-                    child: ListTile(
-                      title: Text(t.title),
-                      trailing: Container(
-                        child: SizedBox(
-                          width: 80,
-                          child: Row(
-                            children: [
+              return Container(
+                color: index % 2 == 0 ? tableShadedColor : kBackgroundColor,
+                child: ListTile(
+                  title: Text(t.title),
+                  trailing: Container(
+                    child: SizedBox(
+                      width: 80,
+                      child: Row(
+                        children: [
 //                        Text("Y: ",
 //                            style: TextStyle(color: kSecondaryTextColor)),
-                              Text(
-                                percentYesExcludeNA == 0 ? "00" : "",
-                                style: TextStyle(
-                                    color: index % 2 == 0
-                                        ? tableShadedColor
-                                        : kBackgroundColor),
-                              ),
-                              Text(
-                                percentYesExcludeNA > 0 &&
-                                        percentYesExcludeNA < 100
-                                    ? "0"
-                                    : "",
-                                style: TextStyle(
-                                    color: index % 2 == 0
-                                        ? tableShadedColor
-                                        : kBackgroundColor),
-                              ),
-                              Text(
-                                percentage.format(percentYesExcludeNA),
-                                textAlign: TextAlign.right,
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(width: 10),
+                          Text(
+                            percentYesExcludeNA == 0 ? "00" : "",
+                            style: TextStyle(
+                                color: index % 2 == 0
+                                    ? tableShadedColor
+                                    : kBackgroundColor),
+                          ),
+                          Text(
+                            percentYesExcludeNA > 0 && percentYesExcludeNA < 100
+                                ? "0"
+                                : "",
+                            style: TextStyle(
+                                color: index % 2 == 0
+                                    ? tableShadedColor
+                                    : kBackgroundColor),
+                          ),
+                          Text(
+                            percentage.format(percentYesExcludeNA),
+                            textAlign: TextAlign.right,
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(width: 10),
 //                        Text(" N: ",
 //                            style: TextStyle(color: kSecondaryTextColor)),
-                              Text(
-                                percentNoExcludeNA == 0 ? "00" : "",
-                                style: TextStyle(
-                                    color: index % 2 == 0
-                                        ? tableShadedColor
-                                        : kBackgroundColor),
-                              ),
-                              Text(
-                                percentNoExcludeNA > 0 &&
-                                        percentNoExcludeNA < 100
-                                    ? "0"
-                                    : "",
-                                style: TextStyle(
-                                    color: index % 2 == 0
-                                        ? tableShadedColor
-                                        : kBackgroundColor),
-                              ),
-                              Text(
-                                percentage.format(percentNoExcludeNA),
-                                textAlign: TextAlign.right,
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                            ],
+                          Text(
+                            percentNoExcludeNA == 0 ? "00" : "",
+                            style: TextStyle(
+                                color: index % 2 == 0
+                                    ? tableShadedColor
+                                    : kBackgroundColor),
                           ),
-                        ),
+                          Text(
+                            percentNoExcludeNA > 0 && percentNoExcludeNA < 100
+                                ? "0"
+                                : "",
+                            style: TextStyle(
+                                color: index % 2 == 0
+                                    ? tableShadedColor
+                                    : kBackgroundColor),
+                          ),
+                          Text(
+                            percentage.format(percentNoExcludeNA),
+                            textAlign: TextAlign.right,
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ],
                       ),
                     ),
-                  );
-                },
-              )),
+                  ),
+                ),
+              );
+            },
+          ),
         ),
       ],
     );

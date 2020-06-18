@@ -8,10 +8,10 @@ import 'enums.dart';
 
 List<Tracker> trackers = [
   Tracker(title: "eat oatmeal", bonusPointsAnswer: Answer.Nothing),
-  Tracker(title: "work on your sprouts", bonusPointsAnswer: Answer.Nothing),
-  Tracker(title: "think about padding", bonusPointsAnswer: Answer.Nothing),
-  Tracker(title: "go on Tumblr", bonusPointsAnswer: Answer.Nothing),
-  Tracker(title: "do at least 1 pull-up", bonusPointsAnswer: Answer.Nothing),
+  Tracker(title: "make a jar of sprouts", bonusPointsAnswer: Answer.Nothing),
+  Tracker(title: "breathe", bonusPointsAnswer: Answer.Nothing),
+  Tracker(title: "go on reddit", bonusPointsAnswer: Answer.Nothing),
+  Tracker(title: "do at least 1 pushup", bonusPointsAnswer: Answer.Nothing),
 ];
 
 class TrackerBrain {
