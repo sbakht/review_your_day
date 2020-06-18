@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:reviewyourday/TrackerBrain.dart';
 import 'package:reviewyourday/page/CreateTracker.dart';
 import 'package:reviewyourday/page/Home.dart';
 import 'package:reviewyourday/page/Review.dart';
 
 class Navigation extends StatefulWidget {
+  final TrackerBrain trackerBrain;
+
+  Navigation({this.trackerBrain});
+
   @override
   _NavigationState createState() => _NavigationState();
 }
@@ -49,9 +54,9 @@ class _NavigationState extends State<Navigation> {
     if (_index == 0) {
       return Home();
     } else if (_index == 1) {
-      return Review();
+      return Review(trackerBrain: this.widget.trackerBrain);
     } else if (_index == 2) {
-      return CreateTracker();
+      return CreateTracker(trackerBrain: this.widget.trackerBrain);
     }
     return null;
   }

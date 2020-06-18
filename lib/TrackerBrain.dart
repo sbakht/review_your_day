@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:reviewyourday/constants.dart';
 import 'package:reviewyourday/data/Percentage.dart';
 
 import 'data/Tracker.dart';
@@ -52,7 +53,7 @@ class TrackerBrain {
   }
 
   String getCurrentQuestionTextWithFlavoring() {
-    return "Did you " + currentQuestion().title + " today?";
+    return "$kTextBefore ${currentQuestion().title} $kTextAfterToday";
   }
 
   void answerCurrentQuestion(Answer ans) {
@@ -97,20 +98,25 @@ class TrackerBrain {
     result.sort((Tracker a, Tracker b) {
       Percentage pa = new Percentage(a);
       Percentage pb = new Percentage(b);
-      if (sortMethod == SortBy.DescYes) {
+      if (sortMethod == SortBy.DescPercentYes) {
         return pb
             .getPercentYesExclusive()
             .compareTo(pa.getPercentYesExclusive());
-      } else if (sortMethod == SortBy.DescNo) {
+      } else if (sortMethod == SortBy.DescPercentNo) {
         return pb.getPercentNoExclusive().compareTo(pa.getPercentNoExclusive());
-      } else if (sortMethod == SortBy.CountYes) {
+      } else if (sortMethod == SortBy.DescCountYes) {
         return b.getNumYes().compareTo(a.getNumYes());
-      } else if (sortMethod == SortBy.CountNo) {
+      } else if (sortMethod == SortBy.DescCountNo) {
         return b.getNumNo().compareTo(a.getNumNo());
       }
       return pb.getPercentYesExclusive().compareTo(pa.getPercentNoExclusive());
     });
     return result;
+  }
+
+  void add(String title) {
+    Tracker t = Tracker(title: title, bonusPointsAnswer: Answer.Nothing);
+    trackers.add(t);
   }
 }
 

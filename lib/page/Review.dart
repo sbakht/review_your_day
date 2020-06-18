@@ -8,16 +8,21 @@ import '../constants.dart';
 import '../enums.dart';
 
 class Review extends StatefulWidget {
+  final TrackerBrain trackerBrain;
+
+  Review({this.trackerBrain});
+
   @override
   _ReviewState createState() => _ReviewState();
 }
 
 class _ReviewState extends State<Review> {
-  //TODO: check if the remaining value updates if you leave the reviews early (or after completing)
-  TrackerBrain trackerBrain = new TrackerBrain();
+//  TrackerBrain trackerBrain = widget.trackerBrain;
 
   @override
   Widget build(BuildContext context) {
+    TrackerBrain trackerBrain = widget.trackerBrain;
+
     //TODO: this is bad setting date without constructor
     String date = (new Date()).getTodayFormatted();
     trackerBrain.setDate(date);
@@ -67,8 +72,9 @@ class _ReviewState extends State<Review> {
           child: Container(
               child: ListView(
             padding: const EdgeInsets.all(5),
-            children:
-                trackerBrain.sorter(SortBy.CountYes).map<Widget>((Tracker t) {
+            children: trackerBrain
+                .sorter(SortBy.DescPercentYes)
+                .map<Widget>((Tracker t) {
               Percentage percentage = new Percentage(t);
               int percentYesExcludeNA = percentage.getPercentYesExclusive();
               int percentNoExcludeNA = percentage.getPercentNoExclusive();

@@ -4,12 +4,14 @@ import 'package:reviewyourday/page/ReviewGame.dart';
 import 'package:reviewyourday/page/Settings.dart';
 
 import 'Navigation.dart';
+import 'TrackerBrain.dart';
 
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  final TrackerBrain trackerBrain = new TrackerBrain();
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -19,7 +21,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: Navigation(),
+      home: Navigation(trackerBrain: trackerBrain),
 //      initialRoute: '/',
       routes: {
 //        '/': (context) => Home(),
