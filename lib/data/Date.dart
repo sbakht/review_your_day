@@ -14,6 +14,12 @@ class Date {
   String getYesterdayFormatted() {
     return format(yesterday);
   }
+
+  static DateTime fromFormatted(String date) {
+    List split = date.split('.');
+    return DateTime.utc(
+        int.parse(split[2]), int.parse(split[0]), int.parse(split[1]));
+  }
 }
 
 String format(DateTime date) {

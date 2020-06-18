@@ -3,7 +3,7 @@ import 'dart:math';
 import 'data/Tracker.dart';
 import 'enums.dart';
 
-Iterable<Tracker> trackers = [
+List<Tracker> trackers = [
   Tracker(title: "eat oatmeal", bonusPointsAnswer: Answer.Nothing),
   Tracker(title: "work on your sprouts", bonusPointsAnswer: Answer.Nothing),
   Tracker(title: "think about padding", bonusPointsAnswer: Answer.Nothing),
@@ -15,9 +15,11 @@ class TrackerBrain {
   int _index = 0;
   String date;
   List<Tracker> activeCards;
+  List<Tracker> cards;
 
   TrackerBrain() {
     updateActiveCards();
+    this.cards = trackers;
   }
 
   Tracker currentQuestion() {
