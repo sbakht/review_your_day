@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:reviewyourday/constants.dart';
+import 'package:reviewyourday/data/Storage.dart';
 
 import '../TrackerBrain.dart';
 
 class CreateTracker extends StatefulWidget {
   final TrackerBrain trackerBrain;
+  final BrainStorage storage;
 
-  CreateTracker({this.trackerBrain});
+  CreateTracker({this.trackerBrain, this.storage});
 
   @override
   _CreateTrackerState createState() => _CreateTrackerState();
@@ -55,6 +57,7 @@ class _CreateTrackerState extends State<CreateTracker> {
                 onPressed: () {
                   if (_formKey.currentState.validate()) {
                     widget.trackerBrain.add(myController.text);
+                    widget.storage.writeBrain(widget.trackerBrain);
                     myController.clear();
                     FocusScope.of(context).unfocus();
                     Scaffold.of(context).showSnackBar(SnackBar(

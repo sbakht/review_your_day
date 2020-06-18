@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:reviewyourday/data/Date.dart';
 import 'package:reviewyourday/data/Percentage.dart';
+import 'package:reviewyourday/data/Storage.dart';
 import 'package:reviewyourday/data/Tracker.dart';
 
 import '../TrackerBrain.dart';
@@ -9,8 +10,9 @@ import '../enums.dart';
 
 class Review extends StatefulWidget {
   final TrackerBrain trackerBrain;
+  final BrainStorage storage;
 
-  Review({this.trackerBrain});
+  Review({this.trackerBrain, this.storage});
 
   @override
   _ReviewState createState() => _ReviewState();
@@ -46,9 +48,10 @@ class _ReviewState extends State<Review> {
                   onPressed: remainingCardCount == 0
                       ? null
                       : () {
-                          Navigator.pushNamed(context, "/review",
-                                  arguments: trackerBrain)
-                              .then((value) {
+                          Navigator.pushNamed(context, "/review", arguments: {
+                            'trackerBrain': trackerBrain,
+                            'storage': widget.storage
+                          }).then((value) {
                             setState(() {
                               // refresh state on pop
                             });
@@ -215,6 +218,7 @@ class _ReviewState extends State<Review> {
               onPressed: () {
                 setState(() {
                   widget.trackerBrain.remove(t);
+                  widget.storage.writeBrain(widget.trackerBrain);
                 });
                 Navigator.of(context).pop();
               },

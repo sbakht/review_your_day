@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:reviewyourday/constants.dart';
@@ -6,26 +7,15 @@ import 'package:reviewyourday/data/Percentage.dart';
 import 'data/Tracker.dart';
 import 'enums.dart';
 
-List<Tracker> trackers = [
-  Tracker(
-      title: "do at least 1 minute of meditation",
-      bonusPointsAnswer: Answer.Nothing),
-  Tracker(title: "waste time on reddit", bonusPointsAnswer: Answer.Nothing),
-  Tracker(title: "make your own activities", bonusPointsAnswer: Answer.Nothing),
-  Tracker(
-      title: "brush your teeth in the morning",
-      bonusPointsAnswer: Answer.Nothing),
-  Tracker(title: "do at least 1 push-up", bonusPointsAnswer: Answer.Nothing),
-  Tracker(title: "delete this activity", bonusPointsAnswer: Answer.Nothing),
-];
-
 class TrackerBrain {
   int _index = 0;
   String date;
+  List<Tracker> trackers;
   List<Tracker> activeCards;
   List<Tracker> cards;
 
-  TrackerBrain() {
+  TrackerBrain(trackersStore) {
+    this.trackers = trackersStore;
     updateActiveCards();
   }
 
@@ -126,6 +116,27 @@ class TrackerBrain {
 
   void remove(Tracker t) {
     trackers.remove(t);
+  }
+
+  TrackerBrain.fromJson(Map<String, dynamic> json) {
+    this.trackers = [];
+    json.forEach((key, value) {
+      this.trackers.add(Tracker.fromJson(value));
+    });
+    updateActiveCards(); //TODO: this needs to rerun (acting like constructor)
+  }
+
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> map = {};
+    int i = 0;
+    this.trackers.forEach((t) {
+      map[i.toString()] = t.toJson();
+      i++;
+    });
+
+    TrackerBrain temp = TrackerBrain.fromJson(jsonDecode(jsonEncode(map)));
+
+    return map;
   }
 }
 

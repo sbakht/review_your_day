@@ -12,7 +12,11 @@ class _SettingsState extends State<Settings> {
       appBar: AppBar(
         title: Text('Settings'),
       ),
-      body: Text("Settings"),
+      body: Center(
+          child: Text(
+        "Add Settings Here",
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40),
+      )),
     );
   }
 }

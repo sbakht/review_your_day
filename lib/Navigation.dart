@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:reviewyourday/TrackerBrain.dart';
+import 'package:reviewyourday/data/Storage.dart';
 import 'package:reviewyourday/page/CreateTracker.dart';
 import 'package:reviewyourday/page/ReviewDashboard.dart';
 
-class Navigation extends StatefulWidget {
-  final TrackerBrain trackerBrain;
+import 'TrackerBrain.dart';
+import 'data/Tracker.dart';
 
-  Navigation({this.trackerBrain});
+class Navigation extends StatefulWidget {
+  final BrainStorage storage;
+
+  Navigation({this.storage});
 
   @override
   _NavigationState createState() => _NavigationState();
@@ -14,6 +17,17 @@ class Navigation extends StatefulWidget {
 
 class _NavigationState extends State<Navigation> {
   int _index = 0;
+  TrackerBrain trackerBrain = new TrackerBrain(<Tracker>[]);
+
+  @override
+  void initState() {
+    super.initState();
+    widget.storage.readBrain().then((TrackerBrain brain) {
+      setState(() {
+        trackerBrain = brain;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,9 +65,9 @@ class _NavigationState extends State<Navigation> {
 
   Widget buildPageView() {
     if (_index == 0) {
-      return Review(trackerBrain: this.widget.trackerBrain);
+      return Review(storage: widget.storage, trackerBrain: trackerBrain);
     } else if (_index == 1) {
-      return CreateTracker(trackerBrain: this.widget.trackerBrain);
+      return CreateTracker(storage: widget.storage, trackerBrain: trackerBrain);
     }
     return null;
   }

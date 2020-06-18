@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reviewyourday/data/Storage.dart';
 
 import '../TrackerBrain.dart';
 import '../constants.dart';
@@ -14,7 +15,9 @@ class ReviewGame extends StatefulWidget {
 class _ReviewGameState extends State<ReviewGame> {
   @override
   Widget build(BuildContext context) {
-    TrackerBrain trackerBrain = ModalRoute.of(context).settings.arguments;
+    Map<String, dynamic> map = ModalRoute.of(context).settings.arguments;
+    TrackerBrain trackerBrain = map['trackerBrain'];
+    BrainStorage storage = map['storage'];
     var index = trackerBrain.getCurrentCardIndex();
     var total = trackerBrain.getTotalCardCount();
 
@@ -81,6 +84,7 @@ class _ReviewGameState extends State<ReviewGame> {
                             setState(() {
                               trackerBrain.answerCurrentQuestion(Answer.Yes);
                               next();
+                              storage.writeBrain(trackerBrain);
                             });
                           },
                         ),
@@ -100,6 +104,7 @@ class _ReviewGameState extends State<ReviewGame> {
                             setState(() {
                               trackerBrain.answerCurrentQuestion(Answer.No);
                               next();
+                              storage.writeBrain(trackerBrain);
                             });
                           },
                         ),
