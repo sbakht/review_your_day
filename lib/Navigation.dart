@@ -44,7 +44,7 @@ class _NavigationState extends State<Navigation> {
       ),
       BottomNavigationBarItem(
         icon: Icon(Icons.add),
-        title: Text('Add Activity'),
+        title: Text('Track New Activity'),
       )
     ];
   }
@@ -62,7 +62,7 @@ class _NavigationState extends State<Navigation> {
     if (_index == 0) {
       return 'Review';
     } else if (_index == 1) {
-      return 'Add Activity';
+      return 'Track New Activity';
     }
     return "";
   }

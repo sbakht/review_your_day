@@ -31,7 +31,7 @@ class _ReviewGameState extends State<ReviewGame> {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text("Review Game"),
+          title: Text("Reviewing Your Day"),
           actions: [
             //TODO: setting to show or hide progress and/or number progress count
             Center(

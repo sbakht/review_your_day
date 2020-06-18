@@ -37,7 +37,7 @@ class _ReviewState extends State<Review> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               RaisedButton(
-                child: Text("Start Review of your Day"),
+                child: Text("Start Your Daily Review"),
                 onPressed: remainingCardCount == 0
                     ? null
                     : () {
