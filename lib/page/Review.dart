@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reviewyourday/data/Date.dart';
+import 'package:reviewyourday/data/Percentage.dart';
 import 'package:reviewyourday/data/Tracker.dart';
 
 import '../TrackerBrain.dart';
@@ -65,34 +66,20 @@ class _ReviewState extends State<Review> {
           child: Container(
               child: ListView(
             padding: const EdgeInsets.all(5),
-            children: trackerBrain.cards.map<Widget>((Tracker t) {
-              int numYes = t.getNumYes();
-              int numNo = t.getNumNo();
-              int numNA = t.getNumNA();
-              int total = t.daysSinceCreated();
-//              String percentYes = toPercentage(numYes, total);
-              int percentYes = toPercentageInt(numYes, total);
-//              int percentNo = toPercentageInt(numNo, total);
-//              int percentNA = toPercentageInt(numNA, total);
-              int percentYesExcludeNA = toPercentageInt(numYes, total - numNA);
-              int percentNoExcludeNA = toPercentageInt(numNo, total - numNA);
-//              String percentYesString = toPercentage(numYes, total);
-//              String percentNoString = toPercentage(numNo, total);
-//              String percentNAString = toPercentage(numNA, total);
-              String percentYesExcludeNAString =
-                  toPercentage(numYes, total - numNA);
-              String percentNoExcludeNAString =
-                  toPercentage(numNo, total - numNA);
+            children: trackerBrain.sorter().map<Widget>((Tracker t) {
+              Percentage percentage = new Percentage(t);
+              int percentYesExcludeNA = percentage.getPercentYesExclusive();
+              int percentNoExcludeNA = percentage.getPercentNoExclusive();
 
               return ListTile(
                 title: Text(t.title),
                 trailing: Container(
                   child: SizedBox(
-                    width: 120,
+                    width: 80,
                     child: Row(
                       children: [
-                        Text("Y: ",
-                            style: TextStyle(color: kSecondaryTextColor)),
+//                        Text("Y: ",
+//                            style: TextStyle(color: kSecondaryTextColor)),
                         Text(
                           percentYesExcludeNA == 0 ? "00" : "",
                           style: TextStyle(color: kBackgroundColor),
@@ -104,13 +91,13 @@ class _ReviewState extends State<Review> {
                           style: TextStyle(color: kBackgroundColor),
                         ),
                         Text(
-                          percentYesExcludeNAString,
+                          percentage.format(percentYesExcludeNA),
                           textAlign: TextAlign.right,
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         SizedBox(width: 10),
-                        Text(" N: ",
-                            style: TextStyle(color: kSecondaryTextColor)),
+//                        Text(" N: ",
+//                            style: TextStyle(color: kSecondaryTextColor)),
                         Text(
                           percentNoExcludeNA == 0 ? "00" : "",
                           style: TextStyle(color: kBackgroundColor),
@@ -122,7 +109,7 @@ class _ReviewState extends State<Review> {
                           style: TextStyle(color: kBackgroundColor),
                         ),
                         Text(
-                          percentNoExcludeNAString,
+                          percentage.format(percentNoExcludeNA),
                           textAlign: TextAlign.right,
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
@@ -136,16 +123,5 @@ class _ReviewState extends State<Review> {
         ),
       ],
     );
-  }
-
-  int toPercentageInt(int num, int total) {
-    if (total == 0) {
-      return 0;
-    }
-    return (num / total * 100).floor();
-  }
-
-  String toPercentage(int num, int total) {
-    return toPercentageInt(num, total).toString() + "%";
   }
 }

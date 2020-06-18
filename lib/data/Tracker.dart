@@ -48,14 +48,14 @@ class Tracker {
     return getKeyCount(userResponsesByDate, Answer.No);
   }
 
-  int daysSinceCreated() {
+  int _daysSinceCreated() {
     DateTime start = Date.fromFormatted(dateCreated);
     DateTime today = Date().today;
     return today.difference(start).inDays + 1;
   }
 
   int getNumNA() {
-    return daysSinceCreated() - getNumNo() - getNumYes();
+    return _daysSinceCreated() - getNumNo() - getNumYes();
   }
 }
 

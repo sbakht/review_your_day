@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:reviewyourday/data/Percentage.dart';
+
 import 'data/Tracker.dart';
 import 'enums.dart';
 
@@ -19,7 +21,6 @@ class TrackerBrain {
 
   TrackerBrain() {
     updateActiveCards();
-    this.cards = trackers;
   }
 
   Tracker currentQuestion() {
@@ -84,6 +85,21 @@ class TrackerBrain {
     this.activeCards = _filterToActiveCards();
     this.activeCards.shuffle();
     //TODO: add setting to sort by random/accsending/added/most yes/most no/ unanswered
+  }
+
+  List<Tracker> filterOutArchived() {
+    return List.from(trackers.where(notArchived));
+  }
+
+  List<Tracker> sorter() {
+    //TODO: move to its own sorter class
+    List<Tracker> result = filterOutArchived();
+    result.sort((Tracker a, Tracker b) {
+      Percentage pa = new Percentage(a);
+      Percentage pb = new Percentage(b);
+      return pb.getPercentYesExclusive().compareTo(pa.getPercentNoExclusive());
+    });
+    return result;
   }
 }
 
