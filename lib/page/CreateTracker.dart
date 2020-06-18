@@ -56,7 +56,7 @@ class _CreateTrackerState extends State<CreateTracker> {
               child: RaisedButton(
                 onPressed: () {
                   if (_formKey.currentState.validate()) {
-                    widget.trackerBrain.add(myController.text);
+                    widget.trackerBrain.add(myController.text.trim());
                     widget.storage.writeBrain(widget.trackerBrain);
                     myController.clear();
                     FocusScope.of(context).unfocus();
