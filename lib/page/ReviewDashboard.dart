@@ -35,40 +35,43 @@ class _ReviewState extends State<Review> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              RaisedButton(
-                child: Text("Start Your Daily Review"),
-                onPressed: remainingCardCount == 0
-                    ? null
-                    : () {
-                        Navigator.pushNamed(context, "/review",
-                                arguments: trackerBrain)
-                            .then((value) {
-                          setState(() {
-                            // refresh state on pop
+        Container(
+          padding: EdgeInsets.only(top: 20),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                RaisedButton(
+                  child: Text("Start Your Daily Review"),
+                  onPressed: remainingCardCount == 0
+                      ? null
+                      : () {
+                          Navigator.pushNamed(context, "/review",
+                                  arguments: trackerBrain)
+                              .then((value) {
+                            setState(() {
+                              // refresh state on pop
+                            });
                           });
-                        });
-                      },
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    remainingCardCount.toString(),
-                    style: TextStyle(
-                        color: kSecondaryTextColor,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    " remaining",
-                    style: TextStyle(color: kSecondaryTextColor),
-                  ),
-                ],
-              ),
-            ],
+                        },
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      remainingCardCount.toString(),
+                      style: TextStyle(
+                          color: kSecondaryTextColor,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      " remaining",
+                      style: TextStyle(color: kSecondaryTextColor),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
         Container(
@@ -116,9 +119,7 @@ class _ReviewState extends State<Review> {
                   subtitle: GestureDetector(
                     child: Text("Delete", style: TextStyle(fontSize: 11)),
                     onTap: () {
-                      setState(() {
-                        trackerBrain.remove(t);
-                      });
+                      _deleteConfirmationDialog(context, t);
                     },
                   ),
                   trailing: Container(
@@ -183,6 +184,44 @@ class _ReviewState extends State<Review> {
           ),
         ),
       ],
+    );
+  }
+
+  Future<void> _deleteConfirmationDialog(context, Tracker t) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Delete Activity'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('This activity will be permanently deleted.'),
+                Text('This action cannot be undone.'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            RaisedButton(
+              color: Colors.red,
+              child: Text("Delete"),
+              onPressed: () {
+                setState(() {
+                  widget.trackerBrain.remove(t);
+                });
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }
