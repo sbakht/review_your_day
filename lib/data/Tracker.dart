@@ -13,17 +13,17 @@ class Tracker {
     this.archived = false;
     var date = new Date();
     this.dateCreated = date.getTodayFormatted();
-    if (this.title == "eat oatmeal") {
-      this.dateCreated = "6.10.2020";
-      userResponsesByDate["6.16.2020"] = Answer.Yes;
-      userResponsesByDate["6.15.2020"] = Answer.Yes;
-      userResponsesByDate["6.11.2020"] = Answer.Yes;
-      userResponsesByDate["6.14.2020"] = Answer.No;
-    }
-    if (this.title == "think about padding") {
-      this.dateCreated = "6.10.2020";
-      userResponsesByDate["6.16.2020"] = Answer.No;
-    }
+//    if (this.title == "eat oatmeal") {
+//      this.dateCreated = "6.10.2020";
+//      userResponsesByDate["6.16.2020"] = Answer.Yes;
+//      userResponsesByDate["6.15.2020"] = Answer.Yes;
+//      userResponsesByDate["6.11.2020"] = Answer.Yes;
+//      userResponsesByDate["6.14.2020"] = Answer.No;
+//    }
+//    if (this.title == "think about padding") {
+//      this.dateCreated = "6.10.2020";
+//      userResponsesByDate["6.16.2020"] = Answer.No;
+//    }
   }
 
   void setUserAnswerByDate(String date, Answer ans) {

@@ -7,11 +7,17 @@ import 'data/Tracker.dart';
 import 'enums.dart';
 
 List<Tracker> trackers = [
-  Tracker(title: "eat oatmeal", bonusPointsAnswer: Answer.Nothing),
-  Tracker(title: "make a jar of sprouts", bonusPointsAnswer: Answer.Nothing),
-  Tracker(title: "breathe", bonusPointsAnswer: Answer.Nothing),
-  Tracker(title: "go on reddit", bonusPointsAnswer: Answer.Nothing),
-  Tracker(title: "do at least 1 pushup", bonusPointsAnswer: Answer.Nothing),
+  Tracker(
+      title: "procrastinate something important",
+      bonusPointsAnswer: Answer.Nothing),
+  Tracker(
+      title: "do at least 1 minute of meditation",
+      bonusPointsAnswer: Answer.Nothing),
+  Tracker(title: "waste time on reddit", bonusPointsAnswer: Answer.Nothing),
+  Tracker(
+      title: "brush your teeth in the morning",
+      bonusPointsAnswer: Answer.Nothing),
+  Tracker(title: "do at least 1 push-up", bonusPointsAnswer: Answer.Nothing),
 ];
 
 class TrackerBrain {
