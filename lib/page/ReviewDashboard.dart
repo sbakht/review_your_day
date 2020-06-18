@@ -72,6 +72,7 @@ class _ReviewState extends State<Review> {
           child: Container(
               child: ListView(
             padding: const EdgeInsets.all(5),
+            primary: true,
             children: trackerBrain
                 .sorter(SortBy.DescPercentYes)
                 .map<Widget>((Tracker t) {
@@ -79,6 +80,7 @@ class _ReviewState extends State<Review> {
               int percentYesExcludeNA = percentage.getPercentYesExclusive();
               int percentNoExcludeNA = percentage.getPercentNoExclusive();
 
+              //TODO: lazy load the tiles
               return ListTile(
                 title: Text(t.title),
                 trailing: Container(

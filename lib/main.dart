@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reviewyourday/page/CreateTracker.dart';
-import 'package:reviewyourday/page/ReviewGame.dart';
+import 'package:reviewyourday/page/Reviewing.dart';
 import 'package:reviewyourday/page/Settings.dart';
 
 import 'Navigation.dart';

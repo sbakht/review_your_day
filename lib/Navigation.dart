@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:reviewyourday/TrackerBrain.dart';
 import 'package:reviewyourday/page/CreateTracker.dart';
-import 'package:reviewyourday/page/Review.dart';
+import 'package:reviewyourday/page/ReviewDashboard.dart';
 
 class Navigation extends StatefulWidget {
   final TrackerBrain trackerBrain;
@@ -73,14 +73,14 @@ class _NavigationState extends State<Navigation> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            ListTile(
-              leading: Icon(Icons.message),
-              title: Text('Messages'),
-            ),
-            ListTile(
-              leading: Icon(Icons.account_circle),
-              title: Text('Profile'),
-            ),
+//            ListTile(
+//              leading: Icon(Icons.message),
+//              title: Text('Messages'),
+//            ),
+//            ListTile(
+//              leading: Icon(Icons.account_circle),
+//              title: Text('Profile'),
+//            ),
             ListTile(
               leading: Icon(Icons.settings),
               title: Text('Settings'),
