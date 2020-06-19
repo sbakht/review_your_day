@@ -58,60 +58,75 @@ class _ReviewGameState extends State<ReviewGame> {
           children: [
             LinearProgressIndicator(value: index / total),
             Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Container(
-                    child: Text(
-                        trackerBrain.getCurrentQuestionTextWithFlavoring(),
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 30)),
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: FlatButton(
-                          child: Text(
-                            "YES",
-                            style: kAnswerTextStyle.copyWith(
-                              color:
-                                  trackerBrain.doesAnswerByDateEqual(Answer.Yes)
+              child: Card(
+                color: Colors.black,
+                margin: EdgeInsets.all(15),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15)),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Container(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                        child: Text(
+                            trackerBrain.getCurrentQuestionTextWithFlavoring(),
+                            textAlign: TextAlign.left,
+                            style: TextStyle(fontSize: 30)),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: FlatButton(
+                              child: Text(
+                                "YES",
+                                style: kAnswerTextStyle.copyWith(
+                                  color: trackerBrain
+                                          .doesAnswerByDateEqual(Answer.Yes)
                                       ? kSelectedColor
                                       : null,
+                                ),
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  trackerBrain
+                                      .answerCurrentQuestion(Answer.Yes);
+                                  next();
+                                  storage.writeBrain(trackerBrain);
+                                });
+                              },
                             ),
                           ),
-                          onPressed: () {
-                            setState(() {
-                              trackerBrain.answerCurrentQuestion(Answer.Yes);
-                              next();
-                              storage.writeBrain(trackerBrain);
-                            });
-                          },
-                        ),
-                      ),
-                      Expanded(
-                        child: FlatButton(
-                          child: Text(
-                            "NO",
-                            style: kAnswerTextStyle.copyWith(
-                              color:
-                                  trackerBrain.doesAnswerByDateEqual(Answer.No)
+                          Expanded(
+                            child: FlatButton(
+                              child: Text(
+                                "NO",
+                                style: kAnswerTextStyle.copyWith(
+                                  color: trackerBrain
+                                          .doesAnswerByDateEqual(Answer.No)
                                       ? kSelectedColor
                                       : null,
+                                ),
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  trackerBrain.answerCurrentQuestion(Answer.No);
+                                  next();
+                                  storage.writeBrain(trackerBrain);
+                                });
+                              },
                             ),
                           ),
-                          onPressed: () {
-                            setState(() {
-                              trackerBrain.answerCurrentQuestion(Answer.No);
-                              next();
-                              storage.writeBrain(trackerBrain);
-                            });
-                          },
-                        ),
+                        ],
                       ),
-                    ],
-                  ),
-                ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

@@ -168,7 +168,9 @@ class _ReviewState extends State<Review> {
                     int percentYesExcludeNA =
                         percentage.getPercentYesExclusive();
                     int percentNoExcludeNA = percentage.getPercentNoExclusive();
-                    var tableShadedColor = Colors.grey[100];
+                    var tableShadedColor = Colors.grey.shade900;
+                    var kBackgroundColor =
+                        Colors.grey[850]; // Default dark scaffold color
 
                     return Container(
                       color:
