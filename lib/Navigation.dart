@@ -34,6 +34,29 @@ class _NavigationState extends State<Navigation> {
     return Scaffold(
         appBar: AppBar(
           title: Text(getTitle()),
+//          actions: [
+//            Center(
+//              child: Container(
+//                width: 200,
+//                margin: EdgeInsets.only(top: 5),
+//                child: TextField(
+////              controller: _filter,
+//                  style: TextStyle(color: Colors.white),
+//                  decoration: new InputDecoration(
+//                    prefixIcon: Container(
+//                      padding: EdgeInsets.only(bottom: 2),
+//                      child: Icon(
+//                        Icons.search,
+//                        color: kSecondaryTextColor,
+//                      ),
+//                    ),
+//                    hintText: 'Search...',
+//                    border: InputBorder.none,
+//                  ),
+//                ),
+//              ),
+//            )
+//          ],
         ),
         drawer: buildDrawer(context),
         body: buildPageView(),

@@ -19,7 +19,22 @@ class Review extends StatefulWidget {
 }
 
 class _ReviewState extends State<Review> {
-//  TrackerBrain trackerBrain = widget.trackerBrain;
+  String searchTerm = "";
+  final TextEditingController _filter = new TextEditingController();
+
+  _ReviewState() {
+    _filter.addListener(() {
+      if (_filter.text.isEmpty) {
+        setState(() {
+          searchTerm = "";
+        });
+      } else {
+        setState(() {
+          searchTerm = _filter.text.toLowerCase();
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +52,9 @@ class _ReviewState extends State<Review> {
     int remainingCardCountFromYesterday =
         trackerBrain.remainingCardCountYesterday();
 
-    var sortedCards = trackerBrain.sorter(SortBy.DescPercentYes);
+    List<Tracker> sortedCards = List.from(trackerBrain
+        .sorter(SortBy.DescPercentYes)
+        .where((t) => t.title.toLowerCase().contains(searchTerm)));
 
     Widget startReview(text, dateENUM, remainingCardCount) {
       return Column(
@@ -85,6 +102,16 @@ class _ReviewState extends State<Review> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Container(
+          child: TextField(
+            controller: _filter,
+            decoration: new InputDecoration(
+              prefixIcon: new Icon(Icons.search),
+              hintText: 'Search...',
+              border: InputBorder.none,
+            ),
+          ),
+        ),
+        Container(
           padding: EdgeInsets.only(top: 20),
           child: Row(
             mainAxisAlignment: shouldHideYesterdayReviewButton()
@@ -127,87 +154,95 @@ class _ReviewState extends State<Review> {
           ),
         ),
         Expanded(
-          child: ListView.builder(
-            padding: const EdgeInsets.all(5),
-            primary: true,
-            itemCount: sortedCards.length,
-            itemBuilder: (BuildContext context, int index) {
-              Tracker t = sortedCards[index];
-              Percentage percentage = new Percentage(t);
-              int percentYesExcludeNA = percentage.getPercentYesExclusive();
-              int percentNoExcludeNA = percentage.getPercentNoExclusive();
-              var tableShadedColor = Colors.grey[100];
+          child: sortedCards.length == 0
+              ? Center(
+                  child: Text("No Activities Found :(",
+                      style: TextStyle(color: kSecondaryTextColor)))
+              : ListView.builder(
+                  padding: const EdgeInsets.all(5),
+                  primary: true,
+                  itemCount: sortedCards.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    Tracker t = sortedCards[index];
+                    Percentage percentage = new Percentage(t);
+                    int percentYesExcludeNA =
+                        percentage.getPercentYesExclusive();
+                    int percentNoExcludeNA = percentage.getPercentNoExclusive();
+                    var tableShadedColor = Colors.grey[100];
 
-              return Container(
-                color: index % 2 == 0 ? tableShadedColor : kBackgroundColor,
-                child: ListTile(
-                  title: Text(t.title),
-                  subtitle: GestureDetector(
-                    child: Text("Delete", style: TextStyle(fontSize: 11)),
-                    onTap: () {
-                      _deleteConfirmationDialog(context, t);
-                    },
-                  ),
-                  trailing: Container(
-                    child: SizedBox(
-                      width: 80,
-                      child: Row(
-                        children: [
+                    return Container(
+                      color:
+                          index % 2 == 0 ? tableShadedColor : kBackgroundColor,
+                      child: ListTile(
+                        title: Text(t.title),
+                        subtitle: GestureDetector(
+                          child: Text("Delete", style: TextStyle(fontSize: 11)),
+                          onTap: () {
+                            _deleteConfirmationDialog(context, t);
+                          },
+                        ),
+                        trailing: Container(
+                          child: SizedBox(
+                            width: 80,
+                            child: Row(
+                              children: [
 //                        Text("Y: ",
 //                            style: TextStyle(color: kSecondaryTextColor)),
-                          Text(
-                            percentYesExcludeNA == 0 ? "00" : "",
-                            style: TextStyle(
-                                color: index % 2 == 0
-                                    ? tableShadedColor
-                                    : kBackgroundColor),
-                          ),
-                          Text(
-                            percentYesExcludeNA > 0 && percentYesExcludeNA < 100
-                                ? "0"
-                                : "",
-                            style: TextStyle(
-                                color: index % 2 == 0
-                                    ? tableShadedColor
-                                    : kBackgroundColor),
-                          ),
-                          Text(
-                            percentage.format(percentYesExcludeNA),
-                            textAlign: TextAlign.right,
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(width: 10),
+                                Text(
+                                  percentYesExcludeNA == 0 ? "00" : "",
+                                  style: TextStyle(
+                                      color: index % 2 == 0
+                                          ? tableShadedColor
+                                          : kBackgroundColor),
+                                ),
+                                Text(
+                                  percentYesExcludeNA > 0 &&
+                                          percentYesExcludeNA < 100
+                                      ? "0"
+                                      : "",
+                                  style: TextStyle(
+                                      color: index % 2 == 0
+                                          ? tableShadedColor
+                                          : kBackgroundColor),
+                                ),
+                                Text(
+                                  percentage.format(percentYesExcludeNA),
+                                  textAlign: TextAlign.right,
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(width: 10),
 //                        Text(" N: ",
 //                            style: TextStyle(color: kSecondaryTextColor)),
-                          Text(
-                            percentNoExcludeNA == 0 ? "00" : "",
-                            style: TextStyle(
-                                color: index % 2 == 0
-                                    ? tableShadedColor
-                                    : kBackgroundColor),
+                                Text(
+                                  percentNoExcludeNA == 0 ? "00" : "",
+                                  style: TextStyle(
+                                      color: index % 2 == 0
+                                          ? tableShadedColor
+                                          : kBackgroundColor),
+                                ),
+                                Text(
+                                  percentNoExcludeNA > 0 &&
+                                          percentNoExcludeNA < 100
+                                      ? "0"
+                                      : "",
+                                  style: TextStyle(
+                                      color: index % 2 == 0
+                                          ? tableShadedColor
+                                          : kBackgroundColor),
+                                ),
+                                Text(
+                                  percentage.format(percentNoExcludeNA),
+                                  textAlign: TextAlign.right,
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
                           ),
-                          Text(
-                            percentNoExcludeNA > 0 && percentNoExcludeNA < 100
-                                ? "0"
-                                : "",
-                            style: TextStyle(
-                                color: index % 2 == 0
-                                    ? tableShadedColor
-                                    : kBackgroundColor),
-                          ),
-                          Text(
-                            percentage.format(percentNoExcludeNA),
-                            textAlign: TextAlign.right,
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
+                    );
+                  },
                 ),
-              );
-            },
-          ),
         ),
       ],
     );
