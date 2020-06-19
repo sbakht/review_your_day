@@ -97,7 +97,7 @@ class _NavigationState extends State<Navigation> {
 
   String getTitle() {
     if (_index == 0) {
-      return 'Review Your Day';
+      return 'The Habit Journal';
     } else if (_index == 1) {
       return 'Track New Activity';
     }
