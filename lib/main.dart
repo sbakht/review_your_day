@@ -32,6 +32,7 @@ class MyApp extends StatelessWidget {
 //        '/': (context) => Home(),
         '/create': (context) => CreateTracker(),
         '/review': (context) => ReviewGame(),
+//        '/review': (context) => CarouselDemo(),
         '/settings': (context) => Settings(),
       },
     );

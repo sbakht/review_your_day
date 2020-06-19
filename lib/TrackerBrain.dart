@@ -23,7 +23,7 @@ class TrackerBrain {
   }
 
   Tracker currentQuestion() {
-    return this._getActiveCards()[_index];
+    return this.getActiveCards()[_index];
   }
 
   bool isFirstQuestion() {
@@ -31,22 +31,22 @@ class TrackerBrain {
   }
 
   bool isLastQuestion() {
-    return _index >= _getActiveCards().length - 1;
+    return _index >= getActiveCards().length - 1;
   }
 
   void nextQuestion() {
-    _index = min(_getActiveCards().length - 1, ++_index);
+    _index = min(getActiveCards().length - 1, ++_index);
   }
 
   void previousQuestion() {
     _index = max(0, --_index);
   }
 
-  bool doesAnswerByDateEqual(Answer answer) {
+  bool doesAnswerByDateEqual(Tracker question, Answer answer) {
     if (mode == DATE.Yesterday) {
-      return currentQuestion().doesAnswerByDateEqual(yesterdayDate, answer);
+      return question.doesAnswerByDateEqual(yesterdayDate, answer);
     } else {
-      return currentQuestion().doesAnswerByDateEqual(date, answer);
+      return question.doesAnswerByDateEqual(date, answer);
     }
   }
 
@@ -58,11 +58,11 @@ class TrackerBrain {
     return "$kTextBefore ${currentQuestion().title}?";
   }
 
-  void answerCurrentQuestion(Answer ans) {
+  void answerCurrentQuestion(Tracker question, Answer ans) {
     if (mode == DATE.Yesterday) {
-      currentQuestion().setUserAnswerByDate(yesterdayDate, ans);
+      question.setUserAnswerByDate(yesterdayDate, ans);
     } else {
-      currentQuestion().setUserAnswerByDate(date, ans);
+      question.setUserAnswerByDate(date, ans);
     }
   }
 
@@ -75,7 +75,7 @@ class TrackerBrain {
   }
 
   int getTotalCardCount() {
-    return _getActiveCards().length;
+    return getActiveCards().length;
   }
 
   List<Tracker> _filterToActiveCards(String date) {
@@ -159,12 +159,16 @@ class TrackerBrain {
     this.mode = d;
   }
 
-  List<Tracker> _getActiveCards() {
+  List<Tracker> getActiveCards() {
     if (mode == DATE.Yesterday) {
       return yesterdayActiveCards;
     } else {
       return activeCards;
     }
+  }
+
+  bool isNextQuestionIndex(int i) {
+    return i > _index;
   }
 }
 
