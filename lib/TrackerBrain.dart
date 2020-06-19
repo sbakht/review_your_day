@@ -5,12 +5,17 @@ import 'data/Percentage.dart';
 import 'data/Tracker.dart';
 import 'enums.dart';
 
+enum DATE { Today, Yesterday }
+
 class TrackerBrain {
   int _index = 0;
   String date;
+  String yesterdayDate;
   List<Tracker> trackers;
   List<Tracker> activeCards;
+  List<Tracker> yesterdayActiveCards;
   List<Tracker> cards;
+  DATE mode;
 
   TrackerBrain(trackersStore) {
     this.trackers = trackersStore;
@@ -18,7 +23,7 @@ class TrackerBrain {
   }
 
   Tracker currentQuestion() {
-    return this.activeCards[_index];
+    return this._getActiveCards()[_index];
   }
 
   bool isFirstQuestion() {
@@ -26,11 +31,11 @@ class TrackerBrain {
   }
 
   bool isLastQuestion() {
-    return _index >= activeCards.length - 1;
+    return _index >= _getActiveCards().length - 1;
   }
 
   void nextQuestion() {
-    _index = min(activeCards.length - 1, ++_index);
+    _index = min(_getActiveCards().length - 1, ++_index);
   }
 
   void previousQuestion() {
@@ -38,7 +43,11 @@ class TrackerBrain {
   }
 
   bool doesAnswerByDateEqual(Answer answer) {
-    return currentQuestion().doesAnswerByDateEqual(date, answer);
+    if (mode == DATE.Yesterday) {
+      return currentQuestion().doesAnswerByDateEqual(yesterdayDate, answer);
+    } else {
+      return currentQuestion().doesAnswerByDateEqual(date, answer);
+    }
   }
 
   String getCurrentQuestionText() {
@@ -46,11 +55,15 @@ class TrackerBrain {
   }
 
   String getCurrentQuestionTextWithFlavoring() {
-    return "$kTextBefore ${currentQuestion().title} $kTextAfterToday";
+    return "$kTextBefore ${currentQuestion().title}?";
   }
 
   void answerCurrentQuestion(Answer ans) {
-    currentQuestion().setUserAnswerByDate(date, ans);
+    if (mode == DATE.Yesterday) {
+      currentQuestion().setUserAnswerByDate(yesterdayDate, ans);
+    } else {
+      currentQuestion().setUserAnswerByDate(date, ans);
+    }
   }
 
   int remainingCardCount() {
@@ -62,22 +75,24 @@ class TrackerBrain {
   }
 
   int getTotalCardCount() {
-    return activeCards.length;
+    return _getActiveCards().length;
   }
 
-  List<Tracker> _filterToActiveCards() {
-    return List.from(
-        trackers.where(notArchived).where(isUnanswered(this.date)));
+  List<Tracker> _filterToActiveCards(String date) {
+    return List.from(trackers.where(notArchived).where(isUnanswered(date)));
   }
 
-  void setDate(String date) {
+  void setDate({String date, String yesterdayDate}) {
     this.date = date;
+    this.yesterdayDate = yesterdayDate;
   }
 
   void updateActiveCards() {
     _index = 0;
-    this.activeCards = _filterToActiveCards();
+    this.activeCards = _filterToActiveCards(this.date);
+    this.yesterdayActiveCards = _filterToActiveCards(this.yesterdayDate);
     this.activeCards.shuffle();
+    this.yesterdayActiveCards.shuffle();
     //TODO: add setting to sort by random/accsending/added/most yes/most no/ unanswered
   }
 
@@ -133,6 +148,23 @@ class TrackerBrain {
     });
 
     return map;
+  }
+
+  //TODO: refactor this to a better implementation
+  int remainingCardCountYesterday() {
+    return yesterdayActiveCards.length;
+  }
+
+  void setMode(DATE d) {
+    this.mode = d;
+  }
+
+  List<Tracker> _getActiveCards() {
+    if (mode == DATE.Yesterday) {
+      return yesterdayActiveCards;
+    } else {
+      return activeCards;
+    }
   }
 }
 

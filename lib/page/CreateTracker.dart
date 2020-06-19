@@ -51,22 +51,24 @@ class _CreateTrackerState extends State<CreateTracker> {
             ),
             Text(kTextAfterToday,
                 style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: RaisedButton(
-                onPressed: () {
-                  if (_formKey.currentState.validate()) {
-                    widget.trackerBrain.add(myController.text.trim());
-                    widget.storage.writeBrain(widget.trackerBrain);
-                    myController.clear();
-                    FocusScope.of(context).unfocus();
-                    Scaffold.of(context).showSnackBar(SnackBar(
-                      content: Text('Tracker Created'),
-                      duration: Duration(seconds: 1),
-                    ));
-                  }
-                },
-                child: Text('Submit'),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: RaisedButton(
+                  onPressed: () {
+                    if (_formKey.currentState.validate()) {
+                      widget.trackerBrain.add(myController.text.trim());
+                      widget.storage.writeBrain(widget.trackerBrain);
+                      myController.clear();
+                      FocusScope.of(context).unfocus();
+                      Scaffold.of(context).showSnackBar(SnackBar(
+                        content: Text('Tracker Created'),
+                        duration: Duration(seconds: 1),
+                      ));
+                    }
+                  },
+                  child: Text('Submit'),
+                ),
               ),
             ),
           ],

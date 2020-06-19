@@ -26,55 +26,78 @@ class _ReviewState extends State<Review> {
     TrackerBrain trackerBrain = widget.trackerBrain;
 
     //TODO: this is bad setting date without constructor
-    String date = (new Date()).getTodayFormatted();
-    trackerBrain.setDate(date);
+    Date date = new Date();
+    trackerBrain.setDate(
+      date: date.getTodayFormatted(),
+      yesterdayDate: date.getYesterdayFormatted(),
+    );
 
     trackerBrain.updateActiveCards();
     int remainingCardCount = trackerBrain.remainingCardCount();
+    int remainingCardCountFromYesterday =
+        trackerBrain.remainingCardCountYesterday();
 
     var sortedCards = trackerBrain.sorter(SortBy.DescPercentYes);
+
+    Widget startReview(text, dateENUM, remainingCardCount) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          RaisedButton(
+            child: Text(text),
+            onPressed: remainingCardCount == 0
+                ? null
+                : () {
+                    trackerBrain.setMode(dateENUM); //TODO: very bad design
+                    Navigator.pushNamed(context, "/review", arguments: {
+                      'trackerBrain': trackerBrain,
+                      'storage': widget.storage
+                    }).then((value) {
+                      setState(() {
+                        // refresh state on pop
+                      });
+                    });
+                  },
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                remainingCardCount.toString(),
+                style: TextStyle(
+                    color: kSecondaryTextColor, fontWeight: FontWeight.bold),
+              ),
+              Text(
+                " remaining",
+                style: TextStyle(color: kSecondaryTextColor),
+              ),
+            ],
+          ),
+        ],
+      );
+    }
+
+    bool shouldHideYesterdayReviewButton() {
+      return remainingCardCountFromYesterday == 0;
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Container(
           padding: EdgeInsets.only(top: 20),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                RaisedButton(
-                  child: Text("Start Your Daily Review"),
-                  onPressed: remainingCardCount == 0
-                      ? null
-                      : () {
-                          Navigator.pushNamed(context, "/review", arguments: {
-                            'trackerBrain': trackerBrain,
-                            'storage': widget.storage
-                          }).then((value) {
-                            setState(() {
-                              // refresh state on pop
-                            });
-                          });
-                        },
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      remainingCardCount.toString(),
-                      style: TextStyle(
-                          color: kSecondaryTextColor,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      " remaining",
-                      style: TextStyle(color: kSecondaryTextColor),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+          child: Row(
+            mainAxisAlignment: shouldHideYesterdayReviewButton()
+                ? MainAxisAlignment.center
+                : MainAxisAlignment.spaceEvenly,
+            children: [
+              startReview(
+                  "Start Your Daily Review", DATE.Today, remainingCardCount),
+              shouldHideYesterdayReviewButton()
+                  ? SizedBox()
+                  : startReview("Start Yesterdays Review", DATE.Yesterday,
+                      remainingCardCountFromYesterday),
+            ],
           ),
         ),
         Container(
