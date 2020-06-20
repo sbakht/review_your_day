@@ -1,53 +1,43 @@
 import 'dart:convert';
 
+import 'package:The_Friendly_Habit_Journal/data/Answers.dart';
 import 'package:The_Friendly_Habit_Journal/data/Date.dart';
 import 'package:The_Friendly_Habit_Journal/enums.dart';
 
 class Tracker {
   String title;
   Answer bonusPointsAnswer;
-  Map<String, Answer> userResponsesByDate;
+  Answers answers;
   bool archived;
   String dateCreated;
 
   Tracker({this.title, this.bonusPointsAnswer}) {
-    this.userResponsesByDate = {};
+    this.answers = new Answers();
     this.archived = false;
     var date = new Date();
     this.dateCreated = date.getTodayFormatted();
-//    if (this.title == "eat oatmeal") {
-//      this.dateCreated = "6.10.2020";
-//      userResponsesByDate["6.16.2020"] = Answer.Yes;
-//      userResponsesByDate["6.15.2020"] = Answer.Yes;
-//      userResponsesByDate["6.11.2020"] = Answer.Yes;
-//      userResponsesByDate["6.14.2020"] = Answer.No;
-//    }
-//    if (this.title == "think about padding") {
-//      this.dateCreated = "6.10.2020";
-//      userResponsesByDate["6.16.2020"] = Answer.No;
-//    }
   }
 
   void setUserAnswerByDate(String date, Answer ans) {
-    userResponsesByDate[date] = ans;
+    answers.setAnswer(date, ans);
   }
 
   doesAnswerByDateEqual(String date, Answer ans) {
-    return this.userResponsesByDate[date] == ans;
+    return answers.getAnswer(date) == ans;
   }
 
   bool hasAnswer(date) {
-    var answer = this.userResponsesByDate[date];
+    var answer = answers.getAnswer(date);
     return answer == Answer.Yes || answer == Answer.No;
   }
 
   //TODO: make statistics class
   int getNumYes() {
-    return getKeyCount(userResponsesByDate, Answer.Yes);
+    return getKeyCount(answers, Answer.Yes);
   }
 
   int getNumNo() {
-    return getKeyCount(userResponsesByDate, Answer.No);
+    return getKeyCount(answers, Answer.No);
   }
 
   int _daysSinceCreated() {
@@ -63,28 +53,29 @@ class Tracker {
   Tracker.fromJson(Map<String, dynamic> json) {
     title = json['title'];
     dateCreated = json['created'];
-    userResponsesByDate = {};
+    answers = new Answers();
     archived = json['archived'];
     jsonDecode(json['userResponsesByDate']).forEach((key, value) {
       if (value == 1) {
-        userResponsesByDate[key] = Answer.Yes;
+        answers.setAnswer(key, Answer.Yes);
       } else if (value == 2) {
-        userResponsesByDate[key] = Answer.No;
+        answers.setAnswer(key, Answer.No);
       }
     });
   }
 
   Map<String, dynamic> toJson() {
     Map<String, int> map = {};
-    userResponsesByDate.forEach((key, value) {
-      if (value == Answer.Yes) {
-        map[key] = 1;
-      } else if (value == Answer.No) {
-        map[key] = 2;
-      } else {
-        map[key] = 0;
-      }
-    });
+    answers
+      ..getData().forEach((key, value) {
+        if (value == Answer.Yes) {
+          map[key] = 1;
+        } else if (value == Answer.No) {
+          map[key] = 2;
+        } else {
+          map[key] = 0;
+        }
+      });
     return {
       'title': title,
       'created': dateCreated,
@@ -94,9 +85,9 @@ class Tracker {
   }
 }
 
-int getKeyCount(Map map, Answer expected) {
+int getKeyCount(Answers map, Answer expected) {
   int count = 0;
-  map.forEach((date, answer) {
+  map.getData().forEach((date, answer) {
     if (answer == expected) {
       count++;
     }
