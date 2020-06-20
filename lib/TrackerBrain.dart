@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:The_Friendly_Habit_Journal/constants.dart';
+import 'package:The_Friendly_Habit_Journal/data/Date.dart';
 import 'package:The_Friendly_Habit_Journal/data/Percentage.dart';
 import 'package:The_Friendly_Habit_Journal/data/Snapshot.dart';
 import 'package:The_Friendly_Habit_Journal/data/Tracker.dart';
@@ -12,8 +13,6 @@ enum DATE { Today, Yesterday }
 
 class TrackerBrain {
   int _index = 0;
-  String date;
-  String yesterdayDate;
   Trackers trackers;
   List<Tracker> activeCards;
   List<Tracker> yesterdayActiveCards;
@@ -84,10 +83,6 @@ class TrackerBrain {
     }
   }
 
-  int remainingCardCount() {
-    return activeCards.length;
-  }
-
   int getCurrentCardIndex() {
     return _index;
   }
@@ -100,24 +95,27 @@ class TrackerBrain {
     return trackers.getUnanswered(date);
   }
 
-  void setDate({String date, String yesterdayDate}) {
-    this.date = date;
-    this.yesterdayDate = yesterdayDate;
-    this.todaySnapshot = new Snapshot(date, trackers);
-    this.yesterdaySnapshot = new Snapshot(yesterdayDate, trackers);
+  void updateDates() {
+    Date date = new Date();
+    String today = date.getTodayFormatted();
+    String yesterday = date.getYesterdayFormatted();
+    this.todaySnapshot = new Snapshot(today, trackers);
+    this.yesterdaySnapshot = new Snapshot(yesterday, trackers);
   }
 
   void updateActiveCards() {
     _index = 0;
-    this.activeCards = _filterToActiveCards(this.date);
-    this.yesterdayActiveCards = _filterToActiveCards(this.yesterdayDate);
+    this.updateDates();
+    this.activeCards = _filterToActiveCards(todaySnapshot.getDate());
+    this.yesterdayActiveCards =
+        _filterToActiveCards(yesterdaySnapshot.getDate());
     this.activeCards.shuffle();
     this.yesterdayActiveCards.shuffle();
     //TODO: add setting to sort by random/accsending/added/most yes/most no/ unanswered
   }
 
   List<Tracker> filterOutArchived() {
-    return trackers.filterOutArchived();
+    return trackers.getNotArchived();
   }
 
   List<Tracker> sorter(SortBy sortMethod) {
@@ -153,11 +151,6 @@ class TrackerBrain {
     save();
   }
 
-  //TODO: refactor this to a better implementation
-  int remainingCardCountYesterday() {
-    return yesterdayActiveCards.length;
-  }
-
   void setMode(DATE d) {
     this.mode = d;
   }
@@ -181,6 +174,14 @@ class TrackerBrain {
   static Future<TrackerBrain> fetch() async {
     TrackerDAO trackerDAO = new TrackerDAO();
     return await trackerDAO.fetch();
+  }
+
+  int getNumRemainingToday() {
+    return todaySnapshot.getNumRemaining();
+  }
+
+  int getNumRemainingYesterday() {
+    return yesterdaySnapshot.getNumRemaining();
   }
 }
 

@@ -19,4 +19,8 @@ class Snapshot {
   getDate() {
     return date;
   }
+
+  int getNumRemaining() {
+    return trackers.getUnanswered(date).length;
+  }
 }

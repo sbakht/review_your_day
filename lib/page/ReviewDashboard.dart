@@ -1,6 +1,5 @@
 import 'package:The_Friendly_Habit_Journal/TrackerBrain.dart';
 import 'package:The_Friendly_Habit_Journal/constants.dart';
-import 'package:The_Friendly_Habit_Journal/data/Date.dart';
 import 'package:The_Friendly_Habit_Journal/data/Percentage.dart';
 import 'package:The_Friendly_Habit_Journal/data/Tracker.dart';
 import 'package:The_Friendly_Habit_Journal/enums.dart';
@@ -37,17 +36,10 @@ class _ReviewState extends State<Review> {
   Widget build(BuildContext context) {
     TrackerBrain trackerBrain = widget.trackerBrain;
 
-    //TODO: this is bad setting date without constructor
-    Date date = new Date();
-    trackerBrain.setDate(
-      date: date.getTodayFormatted(),
-      yesterdayDate: date.getYesterdayFormatted(),
-    );
-
     trackerBrain.updateActiveCards();
-    int remainingCardCount = trackerBrain.remainingCardCount();
+    int numRemainingToday = trackerBrain.getNumRemainingToday();
     int remainingCardCountFromYesterday =
-        trackerBrain.remainingCardCountYesterday();
+        trackerBrain.getNumRemainingYesterday();
 
     List<Tracker> sortedCards = List.from(trackerBrain
         .sorter(SortBy.DescPercentYes)
@@ -115,7 +107,7 @@ class _ReviewState extends State<Review> {
                 : MainAxisAlignment.spaceEvenly,
             children: [
               startReview(
-                  "Start Your Daily Review", DATE.Today, remainingCardCount),
+                  "Start Your Daily Review", DATE.Today, numRemainingToday),
               shouldHideYesterdayReviewButton()
                   ? SizedBox()
                   : startReview("Start Yesterdays Review", DATE.Yesterday,

@@ -9,7 +9,7 @@ class Trackers {
     return List.from(trackers.where(notArchived).where(isUnanswered(date)));
   }
 
-  List<Tracker> filterOutArchived() {
+  List<Tracker> getNotArchived() {
     return List.from(trackers.where(notArchived));
   }
 
