@@ -1,10 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
-import 'file:///C:/Users/saad/AndroidStudioProjects/review_your_day/lib/database/TrackerDAO.dart';
-
 import '../TrackerBrain.dart';
 import '../constants.dart';
+import '../database/TrackerDAO.dart';
 import '../enums.dart';
 
 const kAnswerTextStyle = TextStyle(fontSize: 60);
@@ -107,7 +106,7 @@ class _ReviewGameState extends State<ReviewGame> {
                                 child: Container(
                                   padding: EdgeInsets.symmetric(
                                       vertical: 20, horizontal: 20),
-                                  child: Text("Did I " + item.title,
+                                  child: Text("Did I " + item.title + "?",
                                       textAlign: TextAlign.left,
                                       style: TextStyle(fontSize: 30)),
                                 ),

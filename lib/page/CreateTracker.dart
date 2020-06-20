@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'file:///C:/Users/saad/AndroidStudioProjects/review_your_day/lib/database/TrackerDAO.dart';
-
 import '../TrackerBrain.dart';
 import '../constants.dart';
+import '../database/TrackerDAO.dart';
 
 class CreateTracker extends StatefulWidget {
   final TrackerBrain trackerBrain;

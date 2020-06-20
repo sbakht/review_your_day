@@ -2,9 +2,8 @@ import 'dart:convert';
 
 import 'package:The_Friendly_Habit_Journal/TrackerBrain.dart';
 
-import 'file:///C:/Users/saad/AndroidStudioProjects/review_your_day/lib/database/LocalStorage.dart';
-
 import '../data/Tracker.dart';
+import 'LocalStorage.dart';
 
 class TrackerDAO {
   LocalStorage storage;

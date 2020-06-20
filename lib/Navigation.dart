@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'file:///C:/Users/saad/AndroidStudioProjects/review_your_day/lib/database/TrackerDAO.dart';
-
 import 'TrackerBrain.dart';
 import 'data/Tracker.dart';
+import 'database/TrackerDAO.dart';
 import 'page/CreateTracker.dart';
 import 'page/ReviewDashboard.dart';
 

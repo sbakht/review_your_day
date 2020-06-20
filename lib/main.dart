@@ -1,11 +1,10 @@
-import 'package:The_Friendly_Habit_Journal/examples/examples.dart';
 import 'package:flutter/material.dart';
-
-import 'file:///C:/Users/saad/AndroidStudioProjects/review_your_day/lib/database/TrackerDAO.dart';
 
 import 'Navigation.dart';
 import 'TrackerBrain.dart';
 import 'data/Tracker.dart';
+import 'database/TrackerDAO.dart';
+import 'examples/examples.dart';
 import 'page/CreateTracker.dart';
 import 'page/Reviewing.dart';
 import 'page/Settings.dart';
