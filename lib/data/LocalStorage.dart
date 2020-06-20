@@ -1,12 +1,8 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
 
-import '../TrackerBrain.dart';
-import '../constants.dart';
-
-class BrainStorage {
+class LocalStorage {
   Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
 
@@ -18,24 +14,18 @@ class BrainStorage {
     return File('$path/trackerbrain.txt');
   }
 
-  Future<TrackerBrain> readBrain() async {
+  Future<String> read() async {
     try {
       final file = await _localFile;
-
-      // Read the file
       String json = await file.readAsString();
-
-      return TrackerBrain.fromJson(jsonDecode(json));
+      return json;
     } catch (e) {
-      return new TrackerBrain(trackersStore);
+      return "";
     }
   }
 
-  Future<File> writeBrain(TrackerBrain trackerBrain) async {
+  Future<File> write(String json) async {
     final file = await _localFile;
-    String json = jsonEncode(trackerBrain);
-
-    // Write the file
     return file.writeAsString(json);
   }
 }

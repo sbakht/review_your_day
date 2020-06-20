@@ -1,9 +1,9 @@
+import 'package:The_Friendly_Habit_Journal/data/TrackerDAO.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
 import '../TrackerBrain.dart';
 import '../constants.dart';
-import '../data/BrainStorage.dart';
 import '../enums.dart';
 
 const kAnswerTextStyle = TextStyle(fontSize: 60);
@@ -20,7 +20,7 @@ class _ReviewGameState extends State<ReviewGame> {
   Widget build(BuildContext context) {
     Map<String, dynamic> map = ModalRoute.of(context).settings.arguments;
     TrackerBrain trackerBrain = map['trackerBrain'];
-    BrainStorage storage = map['storage'];
+    TrackerDAO storage = map['storage'];
     var index = trackerBrain.getCurrentCardIndex();
     var total = trackerBrain.getTotalCardCount();
 
@@ -131,7 +131,7 @@ class _ReviewGameState extends State<ReviewGame> {
                                           trackerBrain.answerCurrentQuestion(
                                               item, Answer.Yes);
                                           next();
-                                          storage.writeBrain(trackerBrain);
+                                          storage.save(trackerBrain);
                                         },
                                       ),
                                     ),
@@ -151,7 +151,7 @@ class _ReviewGameState extends State<ReviewGame> {
                                           trackerBrain.answerCurrentQuestion(
                                               item, Answer.No);
                                           next();
-                                          storage.writeBrain(trackerBrain);
+                                          storage.save(trackerBrain);
                                         },
                                       ),
                                     ),

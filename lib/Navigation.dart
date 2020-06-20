@@ -1,13 +1,13 @@
+import 'package:The_Friendly_Habit_Journal/data/TrackerDAO.dart';
 import 'package:flutter/material.dart';
 
 import 'TrackerBrain.dart';
-import 'data/BrainStorage.dart';
 import 'data/Tracker.dart';
 import 'page/CreateTracker.dart';
 import 'page/ReviewDashboard.dart';
 
 class Navigation extends StatefulWidget {
-  final BrainStorage storage;
+  final TrackerDAO storage;
 
   Navigation({this.storage});
 
@@ -22,7 +22,7 @@ class _NavigationState extends State<Navigation> {
   @override
   void initState() {
     super.initState();
-    widget.storage.readBrain().then((TrackerBrain brain) {
+    widget.storage.fetch().then((TrackerBrain brain) {
       setState(() {
         trackerBrain = brain;
       });

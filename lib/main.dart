@@ -1,8 +1,9 @@
+import 'package:The_Friendly_Habit_Journal/data/TrackerDAO.dart';
+import 'package:The_Friendly_Habit_Journal/examples/examples.dart';
 import 'package:flutter/material.dart';
 
 import 'Navigation.dart';
 import 'TrackerBrain.dart';
-import 'data/BrainStorage.dart';
 import 'data/Tracker.dart';
 import 'page/CreateTracker.dart';
 import 'page/Reviewing.dart';
@@ -26,13 +27,12 @@ class MyApp extends StatelessWidget {
         brightness: Brightness.dark,
 //        scaffoldBackgroundColor: Colors.black,
       ),
-      home: Navigation(storage: BrainStorage()),
+      home: Navigation(storage: TrackerDAO(trackerExamples)),
 //      initialRoute: '/',
       routes: {
 //        '/': (context) => Home(),
         '/create': (context) => CreateTracker(),
         '/review': (context) => ReviewGame(),
-//        '/review': (context) => CarouselDemo(),
         '/settings': (context) => Settings(),
       },
     );

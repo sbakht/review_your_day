@@ -1,8 +1,8 @@
+import 'package:The_Friendly_Habit_Journal/data/TrackerDAO.dart';
 import 'package:flutter/material.dart';
 
 import '../TrackerBrain.dart';
 import '../constants.dart';
-import '../data/BrainStorage.dart';
 import '../data/Date.dart';
 import '../data/Percentage.dart';
 import '../data/Tracker.dart';
@@ -10,7 +10,7 @@ import '../enums.dart';
 
 class Review extends StatefulWidget {
   final TrackerBrain trackerBrain;
-  final BrainStorage storage;
+  final TrackerDAO storage;
 
   Review({this.trackerBrain, this.storage});
 
@@ -278,7 +278,7 @@ class _ReviewState extends State<Review> {
               onPressed: () {
                 setState(() {
                   widget.trackerBrain.remove(t);
-                  widget.storage.writeBrain(widget.trackerBrain);
+                  widget.storage.save(widget.trackerBrain);
                 });
                 Navigator.of(context).pop();
               },

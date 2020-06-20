@@ -1,12 +1,12 @@
+import 'package:The_Friendly_Habit_Journal/data/TrackerDAO.dart';
 import 'package:flutter/material.dart';
 
 import '../TrackerBrain.dart';
 import '../constants.dart';
-import '../data/BrainStorage.dart';
 
 class CreateTracker extends StatefulWidget {
   final TrackerBrain trackerBrain;
-  final BrainStorage storage;
+  final TrackerDAO storage;
 
   CreateTracker({this.trackerBrain, this.storage});
 
@@ -58,7 +58,7 @@ class _CreateTrackerState extends State<CreateTracker> {
                   onPressed: () {
                     if (_formKey.currentState.validate()) {
                       widget.trackerBrain.add(myController.text.trim());
-                      widget.storage.writeBrain(widget.trackerBrain);
+                      widget.storage.save(widget.trackerBrain);
                       myController.clear();
                       FocusScope.of(context).unfocus();
                       Scaffold.of(context).showSnackBar(SnackBar(
