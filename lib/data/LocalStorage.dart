@@ -3,6 +3,10 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
 class LocalStorage {
+  String filename;
+
+  LocalStorage(this.filename);
+
   Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
 
@@ -11,7 +15,7 @@ class LocalStorage {
 
   Future<File> get _localFile async {
     final path = await _localPath;
-    return File('$path/trackerbrain.txt');
+    return File('$path/' + filename);
   }
 
   Future<String> read() async {

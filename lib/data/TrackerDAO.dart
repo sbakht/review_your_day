@@ -11,7 +11,7 @@ class TrackerDAO {
   List<Tracker> defaultExamples;
 
   TrackerDAO(List<Tracker> defaultExamples) {
-    this.storage = new LocalStorage();
+    this.storage = new LocalStorage('trackerbrain.txt');
     this.defaultExamples = defaultExamples;
   }
 
