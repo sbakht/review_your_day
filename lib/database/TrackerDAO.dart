@@ -20,6 +20,7 @@ class TrackerDAO {
 
       return TrackerBrain.fromJson(jsonDecode(json));
     } catch (e) {
+      print("Failed to fetch data");
       return TrackerBrain(defaultExamples);
     }
   }

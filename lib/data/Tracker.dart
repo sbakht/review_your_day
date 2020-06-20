@@ -53,34 +53,16 @@ class Tracker {
   Tracker.fromJson(Map<String, dynamic> json) {
     title = json['title'];
     dateCreated = json['created'];
-    answers = new Answers();
     archived = json['archived'];
-    jsonDecode(json['userResponsesByDate']).forEach((key, value) {
-      if (value == 1) {
-        answers.setAnswer(key, Answer.Yes);
-      } else if (value == 2) {
-        answers.setAnswer(key, Answer.No);
-      }
-    });
+    answers = Answers.fromJson(jsonDecode(json['userResponsesByDate']));
   }
 
   Map<String, dynamic> toJson() {
-    Map<String, int> map = {};
-    answers
-      ..getData().forEach((key, value) {
-        if (value == Answer.Yes) {
-          map[key] = 1;
-        } else if (value == Answer.No) {
-          map[key] = 2;
-        } else {
-          map[key] = 0;
-        }
-      });
     return {
       'title': title,
       'created': dateCreated,
       'archived': archived,
-      'userResponsesByDate': jsonEncode(map),
+      'userResponsesByDate': jsonEncode(answers.toJson()),
     };
   }
 }

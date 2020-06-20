@@ -18,4 +18,29 @@ class Answers {
   getData() {
     return userResponsesByDate;
   }
+
+  Answers.fromJson(Map<String, dynamic> json) {
+    userResponsesByDate = {};
+    json.forEach((key, value) {
+      if (value == 1) {
+        setAnswer(key, Answer.Yes);
+      } else if (value == 2) {
+        setAnswer(key, Answer.No);
+      }
+    });
+  }
+
+  Map<String, int> toJson() {
+    Map<String, int> map = {};
+    getData().forEach((key, value) {
+      if (value == Answer.Yes) {
+        map[key] = 1;
+      } else if (value == Answer.No) {
+        map[key] = 2;
+      } else {
+        map[key] = 0;
+      }
+    });
+    return map;
+  }
 }
