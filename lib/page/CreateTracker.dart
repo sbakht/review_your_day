@@ -1,7 +1,6 @@
+import 'package:The_Friendly_Habit_Journal/TrackerBrain.dart';
+import 'package:The_Friendly_Habit_Journal/constants.dart';
 import 'package:flutter/material.dart';
-
-import '../TrackerBrain.dart';
-import '../constants.dart';
 
 class CreateTracker extends StatefulWidget {
   final TrackerBrain trackerBrain;

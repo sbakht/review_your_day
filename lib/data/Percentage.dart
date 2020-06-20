@@ -1,4 +1,4 @@
-import 'Tracker.dart';
+import 'package:The_Friendly_Habit_Journal/data/Tracker.dart';
 
 class Percentage {
   int yes;

@@ -1,9 +1,8 @@
+import 'package:The_Friendly_Habit_Journal/TrackerBrain.dart';
+import 'package:The_Friendly_Habit_Journal/constants.dart';
+import 'package:The_Friendly_Habit_Journal/enums.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-
-import '../TrackerBrain.dart';
-import '../constants.dart';
-import '../enums.dart';
 
 const kAnswerTextStyle = TextStyle(fontSize: 60);
 

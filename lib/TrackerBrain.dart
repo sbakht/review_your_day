@@ -1,12 +1,11 @@
 import 'dart:math';
 
+import 'package:The_Friendly_Habit_Journal/constants.dart';
+import 'package:The_Friendly_Habit_Journal/data/Percentage.dart';
+import 'package:The_Friendly_Habit_Journal/data/Tracker.dart';
 import 'package:The_Friendly_Habit_Journal/database/TrackerDAO.dart';
-
-import 'constants.dart';
-import 'data/Percentage.dart';
-import 'data/Tracker.dart';
-import 'enums.dart';
-import 'examples/examples.dart';
+import 'package:The_Friendly_Habit_Journal/enums.dart';
+import 'package:The_Friendly_Habit_Journal/examples/examples.dart';
 
 enum DATE { Today, Yesterday }
 

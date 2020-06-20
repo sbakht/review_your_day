@@ -1,5 +1,5 @@
-import '../data/Tracker.dart';
-import '../enums.dart';
+import 'package:The_Friendly_Habit_Journal/data/Tracker.dart';
+import 'package:The_Friendly_Habit_Journal/enums.dart';
 
 List<Tracker> trackerExamples = [
   Tracker(title: "surf on youtube", bonusPointsAnswer: Answer.Nothing),

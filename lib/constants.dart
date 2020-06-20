@@ -1,7 +1,6 @@
+import 'package:The_Friendly_Habit_Journal/data/Tracker.dart';
+import 'package:The_Friendly_Habit_Journal/enums.dart';
 import 'package:flutter/material.dart';
-
-import 'data/Tracker.dart';
-import 'enums.dart';
 
 const kSelectedColor = Color(0xFF03A9F4);
 const kSecondaryTextColor = Colors.grey;

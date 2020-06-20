@@ -1,9 +1,8 @@
+import 'package:The_Friendly_Habit_Journal/TrackerBrain.dart';
+import 'package:The_Friendly_Habit_Journal/data/Tracker.dart';
+import 'package:The_Friendly_Habit_Journal/page/CreateTracker.dart';
+import 'package:The_Friendly_Habit_Journal/page/ReviewDashboard.dart';
 import 'package:flutter/material.dart';
-
-import 'TrackerBrain.dart';
-import 'data/Tracker.dart';
-import 'page/CreateTracker.dart';
-import 'page/ReviewDashboard.dart';
 
 class Navigation extends StatefulWidget {
   @override

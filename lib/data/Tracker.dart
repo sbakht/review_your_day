@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import '../enums.dart';
-import 'Date.dart';
+import 'package:The_Friendly_Habit_Journal/data/Date.dart';
+import 'package:The_Friendly_Habit_Journal/enums.dart';
 
 class Tracker {
   String title;

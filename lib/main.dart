@@ -1,11 +1,10 @@
+import 'package:The_Friendly_Habit_Journal/Navigation.dart';
+import 'package:The_Friendly_Habit_Journal/TrackerBrain.dart';
+import 'package:The_Friendly_Habit_Journal/data/Tracker.dart';
+import 'package:The_Friendly_Habit_Journal/page/CreateTracker.dart';
+import 'package:The_Friendly_Habit_Journal/page/Reviewing.dart';
+import 'package:The_Friendly_Habit_Journal/page/Settings.dart';
 import 'package:flutter/material.dart';
-
-import 'Navigation.dart';
-import 'TrackerBrain.dart';
-import 'data/Tracker.dart';
-import 'page/CreateTracker.dart';
-import 'page/Reviewing.dart';
-import 'page/Settings.dart';
 
 void main() {
   runApp(MyApp());
