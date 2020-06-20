@@ -10,7 +10,7 @@ class Sort {
 
   List<Tracker> sort(SortBy sortMethod) {
     //TODO: move to its own sorter class
-    List<Tracker> result = filterOutArchived();
+    List<Tracker> result = trackers.getNotArchived();
     result.sort((Tracker a, Tracker b) {
       Percentage pa = new Percentage(a);
       Percentage pb = new Percentage(b);
@@ -28,9 +28,5 @@ class Sort {
       return pb.getPercentYesExclusive().compareTo(pa.getPercentNoExclusive());
     });
     return result;
-  }
-
-  List<Tracker> filterOutArchived() {
-    return trackers.getNotArchived();
   }
 }
