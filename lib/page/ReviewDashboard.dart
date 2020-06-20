@@ -32,6 +32,12 @@ class _ReviewState extends State<Review> {
     });
   }
 
+  List<Tracker> sortAndSearch(trackerBrain) {
+    List<Tracker> sorted = trackerBrain.sort(SortBy.DescPercentYes);
+    return List.from(
+        sorted.where((t) => t.title.toLowerCase().contains(searchTerm)));
+  }
+
   @override
   Widget build(BuildContext context) {
     TrackerBrain trackerBrain = widget.trackerBrain;
@@ -41,9 +47,7 @@ class _ReviewState extends State<Review> {
     int remainingCardCountFromYesterday =
         trackerBrain.getNumRemainingYesterday();
 
-    List<Tracker> sortedCards = List.from(trackerBrain
-        .sorter(SortBy.DescPercentYes)
-        .where((t) => t.title.toLowerCase().contains(searchTerm)));
+    List<Tracker> cards = sortAndSearch(trackerBrain);
 
     Widget startReview(text, dateENUM, remainingCardCount) {
       return Column(
@@ -142,16 +146,16 @@ class _ReviewState extends State<Review> {
           ),
         ),
         Expanded(
-          child: sortedCards.length == 0
+          child: cards.length == 0
               ? Center(
                   child: Text("No Activities Found :(",
                       style: TextStyle(color: kSecondaryTextColor)))
               : ListView.builder(
                   padding: const EdgeInsets.all(5),
                   primary: true,
-                  itemCount: sortedCards.length,
+                  itemCount: cards.length,
                   itemBuilder: (BuildContext context, int index) {
-                    Tracker t = sortedCards[index];
+                    Tracker t = cards[index];
                     Percentage percentage = new Percentage(t);
                     int percentYesExcludeNA =
                         percentage.getPercentYesExclusive();

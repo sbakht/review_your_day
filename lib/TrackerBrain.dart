@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:The_Friendly_Habit_Journal/constants.dart';
 import 'package:The_Friendly_Habit_Journal/data/Date.dart';
-import 'package:The_Friendly_Habit_Journal/data/Percentage.dart';
 import 'package:The_Friendly_Habit_Journal/data/Snapshot.dart';
+import 'package:The_Friendly_Habit_Journal/data/Sort.dart';
 import 'package:The_Friendly_Habit_Journal/data/Tracker.dart';
 import 'package:The_Friendly_Habit_Journal/data/Trackers.dart';
 import 'package:The_Friendly_Habit_Journal/database/TrackerDAO.dart';
@@ -21,10 +21,12 @@ class TrackerBrain {
   DATE mode;
   Snapshot todaySnapshot;
   Snapshot yesterdaySnapshot;
+  Sort sorter;
 
   TrackerBrain(List<Tracker> trackers) {
     this.trackerDAO = new TrackerDAO();
     this.trackers = new Trackers(trackers);
+    this.sorter = new Sort(this.trackers);
     updateActiveCards();
   }
 
@@ -32,6 +34,7 @@ class TrackerBrain {
     //TODO: stop using separate constructor to remake object on load
     this.trackerDAO = new TrackerDAO();
     this.trackers = Trackers.fromJson(json);
+    this.sorter = new Sort(this.trackers);
     updateActiveCards(); //TODO: this needs to rerun (acting like constructor)
   }
 
@@ -114,30 +117,8 @@ class TrackerBrain {
     //TODO: add setting to sort by random/accsending/added/most yes/most no/ unanswered
   }
 
-  List<Tracker> filterOutArchived() {
-    return trackers.getNotArchived();
-  }
-
-  List<Tracker> sorter(SortBy sortMethod) {
-    //TODO: move to its own sorter class
-    List<Tracker> result = filterOutArchived();
-    result.sort((Tracker a, Tracker b) {
-      Percentage pa = new Percentage(a);
-      Percentage pb = new Percentage(b);
-      if (sortMethod == SortBy.DescPercentYes) {
-        return pb
-            .getPercentYesExclusive()
-            .compareTo(pa.getPercentYesExclusive());
-      } else if (sortMethod == SortBy.DescPercentNo) {
-        return pb.getPercentNoExclusive().compareTo(pa.getPercentNoExclusive());
-      } else if (sortMethod == SortBy.DescCountYes) {
-        return b.getNumYes().compareTo(a.getNumYes());
-      } else if (sortMethod == SortBy.DescCountNo) {
-        return b.getNumNo().compareTo(a.getNumNo());
-      }
-      return pb.getPercentYesExclusive().compareTo(pa.getPercentNoExclusive());
-    });
-    return result;
+  List<Tracker> sort(SortBy sortMethod) {
+    return sorter.sort(sortMethod);
   }
 
   void add(String title) {
