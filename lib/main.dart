@@ -1,6 +1,7 @@
-import 'package:The_Friendly_Habit_Journal/data/TrackerDAO.dart';
 import 'package:The_Friendly_Habit_Journal/examples/examples.dart';
 import 'package:flutter/material.dart';
+
+import 'file:///C:/Users/saad/AndroidStudioProjects/review_your_day/lib/database/TrackerDAO.dart';
 
 import 'Navigation.dart';
 import 'TrackerBrain.dart';
