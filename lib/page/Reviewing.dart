@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import '../TrackerBrain.dart';
 import '../constants.dart';
-import '../database/TrackerDAO.dart';
 import '../enums.dart';
 
 const kAnswerTextStyle = TextStyle(fontSize: 60);
@@ -20,7 +19,6 @@ class _ReviewGameState extends State<ReviewGame> {
   Widget build(BuildContext context) {
     Map<String, dynamic> map = ModalRoute.of(context).settings.arguments;
     TrackerBrain trackerBrain = map['trackerBrain'];
-    TrackerDAO storage = map['storage'];
     var index = trackerBrain.getCurrentCardIndex();
     var total = trackerBrain.getTotalCardCount();
 
@@ -131,7 +129,7 @@ class _ReviewGameState extends State<ReviewGame> {
                                           trackerBrain.answerCurrentQuestion(
                                               item, Answer.Yes);
                                           next();
-                                          storage.save(trackerBrain);
+                                          trackerBrain.save();
                                         },
                                       ),
                                     ),
@@ -151,7 +149,7 @@ class _ReviewGameState extends State<ReviewGame> {
                                           trackerBrain.answerCurrentQuestion(
                                               item, Answer.No);
                                           next();
-                                          storage.save(trackerBrain);
+                                          trackerBrain.save();
                                         },
                                       ),
                                     ),

@@ -5,14 +5,12 @@ import '../constants.dart';
 import '../data/Date.dart';
 import '../data/Percentage.dart';
 import '../data/Tracker.dart';
-import '../database/TrackerDAO.dart';
 import '../enums.dart';
 
 class Review extends StatefulWidget {
   final TrackerBrain trackerBrain;
-  final TrackerDAO storage;
 
-  Review({this.trackerBrain, this.storage});
+  Review({this.trackerBrain});
 
   @override
   _ReviewState createState() => _ReviewState();
@@ -68,7 +66,6 @@ class _ReviewState extends State<Review> {
                     trackerBrain.setMode(dateENUM); //TODO: very bad design
                     Navigator.pushNamed(context, "/review", arguments: {
                       'trackerBrain': trackerBrain,
-                      'storage': widget.storage
                     }).then((value) {
                       setState(() {
                         // refresh state on pop
@@ -278,7 +275,6 @@ class _ReviewState extends State<Review> {
               onPressed: () {
                 setState(() {
                   widget.trackerBrain.remove(t);
-                  widget.storage.save(widget.trackerBrain);
                 });
                 Navigator.of(context).pop();
               },

@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'Navigation.dart';
 import 'TrackerBrain.dart';
 import 'data/Tracker.dart';
-import 'database/TrackerDAO.dart';
-import 'examples/examples.dart';
 import 'page/CreateTracker.dart';
 import 'page/Reviewing.dart';
 import 'page/Settings.dart';
@@ -27,7 +25,7 @@ class MyApp extends StatelessWidget {
         brightness: Brightness.dark,
 //        scaffoldBackgroundColor: Colors.black,
       ),
-      home: Navigation(storage: TrackerDAO(trackerExamples)),
+      home: Navigation(),
 //      initialRoute: '/',
       routes: {
 //        '/': (context) => Home(),

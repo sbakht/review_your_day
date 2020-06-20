@@ -1,9 +1,12 @@
 import 'dart:math';
 
+import 'package:The_Friendly_Habit_Journal/database/TrackerDAO.dart';
+
 import 'constants.dart';
 import 'data/Percentage.dart';
 import 'data/Tracker.dart';
 import 'enums.dart';
+import 'examples/examples.dart';
 
 enum DATE { Today, Yesterday }
 
@@ -15,9 +18,11 @@ class TrackerBrain {
   List<Tracker> activeCards;
   List<Tracker> yesterdayActiveCards;
   List<Tracker> cards;
+  TrackerDAO trackerDAO;
   DATE mode;
 
   TrackerBrain(trackersStore) {
+    this.trackerDAO = new TrackerDAO(trackerExamples);
     this.trackers = trackersStore;
     updateActiveCards();
   }
@@ -125,13 +130,17 @@ class TrackerBrain {
   void add(String title) {
     Tracker t = Tracker(title: title, bonusPointsAnswer: Answer.Nothing);
     trackers.add(t);
+    save();
   }
 
   void remove(Tracker t) {
     trackers.remove(t);
+    save();
   }
 
   TrackerBrain.fromJson(Map<String, dynamic> json) {
+    //TODO: stop using separate constructor to remake object on load
+    this.trackerDAO = new TrackerDAO(trackerExamples);
     this.trackers = [];
     json.forEach((key, value) {
       this.trackers.add(Tracker.fromJson(value));
@@ -169,6 +178,14 @@ class TrackerBrain {
 
   bool isNextQuestionIndex(int i) {
     return i > _index;
+  }
+
+  void save() {
+    trackerDAO.save(this);
+  }
+
+  Future<TrackerBrain> fetch() async {
+    return await trackerDAO.fetch();
   }
 }
 

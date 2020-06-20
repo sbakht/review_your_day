@@ -2,15 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'TrackerBrain.dart';
 import 'data/Tracker.dart';
-import 'database/TrackerDAO.dart';
 import 'page/CreateTracker.dart';
 import 'page/ReviewDashboard.dart';
 
 class Navigation extends StatefulWidget {
-  final TrackerDAO storage;
-
-  Navigation({this.storage});
-
   @override
   _NavigationState createState() => _NavigationState();
 }
@@ -22,7 +17,7 @@ class _NavigationState extends State<Navigation> {
   @override
   void initState() {
     super.initState();
-    widget.storage.fetch().then((TrackerBrain brain) {
+    trackerBrain.fetch().then((TrackerBrain brain) {
       setState(() {
         trackerBrain = brain;
       });
@@ -88,9 +83,9 @@ class _NavigationState extends State<Navigation> {
 
   Widget buildPageView() {
     if (_index == 0) {
-      return Review(storage: widget.storage, trackerBrain: trackerBrain);
+      return Review(trackerBrain: trackerBrain);
     } else if (_index == 1) {
-      return CreateTracker(storage: widget.storage, trackerBrain: trackerBrain);
+      return CreateTracker(trackerBrain: trackerBrain);
     }
     return null;
   }
