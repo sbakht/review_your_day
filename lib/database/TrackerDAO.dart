@@ -1,17 +1,15 @@
 import 'dart:convert';
 
 import 'package:The_Friendly_Habit_Journal/TrackerBrain.dart';
-import 'package:The_Friendly_Habit_Journal/data/Tracker.dart';
 import 'package:The_Friendly_Habit_Journal/database/LocalStorage.dart';
+import 'package:The_Friendly_Habit_Journal/examples/examples.dart';
 
 class TrackerDAO {
   LocalStorage storage;
   TrackerBrain trackerBrain;
-  List<Tracker> defaultExamples;
 
-  TrackerDAO(List<Tracker> defaultExamples) {
+  TrackerDAO() {
     this.storage = new LocalStorage('trackerbrain.txt');
-    this.defaultExamples = defaultExamples;
   }
 
   Future<TrackerBrain> fetch() async {
@@ -21,7 +19,7 @@ class TrackerDAO {
       return TrackerBrain.fromJson(jsonDecode(json));
     } catch (e) {
       print("Failed to fetch data");
-      return TrackerBrain(defaultExamples);
+      return TrackerBrain(trackerExamples);
     }
   }
 

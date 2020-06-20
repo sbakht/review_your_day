@@ -2,10 +2,11 @@ import 'dart:math';
 
 import 'package:The_Friendly_Habit_Journal/constants.dart';
 import 'package:The_Friendly_Habit_Journal/data/Percentage.dart';
+import 'package:The_Friendly_Habit_Journal/data/Snapshot.dart';
 import 'package:The_Friendly_Habit_Journal/data/Tracker.dart';
+import 'package:The_Friendly_Habit_Journal/data/Trackers.dart';
 import 'package:The_Friendly_Habit_Journal/database/TrackerDAO.dart';
 import 'package:The_Friendly_Habit_Journal/enums.dart';
-import 'package:The_Friendly_Habit_Journal/examples/examples.dart';
 
 enum DATE { Today, Yesterday }
 
@@ -13,17 +14,30 @@ class TrackerBrain {
   int _index = 0;
   String date;
   String yesterdayDate;
-  List<Tracker> trackers;
+  Trackers trackers;
   List<Tracker> activeCards;
   List<Tracker> yesterdayActiveCards;
   List<Tracker> cards;
   TrackerDAO trackerDAO;
   DATE mode;
+  Snapshot todaySnapshot;
+  Snapshot yesterdaySnapshot;
 
-  TrackerBrain(trackersStore) {
-    this.trackerDAO = new TrackerDAO(trackerExamples);
-    this.trackers = trackersStore;
+  TrackerBrain(List<Tracker> trackers) {
+    this.trackerDAO = new TrackerDAO();
+    this.trackers = new Trackers(trackers);
     updateActiveCards();
+  }
+
+  TrackerBrain.fromJson(Map<String, dynamic> json) {
+    //TODO: stop using separate constructor to remake object on load
+    this.trackerDAO = new TrackerDAO();
+    this.trackers = Trackers.fromJson(json);
+    updateActiveCards(); //TODO: this needs to rerun (acting like constructor)
+  }
+
+  Map<String, dynamic> toJson() {
+    return trackers.toJson();
   }
 
   Tracker currentQuestion() {
@@ -48,9 +62,9 @@ class TrackerBrain {
 
   bool doesAnswerByDateEqual(Tracker question, Answer answer) {
     if (mode == DATE.Yesterday) {
-      return question.doesAnswerByDateEqual(yesterdayDate, answer);
+      return yesterdaySnapshot.doesAnswerEqual(question, answer);
     } else {
-      return question.doesAnswerByDateEqual(date, answer);
+      return todaySnapshot.doesAnswerEqual(question, answer);
     }
   }
 
@@ -64,9 +78,9 @@ class TrackerBrain {
 
   void answerCurrentQuestion(Tracker question, Answer ans) {
     if (mode == DATE.Yesterday) {
-      question.setUserAnswerByDate(yesterdayDate, ans);
+      yesterdaySnapshot.setAnswer(question, ans);
     } else {
-      question.setUserAnswerByDate(date, ans);
+      todaySnapshot.setAnswer(question, ans);
     }
   }
 
@@ -83,12 +97,14 @@ class TrackerBrain {
   }
 
   List<Tracker> _filterToActiveCards(String date) {
-    return List.from(trackers.where(notArchived).where(isUnanswered(date)));
+    return trackers.getUnanswered(date);
   }
 
   void setDate({String date, String yesterdayDate}) {
     this.date = date;
     this.yesterdayDate = yesterdayDate;
+    this.todaySnapshot = new Snapshot(date, trackers);
+    this.yesterdaySnapshot = new Snapshot(yesterdayDate, trackers);
   }
 
   void updateActiveCards() {
@@ -101,7 +117,7 @@ class TrackerBrain {
   }
 
   List<Tracker> filterOutArchived() {
-    return List.from(trackers.where(notArchived));
+    return trackers.filterOutArchived();
   }
 
   List<Tracker> sorter(SortBy sortMethod) {
@@ -137,27 +153,6 @@ class TrackerBrain {
     save();
   }
 
-  TrackerBrain.fromJson(Map<String, dynamic> json) {
-    //TODO: stop using separate constructor to remake object on load
-    this.trackerDAO = new TrackerDAO(trackerExamples);
-    this.trackers = [];
-    json.forEach((key, value) {
-      this.trackers.add(Tracker.fromJson(value));
-    });
-    updateActiveCards(); //TODO: this needs to rerun (acting like constructor)
-  }
-
-  Map<String, dynamic> toJson() {
-    Map<String, dynamic> map = {};
-    int i = 0;
-    this.trackers.forEach((t) {
-      map[i.toString()] = t.toJson();
-      i++;
-    });
-
-    return map;
-  }
-
   //TODO: refactor this to a better implementation
   int remainingCardCountYesterday() {
     return yesterdayActiveCards.length;
@@ -183,10 +178,10 @@ class TrackerBrain {
     trackerDAO.save(this);
   }
 
-  Future<TrackerBrain> fetch() async {
+  static Future<TrackerBrain> fetch() async {
+    TrackerDAO trackerDAO = new TrackerDAO();
     return await trackerDAO.fetch();
   }
 }
 
 bool notArchived(Tracker t) => !t.archived;
-var isUnanswered = (date) => (Tracker t) => !t.hasAnswer(date);

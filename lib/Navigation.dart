@@ -16,7 +16,7 @@ class _NavigationState extends State<Navigation> {
   @override
   void initState() {
     super.initState();
-    trackerBrain.fetch().then((TrackerBrain brain) {
+    TrackerBrain.fetch().then((TrackerBrain brain) {
       setState(() {
         trackerBrain = brain;
       });

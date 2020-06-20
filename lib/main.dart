@@ -1,6 +1,4 @@
 import 'package:The_Friendly_Habit_Journal/Navigation.dart';
-import 'package:The_Friendly_Habit_Journal/TrackerBrain.dart';
-import 'package:The_Friendly_Habit_Journal/data/Tracker.dart';
 import 'package:The_Friendly_Habit_Journal/page/CreateTracker.dart';
 import 'package:The_Friendly_Habit_Journal/page/Reviewing.dart';
 import 'package:The_Friendly_Habit_Journal/page/Settings.dart';
@@ -11,8 +9,6 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  final TrackerBrain trackerBrain = new TrackerBrain(<Tracker>[]);
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
