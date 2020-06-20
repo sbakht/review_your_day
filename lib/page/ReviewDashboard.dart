@@ -42,10 +42,12 @@ class _ReviewState extends State<Review> {
   Widget build(BuildContext context) {
     TrackerBrain trackerBrain = widget.trackerBrain;
 
-    trackerBrain.updateActiveCards();
-    int numRemainingToday = trackerBrain.getNumRemainingToday();
+    trackerBrain.updateDates();
+
+    int numRemainingToday =
+        trackerBrain.getReviewGame(DATE.Today).getNumCards();
     int remainingCardCountFromYesterday =
-        trackerBrain.getNumRemainingYesterday();
+        trackerBrain.getReviewGame(DATE.Yesterday).getNumCards();
 
     List<Tracker> cards = sortAndSearch(trackerBrain);
 
@@ -58,9 +60,9 @@ class _ReviewState extends State<Review> {
             onPressed: remainingCardCount == 0
                 ? null
                 : () {
-                    trackerBrain.setMode(dateENUM); //TODO: very bad design
                     Navigator.pushNamed(context, "/review", arguments: {
                       'trackerBrain': trackerBrain,
+                      'date': dateENUM,
                     }).then((value) {
                       setState(() {
                         // refresh state on pop

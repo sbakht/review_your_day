@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
       routes: {
 //        '/': (context) => Home(),
         '/create': (context) => CreateTracker(),
-        '/review': (context) => ReviewGame(),
+        '/review': (context) => ReviewingGame(),
         '/settings': (context) => Settings(),
       },
     );

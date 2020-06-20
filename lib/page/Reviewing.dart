@@ -1,28 +1,31 @@
 import 'package:The_Friendly_Habit_Journal/TrackerBrain.dart';
 import 'package:The_Friendly_Habit_Journal/constants.dart';
+import 'package:The_Friendly_Habit_Journal/data/ReviewGame.dart';
 import 'package:The_Friendly_Habit_Journal/enums.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
 const kAnswerTextStyle = TextStyle(fontSize: 60);
 
-class ReviewGame extends StatefulWidget {
+class ReviewingGame extends StatefulWidget {
   @override
-  _ReviewGameState createState() => _ReviewGameState();
+  _ReviewingGameState createState() => _ReviewingGameState();
 }
 
-class _ReviewGameState extends State<ReviewGame> {
+class _ReviewingGameState extends State<ReviewingGame> {
   CarouselController buttonCarouselController = CarouselController();
 
   @override
   Widget build(BuildContext context) {
     Map<String, dynamic> map = ModalRoute.of(context).settings.arguments;
     TrackerBrain trackerBrain = map['trackerBrain'];
-    var index = trackerBrain.getCurrentCardIndex();
-    var total = trackerBrain.getTotalCardCount();
+    DATE date = map['date'];
+    ReviewGame snapshot = trackerBrain.getReviewGame(date);
+    var cardIndex = snapshot.getIndex();
+    var total = snapshot.getNumCards();
 
     lastQuestionCheck() {
-      if (trackerBrain.isLastQuestion()) {
+      if (snapshot.isLastQuestion()) {
         Navigator.pop(context);
       }
     }
@@ -34,7 +37,7 @@ class _ReviewGameState extends State<ReviewGame> {
     }
 
     previous() {
-      trackerBrain.previousQuestion();
+      snapshot.previousQuestion();
       buttonCarouselController.previousPage();
     }
 
@@ -48,7 +51,7 @@ class _ReviewGameState extends State<ReviewGame> {
               margin: EdgeInsets.only(right: 10),
               child: Center(
                   child: Text("" +
-                      (index + 1).toString() +
+                      (cardIndex + 1).toString() +
                       "/" +
                       total.toString() +
                       "")),
@@ -56,20 +59,19 @@ class _ReviewGameState extends State<ReviewGame> {
             IconButton(
               icon: Icon(Icons.chevron_left),
               tooltip: 'Previous Question',
-              onPressed: trackerBrain.isFirstQuestion()
-                  ? null
-                  : () => setState(previous),
+              onPressed:
+                  snapshot.isFirstQuestion() ? null : () => setState(previous),
             ),
             IconButton(
               icon: Icon(Icons.chevron_right),
               tooltip: 'Next Question',
-              onPressed: trackerBrain.isLastQuestion() ? null : next,
+              onPressed: snapshot.isLastQuestion() ? null : next,
             ),
           ],
         ),
         body: Column(
           children: [
-            LinearProgressIndicator(value: index / total),
+            LinearProgressIndicator(value: cardIndex / total),
             Expanded(
                 child: CarouselSlider(
               carouselController: buttonCarouselController,
@@ -79,15 +81,15 @@ class _ReviewGameState extends State<ReviewGame> {
                   enableInfiniteScroll: false,
                   onPageChanged: (i, reason) {
                     setState(() {
-                      if (trackerBrain.isNextQuestionIndex(i)) {
-                        trackerBrain.nextQuestion();
+                      if (snapshot.isNextQuestionIndex(i)) {
+                        snapshot.nextQuestion();
                       } else {
-                        trackerBrain.previousQuestion();
+                        snapshot.previousQuestion();
                       }
                     });
                   }),
-              items: trackerBrain
-                  .getActiveCards()
+              items: snapshot
+                  .getCards()
                   .map((item) => Container(
                         child: Card(
                           color: Colors.black,
@@ -117,16 +119,14 @@ class _ReviewGameState extends State<ReviewGame> {
                                         child: Text(
                                           "YES",
                                           style: kAnswerTextStyle.copyWith(
-                                            color: trackerBrain
-                                                    .doesAnswerByDateEqual(
-                                                        item, Answer.Yes)
+                                            color: snapshot.doesAnswerEqual(
+                                                    item, Answer.Yes)
                                                 ? kSelectedColor
                                                 : null,
                                           ),
                                         ),
                                         onPressed: () {
-                                          trackerBrain.answerCurrentQuestion(
-                                              item, Answer.Yes);
+                                          snapshot.setAnswer(item, Answer.Yes);
                                           next();
                                           trackerBrain.save();
                                         },
@@ -137,16 +137,14 @@ class _ReviewGameState extends State<ReviewGame> {
                                         child: Text(
                                           "NO",
                                           style: kAnswerTextStyle.copyWith(
-                                            color: trackerBrain
-                                                    .doesAnswerByDateEqual(
-                                                        item, Answer.No)
+                                            color: snapshot.doesAnswerEqual(
+                                                    item, Answer.No)
                                                 ? kSelectedColor
                                                 : null,
                                           ),
                                         ),
                                         onPressed: () {
-                                          trackerBrain.answerCurrentQuestion(
-                                              item, Answer.No);
+                                          snapshot.setAnswer(item, Answer.No);
                                           next();
                                           trackerBrain.save();
                                         },
