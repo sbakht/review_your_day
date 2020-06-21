@@ -170,7 +170,7 @@ class _ReviewState extends State<Review> {
                       color:
                           index % 2 == 0 ? tableShadedColor : kBackgroundColor,
                       child: ListTile(
-                        title: Text(t.title),
+                        title: Text(capitalize(t.title)),
                         subtitle: GestureDetector(
                           child: Text("Delete", style: TextStyle(fontSize: 11)),
                           onTap: () {
@@ -281,4 +281,8 @@ class _ReviewState extends State<Review> {
       },
     );
   }
+}
+
+String capitalize(string) {
+  return "${string[0].toUpperCase()}${string.substring(1)}";
 }

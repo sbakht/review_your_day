@@ -44,7 +44,9 @@ class _ReviewingGameState extends State<ReviewingGame> {
     return Scaffold(
         //TODO: refactor into widgets, pass in the onPress to make it easier to find and modify
         appBar: AppBar(
-          title: Text("Reviewing Your Day"),
+          title: Text(date == DATE.Today
+              ? "Reviewing Your Day"
+              : "Reviewing Yesterday"),
           actions: [
             //TODO: setting to show or hide progress and/or number progress count
             Container(

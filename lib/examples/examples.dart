@@ -2,8 +2,8 @@ import 'package:The_Friendly_Habit_Journal/data/Tracker.dart';
 import 'package:The_Friendly_Habit_Journal/enums.dart';
 
 List<Tracker> trackerExamples = [
-  Tracker(title: "surf on youtube", bonusPointsAnswer: Answer.Nothing),
-  Tracker(title: "make your own activities", bonusPointsAnswer: Answer.Nothing),
-  Tracker(title: "do at least 1 push-up", bonusPointsAnswer: Answer.Nothing),
-  Tracker(title: "delete these activities", bonusPointsAnswer: Answer.Nothing),
+  Tracker(title: "use this app", bonusPointsAnswer: Answer.Nothing),
+  Tracker(
+      title: "create a new activity/habit to track",
+      bonusPointsAnswer: Answer.Nothing),
 ];
