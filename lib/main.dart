@@ -2,9 +2,13 @@ import 'package:The_Friendly_Habit_Journal/Navigation.dart';
 import 'package:The_Friendly_Habit_Journal/page/CreateTracker.dart';
 import 'package:The_Friendly_Habit_Journal/page/Reviewing.dart';
 import 'package:The_Friendly_Habit_Journal/page/Settings.dart';
+import 'package:The_Friendly_Habit_Journal/tracker_bloc.dart';
+import 'package:The_Friendly_Habit_Journal/tracker_bloc_delegate.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
+  BlocSupervisor.delegate = TrackerBlocDelegate();
   runApp(MyApp());
 }
 
@@ -20,7 +24,10 @@ class MyApp extends StatelessWidget {
         brightness: Brightness.dark,
 //        scaffoldBackgroundColor: Colors.black,
       ),
-      home: Navigation(),
+      home: BlocProvider<TrackerBloc>(
+        create: (context) => TrackerBloc(),
+        child: Navigation(),
+      ),
 //      initialRoute: '/',
       routes: {
 //        '/': (context) => Home(),

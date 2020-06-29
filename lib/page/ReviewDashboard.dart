@@ -3,7 +3,10 @@ import 'package:The_Friendly_Habit_Journal/constants.dart';
 import 'package:The_Friendly_Habit_Journal/data/Percentage.dart';
 import 'package:The_Friendly_Habit_Journal/data/Tracker.dart';
 import 'package:The_Friendly_Habit_Journal/enums.dart';
+import 'package:The_Friendly_Habit_Journal/tracker_bloc.dart';
+import 'package:The_Friendly_Habit_Journal/tracker_event.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Review extends StatefulWidget {
   final TrackerBrain trackerBrain;
@@ -40,6 +43,7 @@ class _ReviewState extends State<Review> {
 
   @override
   Widget build(BuildContext context) {
+    final TrackerBloc myBloc = BlocProvider.of<TrackerBloc>(context);
     TrackerBrain trackerBrain = widget.trackerBrain;
 
     trackerBrain.updateDates();
@@ -174,7 +178,7 @@ class _ReviewState extends State<Review> {
                         subtitle: GestureDetector(
                           child: Text("Delete", style: TextStyle(fontSize: 11)),
                           onTap: () {
-                            _deleteConfirmationDialog(context, t);
+                            _deleteConfirmationDialog(context, myBloc, t);
                           },
                         ),
                         trailing: Container(
@@ -244,7 +248,8 @@ class _ReviewState extends State<Review> {
     );
   }
 
-  Future<void> _deleteConfirmationDialog(context, Tracker t) async {
+  Future<void> _deleteConfirmationDialog(
+      context, TrackerBloc myBloc, Tracker t) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -271,7 +276,7 @@ class _ReviewState extends State<Review> {
               child: Text("Delete"),
               onPressed: () {
                 setState(() {
-                  widget.trackerBrain.remove(t);
+                  myBloc.add(new TrackerRemove(t));
                 });
                 Navigator.of(context).pop();
               },

@@ -1,6 +1,9 @@
 import 'package:The_Friendly_Habit_Journal/TrackerBrain.dart';
 import 'package:The_Friendly_Habit_Journal/constants.dart';
+import 'package:The_Friendly_Habit_Journal/tracker_bloc.dart';
+import 'package:The_Friendly_Habit_Journal/tracker_event.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CreateTracker extends StatefulWidget {
   final TrackerBrain trackerBrain;
@@ -24,6 +27,7 @@ class _CreateTrackerState extends State<CreateTracker> {
 
   @override
   Widget build(BuildContext context) {
+    final TrackerBloc myBloc = BlocProvider.of<TrackerBloc>(context);
     return Form(
       key: _formKey,
       child: Container(
@@ -54,7 +58,9 @@ class _CreateTrackerState extends State<CreateTracker> {
                 child: RaisedButton(
                   onPressed: () {
                     if (_formKey.currentState.validate()) {
-                      widget.trackerBrain.add(myController.text.trim());
+//                      widget.trackerBrain.add(myController.text.trim());
+                      myBloc.add(
+                          new TrackerAdded(title: myController.text.trim()));
                       myController.clear();
                       FocusScope.of(context).unfocus();
                       Scaffold.of(context).showSnackBar(SnackBar(

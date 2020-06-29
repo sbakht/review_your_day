@@ -1,8 +1,9 @@
 import 'package:The_Friendly_Habit_Journal/TrackerBrain.dart';
-import 'package:The_Friendly_Habit_Journal/data/Tracker.dart';
 import 'package:The_Friendly_Habit_Journal/page/CreateTracker.dart';
 import 'package:The_Friendly_Habit_Journal/page/ReviewDashboard.dart';
+import 'package:The_Friendly_Habit_Journal/tracker_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Navigation extends StatefulWidget {
   @override
@@ -11,20 +12,11 @@ class Navigation extends StatefulWidget {
 
 class _NavigationState extends State<Navigation> {
   int _index = 0;
-  TrackerBrain trackerBrain = new TrackerBrain(<Tracker>[]);
-
-  @override
-  void initState() {
-    super.initState();
-    TrackerBrain.fetch().then((TrackerBrain brain) {
-      setState(() {
-        trackerBrain = brain;
-      });
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
+    final TrackerBloc myBloc = BlocProvider.of<TrackerBloc>(context);
+
     return Scaffold(
         appBar: AppBar(
           title: Text(getTitle()),
@@ -53,7 +45,8 @@ class _NavigationState extends State<Navigation> {
 //          ],
         ),
         drawer: buildDrawer(context),
-        body: buildPageView(),
+        body: BlocBuilder<TrackerBloc, TrackerBrain>(
+            builder: (context, trackerBrain) => buildPageView(trackerBrain)),
         bottomNavigationBar: BottomNavigationBar(
           onTap: (tappedItemIndex) => setState(() {
             _index = tappedItemIndex;
@@ -80,7 +73,7 @@ class _NavigationState extends State<Navigation> {
     ];
   }
 
-  Widget buildPageView() {
+  Widget buildPageView(trackerBrain) {
     if (_index == 0) {
       return Review(trackerBrain: trackerBrain);
     } else if (_index == 1) {
@@ -91,7 +84,7 @@ class _NavigationState extends State<Navigation> {
 
   String getTitle() {
     if (_index == 0) {
-      return 'The Habit Journal';
+      return 'Daily Review';
     } else if (_index == 1) {
       return 'Track New Activity';
     }
