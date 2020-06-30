@@ -62,33 +62,14 @@ class _ReviewingGameState extends State<ReviewingGame> {
         return Scaffold(
             //TODO: refactor into widgets, pass in the onPress to make it easier to find and modify
             appBar: AppBar(
-              title: Text(date == DATE.Today
-                  ? "Reviewing Your Day"
-                  : "Reviewing Yesterday"),
-              actions: [
-                //TODO: setting to show or hide progress and/or number progress count
-                Container(
-                  margin: EdgeInsets.only(right: 10),
-                  child: Center(
-                      child: Text("" +
-                          (cardIndex + 1).toString() +
-                          "/" +
-                          total.toString() +
-                          "")),
-                ),
-                IconButton(
-                    icon: Icon(Icons.chevron_left),
-                    tooltip: 'Previous Question',
-                    onPressed: snapshot.isFirstQuestion()
-                        ? null
-                        : () => setState(previous)),
-                IconButton(
-                  icon: Icon(Icons.chevron_right),
-                  tooltip: 'Next Question',
-                  onPressed:
-                      snapshot.isLastQuestion() ? null : () => next(snapshot),
-                ),
-              ],
+              title: buildTitle(date),
+              //TODO: setting to show or hide progress and/or number progress count
+              actions: buildPagination(
+                  index: cardIndex,
+                  total: total,
+                  snapshot: snapshot,
+                  next: next,
+                  previous: previous),
             ),
             body: Column(
               children: [
@@ -189,5 +170,44 @@ class _ReviewingGameState extends State<ReviewingGame> {
             ));
       }),
     );
+  }
+
+  List<Widget> buildPagination({index, total, snapshot, next, previous}) {
+    return [
+      buildPaginationNumbers(index, total),
+      buildPaginationLeftArrow(snapshot, previous),
+      buildPaginationRightArrow(snapshot, next),
+    ];
+  }
+
+  IconButton buildPaginationRightArrow(
+      ReviewGame snapshot, next(dynamic snapshot)) {
+    return IconButton(
+      icon: Icon(Icons.chevron_right),
+      tooltip: 'Next Question',
+      onPressed: snapshot.isLastQuestion() ? null : () => next(snapshot),
+    );
+  }
+
+  IconButton buildPaginationLeftArrow(ReviewGame snapshot, previous()) {
+    return IconButton(
+        icon: Icon(Icons.chevron_left),
+        tooltip: 'Previous Question',
+        onPressed:
+            snapshot.isFirstQuestion() ? null : () => setState(previous));
+  }
+
+  Container buildPaginationNumbers(int cardIndex, int total) {
+    return Container(
+      margin: EdgeInsets.only(right: 10),
+      child: Center(
+          child: Text(
+              "" + (cardIndex + 1).toString() + "/" + total.toString() + "")),
+    );
+  }
+
+  Text buildTitle(DATE date) {
+    return Text(
+        date == DATE.Today ? "Reviewing Your Day" : "Reviewing Yesterday");
   }
 }
