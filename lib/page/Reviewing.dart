@@ -2,6 +2,7 @@ import 'package:The_Friendly_Habit_Journal/TrackerBrain.dart';
 import 'package:The_Friendly_Habit_Journal/bloc/review/bloc.dart';
 import 'package:The_Friendly_Habit_Journal/constants.dart';
 import 'package:The_Friendly_Habit_Journal/data/ReviewGame.dart';
+import 'package:The_Friendly_Habit_Journal/data/Tracker.dart';
 import 'package:The_Friendly_Habit_Journal/enums.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -77,99 +78,120 @@ class _ReviewingGameState extends State<ReviewingGame> {
                 Expanded(
                     child: CarouselSlider(
                   carouselController: buttonCarouselController,
-                  options: CarouselOptions(
-                      height: MediaQuery.of(context).size.height,
-                      enlargeCenterPage: true,
-                      enableInfiniteScroll: false,
-                      onPageChanged: (i, reason) {
-                        setState(() {
-                          if (snapshot.isNextQuestionIndex(i)) {
-                            reviewBloc.add(EventReviewNextQuestion());
-                          } else {
-                            reviewBloc.add(EventReviewPreviousQuestion());
-                          }
-                        });
-                      }),
+                  options: buildCarouselOptions(context, snapshot, reviewBloc),
                   items: snapshot
                       .getCards()
-                      .map((item) => Container(
-                            child: Card(
-                              color: Colors.black,
-                              margin: EdgeInsets.symmetric(vertical: 10),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15)),
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                    flex: 1,
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: 20, horizontal: 20),
-                                      child: Text("Did I " + item.title + "?",
-                                          textAlign: TextAlign.left,
-                                          style: TextStyle(fontSize: 30)),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 2,
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                          child: FlatButton(
-                                            child: Text(
-                                              "YES",
-                                              style: kAnswerTextStyle.copyWith(
-                                                color: snapshot.doesAnswerEqual(
-                                                        item, Answer.Yes)
-                                                    ? kSelectedColor
-                                                    : null,
-                                              ),
-                                            ),
-                                            onPressed: () {
-                                              snapshot.setAnswer(
-                                                  item, Answer.Yes);
-                                              next(snapshot);
-                                              trackerBrain.save();
-//                                                myBloc.add(TrackerSave());
-                                            },
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: FlatButton(
-                                            child: Text(
-                                              "NO",
-                                              style: kAnswerTextStyle.copyWith(
-                                                color: snapshot.doesAnswerEqual(
-                                                        item, Answer.No)
-                                                    ? kSelectedColor
-                                                    : null,
-                                              ),
-                                            ),
-                                            onPressed: () {
-                                              snapshot.setAnswer(
-                                                  item, Answer.No);
-                                              next(snapshot);
-                                              trackerBrain.save();
-//                                                myBloc.add(TrackerSave());
-                                            },
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ))
+                      .map((item) =>
+                          buildCard(item, snapshot, next, trackerBrain))
                       .toList(),
                 )),
               ],
             ));
       }),
     );
+  }
+
+  Container buildCard(Tracker item, ReviewGame snapshot, next(dynamic snapshot),
+      TrackerBrain trackerBrain) {
+    return Container(
+      child: Card(
+        color: Colors.black,
+        margin: EdgeInsets.symmetric(vertical: 10),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            buildQuestionText(item),
+            Expanded(
+              flex: 2,
+              child: Row(
+                children: [
+                  buildYES(snapshot, item, next, trackerBrain),
+                  buildNO(snapshot, item, next, trackerBrain),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Expanded buildQuestionText(Tracker item) {
+    return Expanded(
+      flex: 1,
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+        child: Text("Did I " + item.title + "?",
+            textAlign: TextAlign.left, style: TextStyle(fontSize: 30)),
+      ),
+    );
+  }
+
+  Expanded buildNO(ReviewGame snapshot, Tracker item, next(dynamic snapshot),
+      TrackerBrain trackerBrain) {
+    return Expanded(
+      child: FlatButton(
+        child: Text(
+          "NO",
+          style: kAnswerTextStyle.copyWith(
+            color: snapshot.doesAnswerEqual(item, Answer.No)
+                ? kSelectedColor
+                : null,
+          ),
+        ),
+        onPressed: () {
+          snapshot.setAnswer(item, Answer.No);
+          next(snapshot);
+          trackerBrain.save();
+//                                                myBloc.add(TrackerSave());
+        },
+      ),
+    );
+  }
+
+  Expanded buildYES(ReviewGame snapshot, Tracker item, next(dynamic snapshot),
+      TrackerBrain trackerBrain) {
+    return Expanded(
+      child: FlatButton(
+        child: Text(
+          "YES",
+          style: kAnswerTextStyle.copyWith(
+            color: snapshot.doesAnswerEqual(item, Answer.Yes)
+                ? kSelectedColor
+                : null,
+          ),
+        ),
+        onPressed: () {
+          snapshot.setAnswer(item, Answer.Yes);
+          next(snapshot);
+          trackerBrain.save();
+//                                                myBloc.add(TrackerSave());
+        },
+      ),
+    );
+  }
+
+  CarouselOptions buildCarouselOptions(
+      BuildContext context, ReviewGame snapshot, ReviewBloc reviewBloc) {
+    return CarouselOptions(
+        height: MediaQuery.of(context).size.height,
+        enlargeCenterPage: true,
+        enableInfiniteScroll: false,
+        onPageChanged: (i, reason) {
+          onCardChange(snapshot, i, reviewBloc);
+        });
+  }
+
+  void onCardChange(ReviewGame snapshot, int i, ReviewBloc reviewBloc) {
+    return setState(() {
+      if (snapshot.isNextQuestionIndex(i)) {
+        reviewBloc.add(EventReviewNextQuestion());
+      } else {
+        reviewBloc.add(EventReviewPreviousQuestion());
+      }
+    });
   }
 
   List<Widget> buildPagination({index, total, snapshot, next, previous}) {
