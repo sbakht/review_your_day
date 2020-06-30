@@ -26,6 +26,8 @@ class TrackerRemove extends TrackerEvent {
 
 class TrackerInitialized extends TrackerEvent {}
 
+class TrackerSave extends TrackerEvent {}
+
 //class TimerPaused extends TrackerEvent {}
 //
 //class TimerResumed extends TrackerEvent {}

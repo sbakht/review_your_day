@@ -1,12 +1,13 @@
 import 'package:The_Friendly_Habit_Journal/TrackerBrain.dart';
+import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_event.dart';
 import 'package:The_Friendly_Habit_Journal/constants.dart';
 import 'package:The_Friendly_Habit_Journal/data/Percentage.dart';
 import 'package:The_Friendly_Habit_Journal/data/Tracker.dart';
 import 'package:The_Friendly_Habit_Journal/enums.dart';
-import 'package:The_Friendly_Habit_Journal/tracker_bloc.dart';
-import 'package:The_Friendly_Habit_Journal/tracker_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'file:///C:/Users/saad/AndroidStudioProjects/review_your_day/lib/bloc/tracker/tracker_bloc.dart';
 
 class Review extends StatefulWidget {
   final TrackerBrain trackerBrain;

@@ -1,5 +1,5 @@
 import 'package:The_Friendly_Habit_Journal/TrackerBrain.dart';
-import 'package:The_Friendly_Habit_Journal/tracker_event.dart';
+import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_event.dart';
 import 'package:bloc/bloc.dart';
 
 class TrackerBloc extends Bloc<TrackerEvent, TrackerBrain> {
@@ -26,6 +26,9 @@ class TrackerBloc extends Bloc<TrackerEvent, TrackerBrain> {
     }
     if (event is TrackerRemove) {
       brain.remove(event.tracker);
+    }
+    if (event is TrackerSave) {
+      brain.save();
     }
   }
 }
