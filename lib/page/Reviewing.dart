@@ -3,7 +3,6 @@ import 'package:The_Friendly_Habit_Journal/bloc/review/bloc.dart';
 import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_bloc.dart';
 import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_event.dart';
 import 'package:The_Friendly_Habit_Journal/constants.dart';
-import 'package:The_Friendly_Habit_Journal/data/ReviewGame.dart';
 import 'package:The_Friendly_Habit_Journal/data/Tracker.dart';
 import 'package:The_Friendly_Habit_Journal/enums.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -64,13 +63,25 @@ class _InternalReviewState extends State<_InternalReview> {
 
   @override
   Widget build(BuildContext context) {
-    ReviewBloc reviewBloc = this.widget.reviewBloc;
-    ReviewState reviewState = this.widget.reviewState;
-    TrackerBloc trackerBloc = this.widget.trackerBloc;
+    ReviewBloc reviewBloc = this.widget.reviewBloc; // events
+    ReviewState reviewState = this.widget.reviewState; // state control
+    TrackerBloc trackerBloc = this.widget.trackerBloc; // saving
     DATE date = this.widget.date;
 
-    next(snapshot) {
-      if (snapshot.isLastQuestion()) {
+    if (reviewState is StateReviewLoading) {
+      return Container();
+    }
+    var cardIndex;
+    var total;
+    StateReviewing state;
+    if (reviewState is StateReviewing) {
+      cardIndex = reviewState.getIndex();
+      total = reviewState.getNumCards();
+      state = reviewState;
+    }
+
+    next() {
+      if (state.isLastQuestion()) {
         Navigator.pop(context);
       }
       buttonCarouselController.nextPage(
@@ -82,18 +93,6 @@ class _InternalReviewState extends State<_InternalReview> {
           duration: Duration(milliseconds: 200), curve: Curves.linear);
     }
 
-    var cardIndex = 0;
-    var total = 1;
-    ReviewGame snapshot;
-    if (reviewState is StateReviewLoading) {
-      return Container();
-    }
-    if (reviewState is StateReviewing) {
-      cardIndex = reviewState.game.getIndex();
-      total = reviewState.game.getNumCards();
-      snapshot = reviewState.game;
-    }
-
     return Scaffold(
         //TODO: refactor into widgets, pass in the onPress to make it easier to find and modify
         appBar: AppBar(
@@ -102,7 +101,7 @@ class _InternalReviewState extends State<_InternalReview> {
           actions: buildPagination(
               index: cardIndex,
               total: total,
-              snapshot: snapshot,
+              snapshot: state,
               next: next,
               previous: previous),
         ),
@@ -112,19 +111,17 @@ class _InternalReviewState extends State<_InternalReview> {
             Expanded(
                 child: CarouselSlider(
               carouselController: buttonCarouselController,
-              options: buildCarouselOptions(context, snapshot, reviewBloc),
-              items: snapshot
+              options: buildCarouselOptions(context, state),
+              items: state
                   .getCards()
-                  .map((item) =>
-                      buildCard(item, snapshot, next, trackerBloc, reviewBloc))
+                  .map((item) => buildCard(item, state, next))
                   .toList(),
             )),
           ],
         ));
   }
 
-  Container buildCard(Tracker item, ReviewGame snapshot, next(dynamic snapshot),
-      TrackerBloc trackerBloc, ReviewBloc reviewBloc) {
+  Container buildCard(Tracker item, StateReviewing snapshot, next) {
     return Container(
       child: Card(
         color: Colors.black,
@@ -139,8 +136,8 @@ class _InternalReviewState extends State<_InternalReview> {
               flex: 2,
               child: Row(
                 children: [
-                  buildYES(snapshot, item, next, trackerBloc, reviewBloc),
-                  buildNO(snapshot, item, next, trackerBloc, reviewBloc),
+                  buildYES(snapshot, item, next),
+                  buildNO(snapshot, item, next),
                 ],
               ),
             ),
@@ -161,8 +158,7 @@ class _InternalReviewState extends State<_InternalReview> {
     );
   }
 
-  Expanded buildNO(ReviewGame snapshot, Tracker item, next(dynamic snapshot),
-      TrackerBloc trackerBloc, ReviewBloc reviewBloc) {
+  Expanded buildNO(StateReviewing snapshot, Tracker item, next) {
     return Expanded(
       child: FlatButton(
         child: Text(
@@ -174,16 +170,16 @@ class _InternalReviewState extends State<_InternalReview> {
           ),
         ),
         onPressed: () {
-          reviewBloc.add(EventAnswerQuestion(tracker: item, answer: Answer.No));
-          trackerBloc.add(TrackerSave());
-          next(snapshot);
+          widget.reviewBloc
+              .add(EventAnswerQuestion(tracker: item, answer: Answer.No));
+          widget.trackerBloc.add(TrackerSave());
+          next();
         },
       ),
     );
   }
 
-  Expanded buildYES(ReviewGame snapshot, Tracker item, next(dynamic snapshot),
-      TrackerBloc trackerBloc, ReviewBloc reviewBloc) {
+  Expanded buildYES(StateReviewing snapshot, Tracker item, next) {
     return Expanded(
       child: FlatButton(
         child: Text(
@@ -195,32 +191,32 @@ class _InternalReviewState extends State<_InternalReview> {
           ),
         ),
         onPressed: () {
-          reviewBloc
+          widget.reviewBloc
               .add(EventAnswerQuestion(tracker: item, answer: Answer.Yes));
-          trackerBloc.add(TrackerSave());
-          next(snapshot);
+          widget.trackerBloc.add(TrackerSave());
+          next();
         },
       ),
     );
   }
 
   CarouselOptions buildCarouselOptions(
-      BuildContext context, ReviewGame snapshot, ReviewBloc reviewBloc) {
+      BuildContext context, StateReviewing snapshot) {
     return CarouselOptions(
         height: MediaQuery.of(context).size.height,
         enlargeCenterPage: true,
         enableInfiniteScroll: false,
         onPageChanged: (i, reason) {
-          onCardChange(snapshot, i, reviewBloc);
+          onCardChange(snapshot, i);
         });
   }
 
-  void onCardChange(ReviewGame snapshot, int i, ReviewBloc reviewBloc) {
+  void onCardChange(StateReviewing snapshot, int i) {
     return setState(() {
       if (snapshot.isNextQuestionIndex(i)) {
-        reviewBloc.add(EventReviewNextQuestion());
+        widget.reviewBloc.add(EventReviewNextQuestion());
       } else {
-        reviewBloc.add(EventReviewPreviousQuestion());
+        widget.reviewBloc.add(EventReviewPreviousQuestion());
       }
     });
   }
@@ -233,21 +229,19 @@ class _InternalReviewState extends State<_InternalReview> {
     ];
   }
 
-  IconButton buildPaginationRightArrow(
-      ReviewGame snapshot, next(dynamic snapshot)) {
+  IconButton buildPaginationRightArrow(StateReviewing snapshot, next) {
     return IconButton(
       icon: Icon(Icons.chevron_right),
       tooltip: 'Next Question',
-      onPressed: snapshot.isLastQuestion() ? null : () => next(snapshot),
+      onPressed: snapshot.isLastQuestion() ? null : () => next(),
     );
   }
 
-  IconButton buildPaginationLeftArrow(ReviewGame snapshot, previous()) {
+  IconButton buildPaginationLeftArrow(StateReviewing state, previous()) {
     return IconButton(
         icon: Icon(Icons.chevron_left),
         tooltip: 'Previous Question',
-        onPressed:
-            snapshot.isFirstQuestion() ? null : () => setState(previous));
+        onPressed: state.isFirstQuestion() ? null : () => setState(previous));
   }
 
   Container buildPaginationNumbers(int cardIndex, int total) {
