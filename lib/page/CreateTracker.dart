@@ -1,10 +1,9 @@
 import 'package:The_Friendly_Habit_Journal/TrackerBrain.dart';
+import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_bloc.dart';
 import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_event.dart';
 import 'package:The_Friendly_Habit_Journal/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'file:///C:/Users/saad/AndroidStudioProjects/review_your_day/lib/bloc/tracker/tracker_bloc.dart';
 
 class CreateTracker extends StatefulWidget {
   final TrackerBrain trackerBrain;
@@ -28,7 +27,8 @@ class _CreateTrackerState extends State<CreateTracker> {
 
   @override
   Widget build(BuildContext context) {
-    final TrackerBloc myBloc = BlocProvider.of<TrackerBloc>(context);
+    // ignore: close_sinks
+    final TrackerBloc trackerBloc = BlocProvider.of<TrackerBloc>(context);
     return Form(
       key: _formKey,
       child: Container(
@@ -60,7 +60,7 @@ class _CreateTrackerState extends State<CreateTracker> {
                   onPressed: () {
                     if (_formKey.currentState.validate()) {
 //                      widget.trackerBrain.add(myController.text.trim());
-                      myBloc.add(
+                      trackerBloc.add(
                           new TrackerAdded(title: myController.text.trim()));
                       myController.clear();
                       FocusScope.of(context).unfocus();

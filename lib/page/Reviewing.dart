@@ -1,5 +1,7 @@
 import 'package:The_Friendly_Habit_Journal/TrackerBrain.dart';
 import 'package:The_Friendly_Habit_Journal/bloc/review/bloc.dart';
+import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_bloc.dart';
+import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_event.dart';
 import 'package:The_Friendly_Habit_Journal/constants.dart';
 import 'package:The_Friendly_Habit_Journal/data/ReviewGame.dart';
 import 'package:The_Friendly_Habit_Journal/data/Tracker.dart';
@@ -16,13 +18,56 @@ class ReviewingGame extends StatefulWidget {
 }
 
 class _ReviewingGameState extends State<ReviewingGame> {
+  @override
+  Widget build(BuildContext context) {
+    // ignore: close_sinks
+    final TrackerBloc trackerBloc = BlocProvider.of<TrackerBloc>(context);
+    Map<String, dynamic> map = ModalRoute.of(context).settings.arguments;
+    TrackerBrain trackerBrain = map['trackerBrain'];
+    DATE date = map['date'];
+
+    return BlocProvider<ReviewBloc>(
+      create: (context) => ReviewBloc(trackerBrain: trackerBrain),
+      child:
+          BlocBuilder<ReviewBloc, ReviewState>(builder: (context, reviewState) {
+        // ignore: close_sinks
+        ReviewBloc reviewBloc = BlocProvider.of<ReviewBloc>(context);
+        return _InternalReview(
+            reviewBloc: reviewBloc,
+            reviewState: reviewState,
+            trackerBloc: trackerBloc,
+            date: date);
+      }),
+    );
+  }
+}
+
+class _InternalReview extends StatefulWidget {
+  final ReviewBloc reviewBloc;
+  final ReviewState reviewState;
+  final TrackerBloc trackerBloc;
+  final DATE date;
+
+  _InternalReview({
+    this.reviewBloc,
+    this.reviewState,
+    this.trackerBloc,
+    this.date,
+  });
+
+  @override
+  _InternalReviewState createState() => _InternalReviewState();
+}
+
+class _InternalReviewState extends State<_InternalReview> {
   CarouselController buttonCarouselController = CarouselController();
 
   @override
   Widget build(BuildContext context) {
-    Map<String, dynamic> map = ModalRoute.of(context).settings.arguments;
-    TrackerBrain trackerBrain = map['trackerBrain'];
-    DATE date = map['date'];
+    ReviewBloc reviewBloc = this.widget.reviewBloc;
+    ReviewState reviewState = this.widget.reviewState;
+    TrackerBloc trackerBloc = this.widget.trackerBloc;
+    DATE date = this.widget.date;
 
     lastQuestionCheck(snapshot) {
       if (snapshot.isLastQuestion()) {
@@ -41,58 +86,48 @@ class _ReviewingGameState extends State<ReviewingGame> {
           duration: Duration(milliseconds: 200), curve: Curves.linear);
     }
 
-    return BlocProvider<ReviewBloc>(
-      create: (context) => ReviewBloc(trackerBrain: trackerBrain),
-      child:
-          BlocBuilder<ReviewBloc, ReviewState>(builder: (context, reviewState) {
-        // ignore: close_sinks
-        ReviewBloc reviewBloc = BlocProvider.of<ReviewBloc>(context);
+    var cardIndex = 0;
+    var total = 1;
+    ReviewGame snapshot;
+    if (reviewState is InitialReviewState) {
+      return Container();
+    }
+    if (reviewState is ReviewingState) {
+      cardIndex = reviewState.game.getIndex();
+      total = reviewState.game.getNumCards();
+      snapshot = reviewState.game;
+    }
 
-        var cardIndex = 0;
-        var total = 1;
-        ReviewGame snapshot;
-        if (reviewState is InitialReviewState) {
-          return Container();
-        }
-        if (reviewState is ReviewingState) {
-          cardIndex = reviewState.game.getIndex();
-          total = reviewState.game.getNumCards();
-          snapshot = reviewState.game;
-        }
-
-        return Scaffold(
-            //TODO: refactor into widgets, pass in the onPress to make it easier to find and modify
-            appBar: AppBar(
-              title: buildTitle(date),
-              //TODO: setting to show or hide progress and/or number progress count
-              actions: buildPagination(
-                  index: cardIndex,
-                  total: total,
-                  snapshot: snapshot,
-                  next: next,
-                  previous: previous),
-            ),
-            body: Column(
-              children: [
-                LinearProgressIndicator(value: cardIndex / total),
-                Expanded(
-                    child: CarouselSlider(
-                  carouselController: buttonCarouselController,
-                  options: buildCarouselOptions(context, snapshot, reviewBloc),
-                  items: snapshot
-                      .getCards()
-                      .map((item) =>
-                          buildCard(item, snapshot, next, trackerBrain))
-                      .toList(),
-                )),
-              ],
-            ));
-      }),
-    );
+    return Scaffold(
+        //TODO: refactor into widgets, pass in the onPress to make it easier to find and modify
+        appBar: AppBar(
+          title: buildTitle(date),
+          //TODO: setting to show or hide progress and/or number progress count
+          actions: buildPagination(
+              index: cardIndex,
+              total: total,
+              snapshot: snapshot,
+              next: next,
+              previous: previous),
+        ),
+        body: Column(
+          children: [
+            LinearProgressIndicator(value: cardIndex / total),
+            Expanded(
+                child: CarouselSlider(
+              carouselController: buttonCarouselController,
+              options: buildCarouselOptions(context, snapshot, reviewBloc),
+              items: snapshot
+                  .getCards()
+                  .map((item) => buildCard(item, snapshot, next, trackerBloc))
+                  .toList(),
+            )),
+          ],
+        ));
   }
 
   Container buildCard(Tracker item, ReviewGame snapshot, next(dynamic snapshot),
-      TrackerBrain trackerBrain) {
+      TrackerBloc trackerBloc) {
     return Container(
       child: Card(
         color: Colors.black,
@@ -107,8 +142,8 @@ class _ReviewingGameState extends State<ReviewingGame> {
               flex: 2,
               child: Row(
                 children: [
-                  buildYES(snapshot, item, next, trackerBrain),
-                  buildNO(snapshot, item, next, trackerBrain),
+                  buildYES(snapshot, item, next, trackerBloc),
+                  buildNO(snapshot, item, next, trackerBloc),
                 ],
               ),
             ),
@@ -130,7 +165,7 @@ class _ReviewingGameState extends State<ReviewingGame> {
   }
 
   Expanded buildNO(ReviewGame snapshot, Tracker item, next(dynamic snapshot),
-      TrackerBrain trackerBrain) {
+      TrackerBloc trackerBloc) {
     return Expanded(
       child: FlatButton(
         child: Text(
@@ -144,15 +179,14 @@ class _ReviewingGameState extends State<ReviewingGame> {
         onPressed: () {
           snapshot.setAnswer(item, Answer.No);
           next(snapshot);
-          trackerBrain.save();
-//                                                myBloc.add(TrackerSave());
+          trackerBloc.add(TrackerSave());
         },
       ),
     );
   }
 
   Expanded buildYES(ReviewGame snapshot, Tracker item, next(dynamic snapshot),
-      TrackerBrain trackerBrain) {
+      TrackerBloc trackerBloc) {
     return Expanded(
       child: FlatButton(
         child: Text(
@@ -166,8 +200,7 @@ class _ReviewingGameState extends State<ReviewingGame> {
         onPressed: () {
           snapshot.setAnswer(item, Answer.Yes);
           next(snapshot);
-          trackerBrain.save();
-//                                                myBloc.add(TrackerSave());
+          trackerBloc.add(TrackerSave());
         },
       ),
     );

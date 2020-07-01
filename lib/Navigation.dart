@@ -1,10 +1,17 @@
 import 'package:The_Friendly_Habit_Journal/TrackerBrain.dart';
+import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_bloc.dart';
 import 'package:The_Friendly_Habit_Journal/page/CreateTracker.dart';
 import 'package:The_Friendly_Habit_Journal/page/ReviewDashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'file:///C:/Users/saad/AndroidStudioProjects/review_your_day/lib/bloc/tracker/tracker_bloc.dart';
+class Navigation2 extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+//    final TrackerBloc trackerBloc = BlocProvider.of<TrackerBloc>(context);
+    return Container();
+  }
+}
 
 class Navigation extends StatefulWidget {
   @override
@@ -16,7 +23,7 @@ class _NavigationState extends State<Navigation> {
 
   @override
   Widget build(BuildContext context) {
-//    final TrackerBloc myBloc = BlocProvider.of<TrackerBloc>(context);
+//    final TrackerBloc trackerBloc = BlocProvider.of<TrackerBloc>(context);
 
     return Scaffold(
         appBar: AppBar(

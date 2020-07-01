@@ -1,20 +1,25 @@
+import 'package:The_Friendly_Habit_Journal/CounterBloc.dart';
 import 'package:The_Friendly_Habit_Journal/Navigation.dart';
+import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_bloc.dart';
 import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_bloc_delegate.dart';
-import 'package:The_Friendly_Habit_Journal/page/CreateTracker.dart';
 import 'package:The_Friendly_Habit_Journal/page/Reviewing.dart';
 import 'package:The_Friendly_Habit_Journal/page/Settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'file:///C:/Users/saad/AndroidStudioProjects/review_your_day/lib/bloc/tracker/tracker_bloc.dart';
-
 void main() {
   BlocSupervisor.delegate = TrackerBlocDelegate();
-  runApp(MyApp());
+  runApp(App());
 }
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+class App extends StatefulWidget {
+  @override
+  _AppState createState() => _AppState();
+}
+
+class _AppState extends State<App> {
+  // ignore: close_sinks
+  final TrackerBloc _trackerBloc = TrackerBloc();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -25,17 +30,19 @@ class MyApp extends StatelessWidget {
         brightness: Brightness.dark,
 //        scaffoldBackgroundColor: Colors.black,
       ),
-      home: BlocProvider<TrackerBloc>(
-        create: (context) => TrackerBloc(),
-        child: Navigation(),
-      ),
-//      initialRoute: '/',
       routes: {
-//        '/': (context) => Home(),
-        '/create': (context) => CreateTracker(),
-        '/review': (context) => ReviewingGame(),
+        '/': (context) =>
+            BlocProvider.value(value: _trackerBloc, child: Navigation()),
+        '/review': (context) =>
+            BlocProvider.value(value: _trackerBloc, child: ReviewingGame()),
         '/settings': (context) => Settings(),
       },
     );
+  }
+
+  @override
+  void dispose() {
+    _trackerBloc.close();
+    super.dispose();
   }
 }
