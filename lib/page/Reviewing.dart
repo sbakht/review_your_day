@@ -27,7 +27,7 @@ class _ReviewingGameState extends State<ReviewingGame> {
     DATE date = map['date'];
 
     return BlocProvider<ReviewBloc>(
-      create: (context) => ReviewBloc(trackerBrain: trackerBrain),
+      create: (context) => ReviewBloc(trackerBrain: trackerBrain, date: date),
       child:
           BlocBuilder<ReviewBloc, ReviewState>(builder: (context, reviewState) {
         // ignore: close_sinks
@@ -69,14 +69,10 @@ class _InternalReviewState extends State<_InternalReview> {
     TrackerBloc trackerBloc = this.widget.trackerBloc;
     DATE date = this.widget.date;
 
-    lastQuestionCheck(snapshot) {
+    next(snapshot) {
       if (snapshot.isLastQuestion()) {
         Navigator.pop(context);
       }
-    }
-
-    next(snapshot) {
-      lastQuestionCheck(snapshot);
       buttonCarouselController.nextPage(
           duration: Duration(milliseconds: 200), curve: Curves.linear);
     }
@@ -89,10 +85,10 @@ class _InternalReviewState extends State<_InternalReview> {
     var cardIndex = 0;
     var total = 1;
     ReviewGame snapshot;
-    if (reviewState is InitialReviewState) {
+    if (reviewState is StateReviewLoading) {
       return Container();
     }
-    if (reviewState is ReviewingState) {
+    if (reviewState is StateReviewing) {
       cardIndex = reviewState.game.getIndex();
       total = reviewState.game.getNumCards();
       snapshot = reviewState.game;
@@ -119,7 +115,8 @@ class _InternalReviewState extends State<_InternalReview> {
               options: buildCarouselOptions(context, snapshot, reviewBloc),
               items: snapshot
                   .getCards()
-                  .map((item) => buildCard(item, snapshot, next, trackerBloc))
+                  .map((item) =>
+                      buildCard(item, snapshot, next, trackerBloc, reviewBloc))
                   .toList(),
             )),
           ],
@@ -127,7 +124,7 @@ class _InternalReviewState extends State<_InternalReview> {
   }
 
   Container buildCard(Tracker item, ReviewGame snapshot, next(dynamic snapshot),
-      TrackerBloc trackerBloc) {
+      TrackerBloc trackerBloc, ReviewBloc reviewBloc) {
     return Container(
       child: Card(
         color: Colors.black,
@@ -142,8 +139,8 @@ class _InternalReviewState extends State<_InternalReview> {
               flex: 2,
               child: Row(
                 children: [
-                  buildYES(snapshot, item, next, trackerBloc),
-                  buildNO(snapshot, item, next, trackerBloc),
+                  buildYES(snapshot, item, next, trackerBloc, reviewBloc),
+                  buildNO(snapshot, item, next, trackerBloc, reviewBloc),
                 ],
               ),
             ),
@@ -165,7 +162,7 @@ class _InternalReviewState extends State<_InternalReview> {
   }
 
   Expanded buildNO(ReviewGame snapshot, Tracker item, next(dynamic snapshot),
-      TrackerBloc trackerBloc) {
+      TrackerBloc trackerBloc, ReviewBloc reviewBloc) {
     return Expanded(
       child: FlatButton(
         child: Text(
@@ -177,16 +174,16 @@ class _InternalReviewState extends State<_InternalReview> {
           ),
         ),
         onPressed: () {
-          snapshot.setAnswer(item, Answer.No);
-          next(snapshot);
+          reviewBloc.add(EventAnswerQuestion(tracker: item, answer: Answer.No));
           trackerBloc.add(TrackerSave());
+          next(snapshot);
         },
       ),
     );
   }
 
   Expanded buildYES(ReviewGame snapshot, Tracker item, next(dynamic snapshot),
-      TrackerBloc trackerBloc) {
+      TrackerBloc trackerBloc, ReviewBloc reviewBloc) {
     return Expanded(
       child: FlatButton(
         child: Text(
@@ -198,9 +195,10 @@ class _InternalReviewState extends State<_InternalReview> {
           ),
         ),
         onPressed: () {
-          snapshot.setAnswer(item, Answer.Yes);
-          next(snapshot);
+          reviewBloc
+              .add(EventAnswerQuestion(tracker: item, answer: Answer.Yes));
           trackerBloc.add(TrackerSave());
+          next(snapshot);
         },
       ),
     );

@@ -5,20 +5,26 @@ abstract class ReviewState extends Equatable {
   const ReviewState();
 }
 
-class InitialReviewState extends ReviewState {
+class StateReviewLoading extends ReviewState {
   final ReviewGame game;
 
-  InitialReviewState({this.game});
+  StateReviewLoading({this.game});
 
   @override
   List<Object> get props => [];
 }
 
-class ReviewingState extends ReviewState {
+class StateReviewing extends ReviewState {
   final ReviewGame game;
 
-  ReviewingState({this.game});
+  StateReviewing({this.game});
 
   @override
   List<Object> get props => [];
+}
+
+class StateReviewFinished extends ReviewState {
+  @override
+  // TODO: implement props
+  List<Object> get props => throw UnimplementedError();
 }

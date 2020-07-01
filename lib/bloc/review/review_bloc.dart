@@ -8,13 +8,13 @@ import './bloc.dart';
 
 class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
   TrackerBrain trackerBrain;
-  final DATE date = DATE.Today;
+  final DATE date;
   @override
-  ReviewState get initialState => InitialReviewState();
+  ReviewState get initialState => StateReviewLoading();
 
-  ReviewBloc({this.trackerBrain}) {
+  ReviewBloc({this.trackerBrain, this.date}) {
     //TODO: fix this hardcoded today
-    add(EventReviewStart(date: DATE.Today));
+    add(EventReviewStart(date: date));
   }
 
   @override
@@ -23,17 +23,22 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
   ) async* {
     if (event is EventReviewStart) {
       //TODO: this isnt being used right now, constructor is calling this
-      yield ReviewingState(game: trackerBrain.getReviewGame(event.date));
+      yield StateReviewing(game: trackerBrain.getReviewGame(event.date));
     }
     if (event is EventReviewNextQuestion) {
       ReviewGame game = trackerBrain.getReviewGame(date);
       game.nextQuestion();
-      yield ReviewingState(game: game);
+      yield StateReviewing(game: game);
     }
     if (event is EventReviewPreviousQuestion) {
       ReviewGame game = trackerBrain.getReviewGame(date);
       game.previousQuestion();
-      yield ReviewingState(game: game);
+      yield StateReviewing(game: game);
+    }
+    if (event is EventAnswerQuestion) {
+      ReviewGame game = trackerBrain.getReviewGame(date);
+      game.setAnswer(event.tracker, event.answer);
+      yield StateReviewing(game: game);
     }
   }
 }
