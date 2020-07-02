@@ -97,7 +97,7 @@ class _InternalReviewState extends State<_InternalReview> {
             Expanded(
                 child: CarouselSlider(
               carouselController: buttonCarouselController,
-              options: buildCarouselOptions(context, state),
+              options: buildCarouselOptions(context, state.cardIndex),
               items: () {
                 var i = 0;
                 return state.cards
@@ -139,40 +139,37 @@ class _InternalReviewState extends State<_InternalReview> {
     );
   }
 
-  Expanded buildQuestionText(Tracker item) {
-    return Expanded(
-      flex: 1,
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-        child: Text("Did I " + item.title + "?",
-            textAlign: TextAlign.left, style: TextStyle(fontSize: 30)),
-      ),
-    );
-  }
-
-  CarouselOptions buildCarouselOptions(
-      BuildContext context, StateReviewing snapshot) {
+  CarouselOptions buildCarouselOptions(BuildContext context, int cardIndex) {
     return CarouselOptions(
         height: MediaQuery.of(context).size.height,
         enlargeCenterPage: true,
         enableInfiniteScroll: false,
         onPageChanged: (i, reason) {
-          onCardChange(snapshot, i);
+          onCardChange(cardIndex, i);
         });
   }
 
-  void onCardChange(StateReviewing snapshot, int i) {
-    return setState(() {
-      if (snapshot.isNextQuestionIndex(i)) {
-        widget.reviewBloc.add(EventReviewNextQuestion());
-      } else {
-        widget.reviewBloc.add(EventReviewPreviousQuestion());
-      }
-    });
+  void onCardChange(int cardIndex, int i) {
+    if (i > cardIndex) {
+      widget.reviewBloc.add(EventReviewNextQuestion());
+    } else {
+      widget.reviewBloc.add(EventReviewPreviousQuestion());
+    }
   }
+}
 
-  Text buildTitle(DATE date) {
-    return Text(
-        date == DATE.Today ? "Reviewing Your Day" : "Reviewing Yesterday");
-  }
+Expanded buildQuestionText(Tracker item) {
+  return Expanded(
+    flex: 1,
+    child: Container(
+      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+      child: Text("Did I " + item.title + "?",
+          textAlign: TextAlign.left, style: TextStyle(fontSize: 30)),
+    ),
+  );
+}
+
+Text buildTitle(DATE date) {
+  return Text(
+      date == DATE.Today ? "Reviewing Your Day" : "Reviewing Yesterday");
 }
