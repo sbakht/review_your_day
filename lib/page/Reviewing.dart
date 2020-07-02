@@ -1,7 +1,6 @@
 import 'package:The_Friendly_Habit_Journal/TrackerBrain.dart';
 import 'package:The_Friendly_Habit_Journal/bloc/review/bloc.dart';
 import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_bloc.dart';
-import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_event.dart';
 import 'package:The_Friendly_Habit_Journal/constants.dart';
 import 'package:The_Friendly_Habit_Journal/data/Tracker.dart';
 import 'package:The_Friendly_Habit_Journal/enums.dart';
@@ -26,16 +25,14 @@ class _ReviewingGameState extends State<ReviewingGame> {
     DATE date = map['date'];
 
     return BlocProvider<ReviewBloc>(
-      create: (context) => ReviewBloc(trackerBrain: trackerBrain, date: date),
+      create: (context) => ReviewBloc(
+          trackerBloc: trackerBloc, trackerBrain: trackerBrain, date: date),
       child:
           BlocBuilder<ReviewBloc, ReviewState>(builder: (context, reviewState) {
         // ignore: close_sinks
         ReviewBloc reviewBloc = BlocProvider.of<ReviewBloc>(context);
         return _InternalReview(
-            reviewBloc: reviewBloc,
-            reviewState: reviewState,
-            trackerBloc: trackerBloc,
-            date: date);
+            reviewBloc: reviewBloc, reviewState: reviewState, date: date);
       }),
     );
   }
@@ -44,13 +41,11 @@ class _ReviewingGameState extends State<ReviewingGame> {
 class _InternalReview extends StatefulWidget {
   final ReviewBloc reviewBloc;
   final ReviewState reviewState;
-  final TrackerBloc trackerBloc;
   final DATE date;
 
   _InternalReview({
     this.reviewBloc,
     this.reviewState,
-    this.trackerBloc,
     this.date,
   });
 
@@ -63,9 +58,7 @@ class _InternalReviewState extends State<_InternalReview> {
 
   @override
   Widget build(BuildContext context) {
-    ReviewBloc reviewBloc = this.widget.reviewBloc; // events
-    ReviewState reviewState = this.widget.reviewState; // state control
-    TrackerBloc trackerBloc = this.widget.trackerBloc; // saving
+    ReviewState reviewState = this.widget.reviewState;
     DATE date = this.widget.date;
 
     if (reviewState is StateReviewLoading) {
@@ -172,7 +165,6 @@ class _InternalReviewState extends State<_InternalReview> {
         onPressed: () {
           widget.reviewBloc
               .add(EventAnswerQuestion(tracker: item, answer: Answer.No));
-          widget.trackerBloc.add(TrackerSave());
           next();
         },
       ),
@@ -193,7 +185,6 @@ class _InternalReviewState extends State<_InternalReview> {
         onPressed: () {
           widget.reviewBloc
               .add(EventAnswerQuestion(tracker: item, answer: Answer.Yes));
-          widget.trackerBloc.add(TrackerSave());
           next();
         },
       ),
