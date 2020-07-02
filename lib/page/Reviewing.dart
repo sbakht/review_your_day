@@ -1,8 +1,6 @@
 import 'package:The_Friendly_Habit_Journal/TrackerBrain.dart';
 import 'package:The_Friendly_Habit_Journal/bloc/review/bloc.dart';
-import 'package:The_Friendly_Habit_Journal/data/Tracker.dart';
-import 'package:The_Friendly_Habit_Journal/enums.dart';
-import 'package:The_Friendly_Habit_Journal/widgets/YesNoButtons.dart';
+import 'package:The_Friendly_Habit_Journal/widgets/Card.dart';
 import 'package:The_Friendly_Habit_Journal/widgets/pagination.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -80,73 +78,58 @@ class _InternalReviewState extends State<_InternalReview> {
     }
 
     return Scaffold(
-        //TODO: refactor into widgets, pass in the onPress to make it easier to find and modify
-        appBar: AppBar(
-          title: buildTitle(date),
-          //TODO: setting to show or hide progress and/or number progress count
-          actions: buildPagination(
-              index: cardIndex,
-              total: total,
-              snapshot: state,
-              next: next,
-              previous: previous),
-        ),
-        body: Column(
-          children: [
-            LinearProgressIndicator(value: cardIndex / total),
-            Expanded(
-                child: CarouselSlider(
+      //TODO: refactor into widgets, pass in the onPress to make it easier to find and modify
+      appBar: AppBar(
+        title: buildTitle(date),
+        //TODO: setting to show or hide progress and/or number progress count
+        actions: buildPagination(
+            index: cardIndex,
+            total: total,
+            snapshot: state,
+            next: next,
+            previous: previous),
+      ),
+      body: Column(
+        children: [
+          LinearProgressIndicator(value: cardIndex / total),
+          Expanded(
+            child: CarouselSlider(
               carouselController: buttonCarouselController,
               options: buildCarouselOptions(context, state.cardIndex),
-              items: () {
-                var i = 0;
-                return state.cards
-                    .map((item) => buildCard(item, state.answers[i++], next))
-                    .toList();
-              }(),
-            )),
-          ],
-        ));
-  }
-
-  Container buildCard(Tracker item, Answer answer, next) {
-    return Container(
-      child: Card(
-        color: Colors.black,
-        margin: EdgeInsets.symmetric(vertical: 10),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            buildQuestionText(item),
-            Expanded(
-              flex: 2,
-              child: Row(
-                children: buildYesNoButtons(
-                  answer: answer,
-                  onPress: (ans) {
-                    widget.reviewBloc
-                        .add(EventAnswerQuestion(tracker: item, answer: ans));
-                    next();
-                  },
-                ),
-              ),
+              items: buildItems(state, next),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
+  List<Widget> buildItems(StateReviewing state, Function next) {
+    var i = 0;
+    return state.cards
+        .map(
+          (item) => buildCard(
+            questionText: item.title,
+            answer: state.answers[i++],
+            onAnswer: (ans) {
+              widget.reviewBloc
+                  .add(EventAnswerQuestion(tracker: item, answer: ans));
+              next();
+            },
+          ),
+        )
+        .toList();
+  }
+
   CarouselOptions buildCarouselOptions(BuildContext context, int cardIndex) {
     return CarouselOptions(
-        height: MediaQuery.of(context).size.height,
-        enlargeCenterPage: true,
-        enableInfiniteScroll: false,
-        onPageChanged: (i, reason) {
-          onCardChange(cardIndex, i);
-        });
+      height: MediaQuery.of(context).size.height,
+      enlargeCenterPage: true,
+      enableInfiniteScroll: false,
+      onPageChanged: (i, reason) {
+        onCardChange(cardIndex, i);
+      },
+    );
   }
 
   void onCardChange(int cardIndex, int i) {
@@ -156,17 +139,6 @@ class _InternalReviewState extends State<_InternalReview> {
       widget.reviewBloc.add(EventReviewPreviousQuestion());
     }
   }
-}
-
-Expanded buildQuestionText(Tracker item) {
-  return Expanded(
-    flex: 1,
-    child: Container(
-      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-      child: Text("Did I " + item.title + "?",
-          textAlign: TextAlign.left, style: TextStyle(fontSize: 30)),
-    ),
-  );
 }
 
 Text buildTitle(DATE date) {
