@@ -1,14 +1,12 @@
 import 'package:The_Friendly_Habit_Journal/TrackerBrain.dart';
 import 'package:The_Friendly_Habit_Journal/bloc/review/bloc.dart';
-import 'package:The_Friendly_Habit_Journal/constants.dart';
 import 'package:The_Friendly_Habit_Journal/data/Tracker.dart';
 import 'package:The_Friendly_Habit_Journal/enums.dart';
+import 'package:The_Friendly_Habit_Journal/widgets/YesNoButtons.dart';
 import 'package:The_Friendly_Habit_Journal/widgets/pagination.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-const kAnswerTextStyle = TextStyle(fontSize: 60);
 
 class ReviewingGame extends StatefulWidget {
   @override
@@ -103,7 +101,7 @@ class _InternalReviewState extends State<_InternalReview> {
               items: () {
                 var i = 0;
                 return state.cards
-                    .map((item) => buildCard(item, state, next, i++))
+                    .map((item) => buildCard(item, state.answers[i++], next))
                     .toList();
               }(),
             )),
@@ -111,7 +109,7 @@ class _InternalReviewState extends State<_InternalReview> {
         ));
   }
 
-  Container buildCard(Tracker item, StateReviewing snapshot, next, int i) {
+  Container buildCard(Tracker item, Answer answer, next) {
     return Container(
       child: Card(
         color: Colors.black,
@@ -125,10 +123,14 @@ class _InternalReviewState extends State<_InternalReview> {
             Expanded(
               flex: 2,
               child: Row(
-                children: [
-                  buildYES(snapshot, item, next, snapshot.answers[i]),
-                  buildNO(snapshot, item, next, snapshot.answers[i]),
-                ],
+                children: buildYesNoButtons(
+                  answer: answer,
+                  onPress: (ans) {
+                    widget.reviewBloc
+                        .add(EventAnswerQuestion(tracker: item, answer: ans));
+                    next();
+                  },
+                ),
               ),
             ),
           ],
@@ -144,43 +146,6 @@ class _InternalReviewState extends State<_InternalReview> {
         padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
         child: Text("Did I " + item.title + "?",
             textAlign: TextAlign.left, style: TextStyle(fontSize: 30)),
-      ),
-    );
-  }
-
-  Expanded buildNO(StateReviewing snapshot, Tracker item, next, Answer answer) {
-    return Expanded(
-      child: FlatButton(
-        child: Text(
-          "NO",
-          style: kAnswerTextStyle.copyWith(
-            color: answer == Answer.No ? kSelectedColor : null,
-          ),
-        ),
-        onPressed: () {
-          widget.reviewBloc
-              .add(EventAnswerQuestion(tracker: item, answer: Answer.No));
-          next();
-        },
-      ),
-    );
-  }
-
-  Expanded buildYES(
-      StateReviewing snapshot, Tracker item, next, Answer answer) {
-    return Expanded(
-      child: FlatButton(
-        child: Text(
-          "YES",
-          style: kAnswerTextStyle.copyWith(
-            color: answer == Answer.Yes ? kSelectedColor : null,
-          ),
-        ),
-        onPressed: () {
-          widget.reviewBloc
-              .add(EventAnswerQuestion(tracker: item, answer: Answer.Yes));
-          next();
-        },
       ),
     );
   }
