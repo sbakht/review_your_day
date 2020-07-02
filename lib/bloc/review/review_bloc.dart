@@ -49,6 +49,7 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
       numCards: game.getNumCards(),
       cardIndex: game.getIndex(),
       cards: game.getCards(),
+      answers: game.getAnswers(),
     );
   }
 }

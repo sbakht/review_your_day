@@ -19,6 +19,7 @@ class StateReviewing extends ReviewState {
   final int numCards;
   final int cardIndex;
   final List<Tracker> cards;
+  final List<Answer> answers;
 
   StateReviewing({
     this.game,
@@ -27,15 +28,19 @@ class StateReviewing extends ReviewState {
     this.numCards,
     this.cardIndex,
     this.cards,
+    this.answers,
   });
 
   @override
-  List<Object> get props =>
-      [game, isFirstQuestion, isLastQuestion, numCards, cardIndex, cards];
-
-  doesAnswerEqual(Tracker question, Answer answer) {
-    return game.doesAnswerEqual(question, answer);
-  }
+  List<Object> get props => [
+        game,
+        isFirstQuestion,
+        isLastQuestion,
+        numCards,
+        cardIndex,
+        cards,
+        answers
+      ];
 
   bool isNextQuestionIndex(int i) {
     return game.isNextQuestionIndex(i);

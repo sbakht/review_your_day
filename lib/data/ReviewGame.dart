@@ -55,4 +55,8 @@ class ReviewGame {
   bool doesAnswerEqual(Tracker question, Answer answer) {
     return question.doesAnswerByDateEqual(date, answer);
   }
+
+  List<Answer> getAnswers() {
+    return List.from(cards.map((card) => card.getAnswer(date)));
+  }
 }

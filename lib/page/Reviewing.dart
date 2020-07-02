@@ -100,15 +100,18 @@ class _InternalReviewState extends State<_InternalReview> {
                 child: CarouselSlider(
               carouselController: buttonCarouselController,
               options: buildCarouselOptions(context, state),
-              items: state.cards
-                  .map((item) => buildCard(item, state, next))
-                  .toList(),
+              items: () {
+                var i = 0;
+                return state.cards
+                    .map((item) => buildCard(item, state, next, i++))
+                    .toList();
+              }(),
             )),
           ],
         ));
   }
 
-  Container buildCard(Tracker item, StateReviewing snapshot, next) {
+  Container buildCard(Tracker item, StateReviewing snapshot, next, int i) {
     return Container(
       child: Card(
         color: Colors.black,
@@ -123,8 +126,8 @@ class _InternalReviewState extends State<_InternalReview> {
               flex: 2,
               child: Row(
                 children: [
-                  buildYES(snapshot, item, next),
-                  buildNO(snapshot, item, next),
+                  buildYES(snapshot, item, next, snapshot.answers[i]),
+                  buildNO(snapshot, item, next, snapshot.answers[i]),
                 ],
               ),
             ),
@@ -145,15 +148,13 @@ class _InternalReviewState extends State<_InternalReview> {
     );
   }
 
-  Expanded buildNO(StateReviewing snapshot, Tracker item, next) {
+  Expanded buildNO(StateReviewing snapshot, Tracker item, next, Answer answer) {
     return Expanded(
       child: FlatButton(
         child: Text(
           "NO",
           style: kAnswerTextStyle.copyWith(
-            color: snapshot.doesAnswerEqual(item, Answer.No)
-                ? kSelectedColor
-                : null,
+            color: answer == Answer.No ? kSelectedColor : null,
           ),
         ),
         onPressed: () {
@@ -165,15 +166,14 @@ class _InternalReviewState extends State<_InternalReview> {
     );
   }
 
-  Expanded buildYES(StateReviewing snapshot, Tracker item, next) {
+  Expanded buildYES(
+      StateReviewing snapshot, Tracker item, next, Answer answer) {
     return Expanded(
       child: FlatButton(
         child: Text(
           "YES",
           style: kAnswerTextStyle.copyWith(
-            color: snapshot.doesAnswerEqual(item, Answer.Yes)
-                ? kSelectedColor
-                : null,
+            color: answer == Answer.Yes ? kSelectedColor : null,
           ),
         ),
         onPressed: () {

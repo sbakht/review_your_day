@@ -26,8 +26,12 @@ class Tracker {
     return answers.getAnswer(date) == ans;
   }
 
+  Answer getAnswer(date) {
+    return answers.getAnswer(date);
+  }
+
   bool hasAnswer(date) {
-    var answer = answers.getAnswer(date);
+    var answer = getAnswer(date);
     return answer == Answer.Yes || answer == Answer.No;
   }
 
