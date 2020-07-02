@@ -7,45 +7,38 @@ abstract class ReviewState extends Equatable {
   const ReviewState();
 }
 
-class StateReviewLoading extends ReviewState {
+class StateReviewInit extends ReviewState {
   @override
   List<Object> get props => [];
 }
 
 class StateReviewing extends ReviewState {
   final ReviewGame game;
+  final bool isFirstQuestion;
+  final bool isLastQuestion;
+  final int numCards;
+  final int cardIndex;
+  final List<Tracker> cards;
 
-  StateReviewing({this.game});
+  StateReviewing({
+    this.game,
+    this.isFirstQuestion,
+    this.isLastQuestion,
+    this.numCards,
+    this.cardIndex,
+    this.cards,
+  });
 
   @override
-  List<Object> get props => [];
-
-  getIndex() {
-    return game.getIndex();
-  }
-
-  getNumCards() {
-    return game.getNumCards();
-  }
-
-  isFirstQuestion() {
-    return game.isFirstQuestion();
-  }
+  List<Object> get props =>
+      [game, isFirstQuestion, isLastQuestion, numCards, cardIndex, cards];
 
   doesAnswerEqual(Tracker question, Answer answer) {
     return game.doesAnswerEqual(question, answer);
   }
 
-  List<Tracker> getCards() {
-    return game.getCards();
-  }
-
   bool isNextQuestionIndex(int i) {
     return game.isNextQuestionIndex(i);
-  }
-
-  isLastQuestion() {
-    return game.isLastQuestion();
   }
 }
 

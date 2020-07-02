@@ -1,9 +1,9 @@
 import 'package:The_Friendly_Habit_Journal/TrackerBrain.dart';
 import 'package:The_Friendly_Habit_Journal/bloc/review/bloc.dart';
-import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_bloc.dart';
 import 'package:The_Friendly_Habit_Journal/constants.dart';
 import 'package:The_Friendly_Habit_Journal/data/Tracker.dart';
 import 'package:The_Friendly_Habit_Journal/enums.dart';
+import 'package:The_Friendly_Habit_Journal/widgets/pagination.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,23 +18,18 @@ class ReviewingGame extends StatefulWidget {
 class _ReviewingGameState extends State<ReviewingGame> {
   @override
   Widget build(BuildContext context) {
-    // ignore: close_sinks
-    final TrackerBloc trackerBloc = BlocProvider.of<TrackerBloc>(context);
     Map<String, dynamic> map = ModalRoute.of(context).settings.arguments;
-    TrackerBrain trackerBrain = map['trackerBrain'];
     DATE date = map['date'];
 
-    return BlocProvider<ReviewBloc>(
-      create: (context) => ReviewBloc(
-          trackerBloc: trackerBloc, trackerBrain: trackerBrain, date: date),
-      child:
-          BlocBuilder<ReviewBloc, ReviewState>(builder: (context, reviewState) {
-        // ignore: close_sinks
-        ReviewBloc reviewBloc = BlocProvider.of<ReviewBloc>(context);
-        return _InternalReview(
-            reviewBloc: reviewBloc, reviewState: reviewState, date: date);
-      }),
-    );
+    // ignore: close_sinks
+    final ReviewBloc reviewBloc = BlocProvider.of<ReviewBloc>(context);
+    reviewBloc.add(EventReviewStart(date: date));
+
+    return BlocBuilder<ReviewBloc, ReviewState>(
+        builder: (context, reviewState) {
+      return _InternalReview(
+          reviewBloc: reviewBloc, reviewState: reviewState, date: date);
+    });
   }
 }
 
@@ -61,20 +56,20 @@ class _InternalReviewState extends State<_InternalReview> {
     ReviewState reviewState = this.widget.reviewState;
     DATE date = this.widget.date;
 
-    if (reviewState is StateReviewLoading) {
+    if (reviewState is StateReviewInit) {
       return Container();
     }
     var cardIndex;
     var total;
     StateReviewing state;
     if (reviewState is StateReviewing) {
-      cardIndex = reviewState.getIndex();
-      total = reviewState.getNumCards();
+      cardIndex = reviewState.cardIndex;
+      total = reviewState.numCards;
       state = reviewState;
     }
 
     next() {
-      if (state.isLastQuestion()) {
+      if (state.isLastQuestion) {
         Navigator.pop(context);
       }
       buttonCarouselController.nextPage(
@@ -105,8 +100,7 @@ class _InternalReviewState extends State<_InternalReview> {
                 child: CarouselSlider(
               carouselController: buttonCarouselController,
               options: buildCarouselOptions(context, state),
-              items: state
-                  .getCards()
+              items: state.cards
                   .map((item) => buildCard(item, state, next))
                   .toList(),
             )),
@@ -210,38 +204,6 @@ class _InternalReviewState extends State<_InternalReview> {
         widget.reviewBloc.add(EventReviewPreviousQuestion());
       }
     });
-  }
-
-  List<Widget> buildPagination({index, total, snapshot, next, previous}) {
-    return [
-      buildPaginationNumbers(index, total),
-      buildPaginationLeftArrow(snapshot, previous),
-      buildPaginationRightArrow(snapshot, next),
-    ];
-  }
-
-  IconButton buildPaginationRightArrow(StateReviewing snapshot, next) {
-    return IconButton(
-      icon: Icon(Icons.chevron_right),
-      tooltip: 'Next Question',
-      onPressed: snapshot.isLastQuestion() ? null : () => next(),
-    );
-  }
-
-  IconButton buildPaginationLeftArrow(StateReviewing state, previous()) {
-    return IconButton(
-        icon: Icon(Icons.chevron_left),
-        tooltip: 'Previous Question',
-        onPressed: state.isFirstQuestion() ? null : () => setState(previous));
-  }
-
-  Container buildPaginationNumbers(int cardIndex, int total) {
-    return Container(
-      margin: EdgeInsets.only(right: 10),
-      child: Center(
-          child: Text(
-              "" + (cardIndex + 1).toString() + "/" + total.toString() + "")),
-    );
   }
 
   Text buildTitle(DATE date) {

@@ -1,4 +1,5 @@
 import 'package:The_Friendly_Habit_Journal/Navigation.dart';
+import 'package:The_Friendly_Habit_Journal/bloc/review/bloc.dart';
 import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_bloc.dart';
 import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_bloc_delegate.dart';
 import 'package:The_Friendly_Habit_Journal/page/Reviewing.dart';
@@ -32,8 +33,18 @@ class _AppState extends State<App> {
       routes: {
         '/': (context) =>
             BlocProvider.value(value: _trackerBloc, child: Navigation()),
-        '/review': (context) =>
-            BlocProvider.value(value: _trackerBloc, child: ReviewingGame()),
+        '/review': (context) => MultiBlocProvider(
+              providers: [
+                BlocProvider<TrackerBloc>(
+                  create: (BuildContext context) => _trackerBloc,
+                ),
+                BlocProvider<ReviewBloc>(
+                  create: (BuildContext context) =>
+                      ReviewBloc(trackerBloc: _trackerBloc),
+                ),
+              ],
+              child: ReviewingGame(),
+            ),
         '/settings': (context) => Settings(),
       },
     );

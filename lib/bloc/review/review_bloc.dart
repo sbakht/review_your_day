@@ -11,13 +11,13 @@ import './bloc.dart';
 class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
   TrackerBloc trackerBloc;
   TrackerBrain trackerBrain;
-  final DATE date;
+  DATE date;
   @override
-  ReviewState get initialState => StateReviewLoading();
+  ReviewState get initialState => StateReviewInit();
 
-  ReviewBloc({this.trackerBrain, this.date, this.trackerBloc}) {
-    //TODO: fix this hardcoded today
-    add(EventReviewStart(date: date));
+  ReviewBloc({this.trackerBloc}) {
+    //TODO: fix this hardcoded trackerBrain grab
+    trackerBrain = trackerBloc.state;
   }
 
   @override
@@ -25,24 +25,30 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
     ReviewEvent event,
   ) async* {
     if (event is EventReviewStart) {
-      //TODO: this isnt being used right now, constructor is calling this
-      yield StateReviewing(game: trackerBrain.getReviewGame(event.date));
+      this.date = event.date;
     }
     if (event is EventReviewNextQuestion) {
       ReviewGame game = trackerBrain.getReviewGame(date);
       game.nextQuestion();
-      yield StateReviewing(game: game);
     }
     if (event is EventReviewPreviousQuestion) {
       ReviewGame game = trackerBrain.getReviewGame(date);
       game.previousQuestion();
-      yield StateReviewing(game: game);
     }
     if (event is EventAnswerQuestion) {
       ReviewGame game = trackerBrain.getReviewGame(date);
       game.setAnswer(event.tracker, event.answer);
-      yield StateReviewing(game: game);
       trackerBloc.add(TrackerSave());
     }
+
+    ReviewGame game = trackerBrain.getReviewGame(date);
+    yield StateReviewing(
+      game: trackerBrain.getReviewGame(date),
+      isFirstQuestion: game.isFirstQuestion(),
+      isLastQuestion: game.isLastQuestion(),
+      numCards: game.getNumCards(),
+      cardIndex: game.getIndex(),
+      cards: game.getCards(),
+    );
   }
 }
