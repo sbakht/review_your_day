@@ -1,10 +1,6 @@
-import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_bloc.dart';
-import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_event.dart';
-import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_state.dart';
 import 'package:The_Friendly_Habit_Journal/page/CreateTracker.dart';
 import 'package:The_Friendly_Habit_Journal/page/ReviewDashboard.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Navigation extends StatefulWidget {
   @override
@@ -73,18 +69,7 @@ class _NavigationState extends State<Navigation> {
 
   Widget buildPageView() {
     if (_index == 0) {
-      return BlocBuilder<TrackerBloc, TrackerState>(builder: (context, state) {
-        if (state is StateTrackerLoading) {
-          return Container();
-        }
-        if (state is StateTracker) {
-          // ignore: close_sinks
-          final TrackerBloc trackerBloc = BlocProvider.of<TrackerBloc>(context);
-          trackerBloc.add(EventTrackerInitialized());
-          return ReviewDashboard();
-        }
-        return Container(); //TODO: this line should never run
-      });
+      return ReviewDashboard();
     } else if (_index == 1) {
       return CreateTracker();
     }

@@ -11,19 +11,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ReviewDashboard extends StatelessWidget {
-  final TextEditingController _filter = new TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TrackerBloc, TrackerState>(
         builder: (context, trackerState) {
       final TrackerBloc trackerBloc = BlocProvider.of<TrackerBloc>(context);
+
       if (trackerState is StateTrackerLoading) {
         return Container();
       }
+
       StateTracker state;
       if (trackerState is StateTracker) {
-        trackerBloc.add(EventTrackerInitialized());
         state = trackerState;
       }
 
