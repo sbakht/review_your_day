@@ -55,12 +55,16 @@ class _InternalReviewState extends State<_InternalReview> {
     if (reviewState is StateReviewInit) {
       return Container();
     }
+    if (reviewState is StateReviewingFinished) {
+      return Container();
+    }
+
     var cardIndex;
     var total;
     StateReviewing state;
     if (reviewState is StateReviewing) {
       cardIndex = reviewState.cardIndex;
-      total = reviewState.numCards;
+      total = reviewState.cards.length;
       state = reviewState;
     }
 

@@ -34,9 +34,6 @@ class _ReviewDashboardState extends State<ReviewDashboard> {
   Widget build(BuildContext context) {
     final TrackerBloc trackerBloc = BlocProvider.of<TrackerBloc>(context);
     StateTracker state = widget.state;
-    TrackerBrain trackerBrain = state.trackerBrain;
-
-    trackerBrain.updateDates();
 
     List<Tracker> cards = state.cards;
     int numRemainingToday = state.numRemainingToday;
@@ -54,9 +51,10 @@ class _ReviewDashboardState extends State<ReviewDashboard> {
                     Navigator.of(context).pushNamed("/review", arguments: {
                       'date': dateENUM,
                     }).then((value) {
-                      setState(() {
-                        // refresh state on pop
-                      });
+                      //TODO: having to update dates on load
+                      // ignore: close_sinks
+                      TrackerBloc bloc = BlocProvider.of<TrackerBloc>(context);
+                      bloc.add(EventTrackerInitialized());
                     });
                   },
           ),

@@ -30,6 +30,7 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
   ) async* {
     if (event is EventReviewStart) {
       this.date = event.date;
+      ReviewGame game = trackerBrain.getReviewGame(date);
     }
     if (event is EventReviewNextQuestion) {
       ReviewGame game = trackerBrain.getReviewGame(date);
@@ -46,14 +47,17 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
     }
 
     ReviewGame game = trackerBrain.getReviewGame(date);
-    yield StateReviewing(
-      game: trackerBrain.getReviewGame(date),
-      isFirstQuestion: game.isFirstQuestion(),
-      isLastQuestion: game.isLastQuestion(),
-      numCards: game.getNumCards(),
-      cardIndex: game.getIndex(),
-      cards: game.getCards(),
-      answers: game.getAnswers(),
-    );
+    if (game.getCards().length == 0) {
+      yield StateReviewingFinished();
+    } else {
+      yield StateReviewing(
+        game: trackerBrain.getReviewGame(date),
+        isFirstQuestion: game.isFirstQuestion(),
+        isLastQuestion: game.isLastQuestion(),
+        cardIndex: game.getIndex(),
+        cards: game.getCards(),
+        answers: game.getAnswers(),
+      );
+    }
   }
 }

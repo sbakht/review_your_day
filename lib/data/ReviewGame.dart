@@ -12,6 +12,7 @@ class ReviewGame {
   List<Tracker> cards;
 
   ReviewGame(this.date, this.trackers) {
+    print("refreshing");
     this.cards = trackers.getUnanswered(date);
     cards.shuffle();
   }

@@ -1,4 +1,5 @@
 import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_bloc.dart';
+import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_event.dart';
 import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_state.dart';
 import 'package:The_Friendly_Habit_Journal/page/CreateTracker.dart';
 import 'package:The_Friendly_Habit_Journal/page/ReviewDashboard.dart';
@@ -77,6 +78,9 @@ class _NavigationState extends State<Navigation> {
           return Container();
         }
         if (state is StateTracker) {
+          // ignore: close_sinks
+          final TrackerBloc trackerBloc = BlocProvider.of<TrackerBloc>(context);
+          trackerBloc.add(EventTrackerInitialized());
           return ReviewDashboard(state: state);
         }
         return Container(); //TODO: this line should never run

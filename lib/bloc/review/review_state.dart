@@ -16,7 +16,6 @@ class StateReviewing extends ReviewState {
   final ReviewGame game;
   final bool isFirstQuestion;
   final bool isLastQuestion;
-  final int numCards;
   final int cardIndex;
   final List<Tracker> cards;
   final List<Answer> answers;
@@ -25,24 +24,22 @@ class StateReviewing extends ReviewState {
     this.game,
     this.isFirstQuestion,
     this.isLastQuestion,
-    this.numCards,
     this.cardIndex,
     this.cards,
     this.answers,
   });
 
   @override
-  List<Object> get props => [
-        game,
-        isFirstQuestion,
-        isLastQuestion,
-        numCards,
-        cardIndex,
-        cards,
-        answers
-      ];
+  List<Object> get props =>
+      [game, isFirstQuestion, isLastQuestion, cardIndex, cards, answers];
 
   bool isNextQuestionIndex(int i) {
     return game.isNextQuestionIndex(i);
   }
+}
+
+class StateReviewingFinished extends ReviewState {
+  @override
+  // TODO: implement props
+  List<Object> get props => throw UnimplementedError();
 }

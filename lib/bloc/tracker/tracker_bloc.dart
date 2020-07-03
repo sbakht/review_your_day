@@ -25,16 +25,14 @@ class TrackerBloc extends Bloc<TrackerEvent, TrackerState> {
     TrackerEvent event,
   ) async* {
     if (event is EventTrackerInitialized) {
-//      yield StateTracker(trackerBrain: brain);
+      brain.updateDates();
     }
     if (event is EventTrackerAdd) {
       brain.add(event.toString());
     }
     if (event is EventTrackerRemove) {
       brain.remove(event.tracker);
-    }
-    if (event is EventTrackerSave) {
-      brain.save();
+      brain.updateDates();
     }
     if (event is EventTrackerSort) {
       sortMethod = event.sortMethod;
@@ -43,16 +41,20 @@ class TrackerBloc extends Bloc<TrackerEvent, TrackerState> {
       searchText = event.searchText;
     }
 
-    yield StateTracker(
-      trackerBrain: brain,
-      cards: _search(brain.sort(sortMethod)),
-      numRemainingToday: brain.getReviewGame(DATE.Today).getNumCards(),
-      numRemainingYesterday: brain.getReviewGame(DATE.Yesterday).getNumCards(),
-    );
+    if (event is EventTrackerSave) {
+      brain.save();
+    } else {
+      yield StateTracker(
+        trackerBrain: brain,
+        cards: _search(brain.sort(sortMethod)),
+        numRemainingToday: brain.getReviewGame(DATE.Today).getNumCards(),
+        numRemainingYesterday:
+            brain.getReviewGame(DATE.Yesterday).getNumCards(),
+      );
+    }
   }
 
   List<Tracker> _search(List<Tracker> trackers) {
-    print(searchText);
     return List.from(
         trackers.where((t) => t.title.toLowerCase().contains(searchText)));
   }
