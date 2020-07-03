@@ -1,12 +1,14 @@
 import 'package:The_Friendly_Habit_Journal/TrackerBrain.dart';
 import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_event.dart';
 import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_state.dart';
+import 'package:The_Friendly_Habit_Journal/data/Tracker.dart';
 import 'package:The_Friendly_Habit_Journal/enums.dart';
 import 'package:bloc/bloc.dart';
 
 class TrackerBloc extends Bloc<TrackerEvent, TrackerState> {
   TrackerBrain brain = new TrackerBrain([]);
   SortBy sortMethod = SortBy.DescPercentYes;
+  String searchText = "";
 
   @override
   TrackerState get initialState => StateTrackerLoading();
@@ -25,22 +27,31 @@ class TrackerBloc extends Bloc<TrackerEvent, TrackerState> {
     if (event is EventTrackerInitialized) {
 //      yield StateTracker(trackerBrain: brain);
     }
-    if (event is EventAddTracker) {
+    if (event is EventTrackerAdd) {
       brain.add(event.toString());
     }
-    if (event is EventRemoveTracker) {
+    if (event is EventTrackerRemove) {
       brain.remove(event.tracker);
     }
-    if (event is EventSaveTracker) {
+    if (event is EventTrackerSave) {
       brain.save();
     }
-    if (event is EventSortTracker) {
+    if (event is EventTrackerSort) {
       sortMethod = event.sortMethod;
+    }
+    if (event is EventTrackerSearch) {
+      searchText = event.searchText;
     }
 
     yield StateTracker(
       trackerBrain: brain,
-      sorted: brain.sort(sortMethod),
+      cards: _search(brain.sort(sortMethod)),
     );
+  }
+
+  List<Tracker> _search(List<Tracker> trackers) {
+    print(searchText);
+    return List.from(
+        trackers.where((t) => t.title.toLowerCase().contains(searchText)));
   }
 }

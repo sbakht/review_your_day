@@ -72,7 +72,7 @@ class _CreateTrackerState extends State<CreateTracker> {
 
   void addTracker(TrackerBloc trackerBloc) {
     var title = myController.text.trim();
-    trackerBloc.add(new EventAddTracker(title: title));
+    trackerBloc.add(new EventTrackerAdd(title: title));
   }
 
   void showSnackBar(BuildContext context) {

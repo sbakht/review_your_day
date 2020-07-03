@@ -12,14 +12,14 @@ class StateTrackerLoading extends TrackerState {
 
 class StateTracker extends TrackerState {
   final TrackerBrain trackerBrain;
-  final List<Tracker> sorted;
+  final List<Tracker> cards;
 
   StateTracker({
     this.trackerBrain,
-    this.sorted,
+    this.cards,
   });
 
   @override
   // TODO: implement props
-  List<Object> get props => [trackerBrain];
+  List<Object> get props => [trackerBrain, cards];
 }

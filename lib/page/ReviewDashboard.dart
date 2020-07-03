@@ -23,22 +23,11 @@ class _ReviewDashboardState extends State<ReviewDashboard> {
 
   _ReviewDashboardState() {
     _filter.addListener(() {
-      if (_filter.text.isEmpty) {
-        setState(() {
-          searchTerm = "";
-        });
-      } else {
-        setState(() {
-          searchTerm = _filter.text.toLowerCase();
-        });
-      }
+      searchTerm = _filter.text.isEmpty ? "" : _filter.text.toLowerCase();
+      // ignore: close_sinks
+      final TrackerBloc trackerBloc = BlocProvider.of<TrackerBloc>(context);
+      trackerBloc.add(EventTrackerSearch(searchText: searchTerm));
     });
-  }
-
-  List<Tracker> sortAndSearch(StateTracker state) {
-    List<Tracker> sorted = state.sorted;
-    return List.from(
-        sorted.where((t) => t.title.toLowerCase().contains(searchTerm)));
   }
 
   @override
@@ -54,7 +43,7 @@ class _ReviewDashboardState extends State<ReviewDashboard> {
     int remainingCardCountFromYesterday =
         trackerBrain.getReviewGame(DATE.Yesterday).getNumCards();
 
-    List<Tracker> cards = sortAndSearch(state);
+    List<Tracker> cards = state.cards;
 
     Widget startReview(text, dateENUM, remainingCardCount) {
       return Column(
@@ -276,7 +265,7 @@ class _ReviewDashboardState extends State<ReviewDashboard> {
               child: Text("Delete"),
               onPressed: () {
                 setState(() {
-                  myBloc.add(new EventRemoveTracker(t));
+                  myBloc.add(new EventTrackerRemove(t));
                 });
                 Navigator.of(context).pop();
               },

@@ -42,7 +42,7 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
     if (event is EventAnswerQuestion) {
       ReviewGame game = trackerBrain.getReviewGame(date);
       game.setAnswer(event.tracker, event.answer);
-      trackerBloc.add(EventSaveTracker());
+      trackerBloc.add(EventTrackerSave());
     }
 
     ReviewGame game = trackerBrain.getReviewGame(date);

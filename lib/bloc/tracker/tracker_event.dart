@@ -10,27 +10,33 @@ abstract class TrackerEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class EventAddTracker extends TrackerEvent {
+class EventTrackerAdd extends TrackerEvent {
   final String title;
 
-  const EventAddTracker({@required this.title});
+  const EventTrackerAdd({@required this.title});
 
   @override
   String toString() => title;
 }
 
-class EventRemoveTracker extends TrackerEvent {
+class EventTrackerRemove extends TrackerEvent {
   final Tracker tracker;
 
-  const EventRemoveTracker(this.tracker);
+  const EventTrackerRemove(this.tracker);
 }
 
 class EventTrackerInitialized extends TrackerEvent {}
 
-class EventSaveTracker extends TrackerEvent {}
+class EventTrackerSave extends TrackerEvent {}
 
-class EventSortTracker extends TrackerEvent {
+class EventTrackerSort extends TrackerEvent {
   final SortBy sortMethod;
 
-  EventSortTracker({this.sortMethod});
+  EventTrackerSort({this.sortMethod});
+}
+
+class EventTrackerSearch extends TrackerEvent {
+  final String searchText;
+
+  EventTrackerSearch({this.searchText});
 }
