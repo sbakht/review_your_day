@@ -3,10 +3,10 @@ import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_bloc.dart';
 import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_event.dart';
 import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_state.dart';
 import 'package:The_Friendly_Habit_Journal/constants.dart';
-import 'package:The_Friendly_Habit_Journal/data/Percentage.dart';
 import 'package:The_Friendly_Habit_Journal/data/Tracker.dart';
 import 'package:The_Friendly_Habit_Journal/widgets/ReviewButton.dart';
 import 'package:The_Friendly_Habit_Journal/widgets/SearchBox.dart';
+import 'package:The_Friendly_Habit_Journal/widgets/TableEntry.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -75,92 +75,35 @@ class ReviewDashboard extends StatelessWidget {
           tableHeader(),
           Expanded(
             child: cards.length == 0
-                ? Center(
-                    child: Text("No Activities Found :(",
-                        style: TextStyle(color: kSecondaryTextColor)))
+                ? emptyTableMsg()
                 : ListView.builder(
                     padding: const EdgeInsets.all(5),
                     primary: true,
                     itemCount: cards.length,
                     itemBuilder: (BuildContext context, int index) {
-                      Tracker t = cards[index];
-                      Percentage percentage = new Percentage(t);
-                      int percentYesExcludeNA =
-                          percentage.getPercentYesExclusive();
-                      int percentNoExcludeNA =
-                          percentage.getPercentNoExclusive();
-                      var tableShadedColor = Colors.grey.shade900;
-                      var kBackgroundColor =
-                          Colors.grey[850]; // Default dark scaffold color
+                      Tracker tracker = cards[index];
 
                       return Container(
                         color: index % 2 == 0
-                            ? tableShadedColor
+                            ? kTableShadedColor
                             : kBackgroundColor,
                         child: ListTile(
-                          title: Text(capitalize(t.title)),
+                          title: Text(capitalize(tracker.title)),
                           subtitle: GestureDetector(
                             child:
                                 Text("Delete", style: TextStyle(fontSize: 11)),
                             onTap: () {
                               _deleteConfirmationDialog(
-                                  context, trackerBloc, t);
+                                context,
+                                trackerBloc,
+                                tracker,
+                              );
                             },
                           ),
                           trailing: Container(
                             child: SizedBox(
                               width: 80,
-                              child: Row(
-                                children: [
-                                  Text(
-                                    percentYesExcludeNA == 0 ? "00" : "",
-                                    style: TextStyle(
-                                        color: index % 2 == 0
-                                            ? tableShadedColor
-                                            : kBackgroundColor),
-                                  ),
-                                  Text(
-                                    percentYesExcludeNA > 0 &&
-                                            percentYesExcludeNA < 100
-                                        ? "0"
-                                        : "",
-                                    style: TextStyle(
-                                        color: index % 2 == 0
-                                            ? tableShadedColor
-                                            : kBackgroundColor),
-                                  ),
-                                  Text(
-                                    percentage.format(percentYesExcludeNA),
-                                    textAlign: TextAlign.right,
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  SizedBox(width: 10),
-                                  Text(
-                                    percentNoExcludeNA == 0 ? "00" : "",
-                                    style: TextStyle(
-                                        color: index % 2 == 0
-                                            ? tableShadedColor
-                                            : kBackgroundColor),
-                                  ),
-                                  Text(
-                                    percentNoExcludeNA > 0 &&
-                                            percentNoExcludeNA < 100
-                                        ? "0"
-                                        : "",
-                                    style: TextStyle(
-                                        color: index % 2 == 0
-                                            ? tableShadedColor
-                                            : kBackgroundColor),
-                                  ),
-                                  Text(
-                                    percentage.format(percentNoExcludeNA),
-                                    textAlign: TextAlign.right,
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
+                              child: tableEntry(tracker, index),
                             ),
                           ),
                         ),
@@ -242,4 +185,10 @@ Widget tableHeader() {
       ],
     ),
   );
+}
+
+Widget emptyTableMsg() {
+  return Center(
+      child: Text("No Activities Found :(",
+          style: TextStyle(color: kSecondaryTextColor)));
 }
