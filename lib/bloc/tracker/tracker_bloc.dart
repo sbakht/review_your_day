@@ -46,6 +46,8 @@ class TrackerBloc extends Bloc<TrackerEvent, TrackerState> {
     yield StateTracker(
       trackerBrain: brain,
       cards: _search(brain.sort(sortMethod)),
+      numRemainingToday: brain.getReviewGame(DATE.Today).getNumCards(),
+      numRemainingYesterday: brain.getReviewGame(DATE.Yesterday).getNumCards(),
     );
   }
 

@@ -38,12 +38,9 @@ class _ReviewDashboardState extends State<ReviewDashboard> {
 
     trackerBrain.updateDates();
 
-    int numRemainingToday =
-        trackerBrain.getReviewGame(DATE.Today).getNumCards();
-    int remainingCardCountFromYesterday =
-        trackerBrain.getReviewGame(DATE.Yesterday).getNumCards();
-
     List<Tracker> cards = state.cards;
+    int numRemainingToday = state.numRemainingToday;
+    int remainingCardCountFromYesterday = state.numRemainingYesterday;
 
     Widget startReview(text, dateENUM, remainingCardCount) {
       return Column(
