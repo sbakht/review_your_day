@@ -9,36 +9,21 @@ abstract class TrackerEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class TrackerAdded extends TrackerEvent {
+class EventAddTracker extends TrackerEvent {
   final String title;
 
-  const TrackerAdded({@required this.title});
+  const EventAddTracker({@required this.title});
 
   @override
   String toString() => title;
 }
 
-class TrackerRemove extends TrackerEvent {
+class EventRemoveTracker extends TrackerEvent {
   final Tracker tracker;
 
-  const TrackerRemove(this.tracker);
+  const EventRemoveTracker(this.tracker);
 }
 
-class TrackerInitialized extends TrackerEvent {}
+class EventTrackerInitialized extends TrackerEvent {}
 
-class TrackerSave extends TrackerEvent {}
-
-//class TimerPaused extends TrackerEvent {}
-//
-//class TimerResumed extends TrackerEvent {}
-//
-//class TimerReset extends TrackerEvent {}
-//
-//class TimerTicked extends TrackerEvent {
-//  final int duration;
-//
-//  const TimerTicked({@required this.duration});
-//
-//  @override
-//  String toString() => "TimerTicked { duration: $duration }";
-//}
+class EventSaveTracker extends TrackerEvent {}

@@ -65,7 +65,6 @@ class _ReviewState extends State<Review> {
                 ? null
                 : () {
                     Navigator.of(context).pushNamed("/review", arguments: {
-                      'trackerBrain': trackerBrain,
                       'date': dateENUM,
                     }).then((value) {
                       setState(() {
@@ -276,7 +275,7 @@ class _ReviewState extends State<Review> {
               child: Text("Delete"),
               onPressed: () {
                 setState(() {
-                  myBloc.add(new TrackerRemove(t));
+                  myBloc.add(new EventRemoveTracker(t));
                 });
                 Navigator.of(context).pop();
               },

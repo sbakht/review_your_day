@@ -10,7 +10,7 @@ class TrackerBloc extends Bloc<TrackerEvent, TrackerBrain> {
   TrackerBloc() {
     TrackerBrain.fetch().then((TrackerBrain brain) async {
       this.brain = brain;
-      add(TrackerInitialized());
+      add(EventTrackerInitialized());
     });
   }
 
@@ -18,16 +18,16 @@ class TrackerBloc extends Bloc<TrackerEvent, TrackerBrain> {
   Stream<TrackerBrain> mapEventToState(
     TrackerEvent event,
   ) async* {
-    if (event is TrackerInitialized) {
+    if (event is EventTrackerInitialized) {
       yield brain;
     }
-    if (event is TrackerAdded) {
+    if (event is EventAddTracker) {
       brain.add(event.toString());
     }
-    if (event is TrackerRemove) {
+    if (event is EventRemoveTracker) {
       brain.remove(event.tracker);
     }
-    if (event is TrackerSave) {
+    if (event is EventSaveTracker) {
       brain.save();
     }
   }

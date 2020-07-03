@@ -5,14 +5,6 @@ import 'package:The_Friendly_Habit_Journal/page/ReviewDashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class Navigation2 extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-//    final TrackerBloc trackerBloc = BlocProvider.of<TrackerBloc>(context);
-    return Container();
-  }
-}
-
 class Navigation extends StatefulWidget {
   @override
   _NavigationState createState() => _NavigationState();
@@ -23,8 +15,6 @@ class _NavigationState extends State<Navigation> {
 
   @override
   Widget build(BuildContext context) {
-//    final TrackerBloc trackerBloc = BlocProvider.of<TrackerBloc>(context);
-
     return Scaffold(
         appBar: AppBar(
           title: Text(getTitle()),
@@ -85,7 +75,7 @@ class _NavigationState extends State<Navigation> {
     if (_index == 0) {
       return Review(trackerBrain: trackerBrain);
     } else if (_index == 1) {
-      return CreateTracker(trackerBrain: trackerBrain);
+      return CreateTracker();
     }
     return null;
   }

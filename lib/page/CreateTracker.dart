@@ -1,4 +1,3 @@
-import 'package:The_Friendly_Habit_Journal/TrackerBrain.dart';
 import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_bloc.dart';
 import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_event.dart';
 import 'package:The_Friendly_Habit_Journal/constants.dart';
@@ -6,10 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CreateTracker extends StatefulWidget {
-  final TrackerBrain trackerBrain;
-
-  CreateTracker({this.trackerBrain});
-
   @override
   _CreateTrackerState createState() => _CreateTrackerState();
 }
@@ -39,16 +34,9 @@ class _CreateTrackerState extends State<CreateTracker> {
             Text(kTextBefore,
                 style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
             TextFormField(
-//              keyboardType: TextInputType.multiline,
-//              maxLines: null,
               maxLength: 100,
               controller: myController,
-              validator: (value) {
-                if (value.isEmpty) {
-                  return 'Field cannot be empty';
-                }
-                return null;
-              },
+              validator: validator,
               style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
             ),
             Text(kTextAfterToday,
@@ -59,15 +47,10 @@ class _CreateTrackerState extends State<CreateTracker> {
                 child: RaisedButton(
                   onPressed: () {
                     if (_formKey.currentState.validate()) {
-//                      widget.trackerBrain.add(myController.text.trim());
-                      trackerBloc.add(
-                          new TrackerAdded(title: myController.text.trim()));
+                      addTracker(trackerBloc);
                       myController.clear();
+                      showSnackBar(context);
                       FocusScope.of(context).unfocus();
-                      Scaffold.of(context).showSnackBar(SnackBar(
-                        content: Text('Tracker Created'),
-                        duration: Duration(seconds: 1),
-                      ));
                     }
                   },
                   child: Text('Submit'),
@@ -78,5 +61,24 @@ class _CreateTrackerState extends State<CreateTracker> {
         ),
       ),
     );
+  }
+
+  String validator(value) {
+    if (value.isEmpty) {
+      return 'Field cannot be empty';
+    }
+    return null;
+  }
+
+  void addTracker(TrackerBloc trackerBloc) {
+    var title = myController.text.trim();
+    trackerBloc.add(new EventAddTracker(title: title));
+  }
+
+  void showSnackBar(BuildContext context) {
+    Scaffold.of(context).showSnackBar(SnackBar(
+      content: Text('Tracker Created'),
+      duration: Duration(seconds: 1),
+    ));
   }
 }

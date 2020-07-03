@@ -35,9 +35,6 @@ class _AppState extends State<App> {
             BlocProvider.value(value: _trackerBloc, child: Navigation()),
         '/review': (context) => MultiBlocProvider(
               providers: [
-                BlocProvider<TrackerBloc>(
-                  create: (BuildContext context) => _trackerBloc,
-                ),
                 BlocProvider<ReviewBloc>(
                   create: (BuildContext context) =>
                       ReviewBloc(trackerBloc: _trackerBloc),
