@@ -5,6 +5,7 @@ import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_state.dart';
 import 'package:The_Friendly_Habit_Journal/constants.dart';
 import 'package:The_Friendly_Habit_Journal/data/Percentage.dart';
 import 'package:The_Friendly_Habit_Journal/data/Tracker.dart';
+import 'package:The_Friendly_Habit_Journal/widgets/ReviewButton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -24,9 +25,8 @@ class _ReviewDashboardState extends State<ReviewDashboard> {
   _ReviewDashboardState() {
     _filter.addListener(() {
       searchTerm = _filter.text.isEmpty ? "" : _filter.text.toLowerCase();
-      // ignore: close_sinks
-      final TrackerBloc trackerBloc = BlocProvider.of<TrackerBloc>(context);
-      trackerBloc.add(EventTrackerSearch(searchText: searchTerm));
+      BlocProvider.of<TrackerBloc>(context)
+          .add(EventTrackerSearch(searchText: searchTerm));
     });
   }
 
@@ -37,47 +37,10 @@ class _ReviewDashboardState extends State<ReviewDashboard> {
 
     List<Tracker> cards = state.cards;
     int numRemainingToday = state.numRemainingToday;
-    int remainingCardCountFromYesterday = state.numRemainingYesterday;
-
-    Widget startReview(text, dateENUM, remainingCardCount) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          RaisedButton(
-            child: Text(text),
-            onPressed: remainingCardCount == 0
-                ? null
-                : () {
-                    Navigator.of(context).pushNamed("/review", arguments: {
-                      'date': dateENUM,
-                    }).then((value) {
-                      //TODO: having to update dates on load
-                      // ignore: close_sinks
-                      TrackerBloc bloc = BlocProvider.of<TrackerBloc>(context);
-                      bloc.add(EventTrackerInitialized());
-                    });
-                  },
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                remainingCardCount.toString(),
-                style: TextStyle(
-                    color: kSecondaryTextColor, fontWeight: FontWeight.bold),
-              ),
-              Text(
-                " remaining",
-                style: TextStyle(color: kSecondaryTextColor),
-              ),
-            ],
-          ),
-        ],
-      );
-    }
+    int numRemainingYesterday = state.numRemainingYesterday;
 
     bool shouldHideYesterdayReviewButton() {
-      return remainingCardCountFromYesterday == 0;
+      return numRemainingYesterday == 0;
     }
 
     return Column(
@@ -100,12 +63,20 @@ class _ReviewDashboardState extends State<ReviewDashboard> {
                 ? MainAxisAlignment.center
                 : MainAxisAlignment.spaceEvenly,
             children: [
-              startReview(
-                  "Start Your Daily Review", DATE.Today, numRemainingToday),
+              ReviewButton(
+                text: "Start Your Daily Review",
+                date: DATE.Today,
+                remainingCardCount: numRemainingToday,
+                bloc: trackerBloc,
+              ),
               shouldHideYesterdayReviewButton()
                   ? SizedBox()
-                  : startReview("Start Yesterdays Review", DATE.Yesterday,
-                      remainingCardCountFromYesterday),
+                  : ReviewButton(
+                      text: "Start Yesterdays Review",
+                      date: DATE.Yesterday,
+                      remainingCardCount: numRemainingYesterday,
+                      bloc: trackerBloc,
+                    ),
             ],
           ),
         ),
@@ -170,8 +141,6 @@ class _ReviewDashboardState extends State<ReviewDashboard> {
                             width: 80,
                             child: Row(
                               children: [
-//                        Text("Y: ",
-//                            style: TextStyle(color: kSecondaryTextColor)),
                                 Text(
                                   percentYesExcludeNA == 0 ? "00" : "",
                                   style: TextStyle(
@@ -195,8 +164,6 @@ class _ReviewDashboardState extends State<ReviewDashboard> {
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                                 SizedBox(width: 10),
-//                        Text(" N: ",
-//                            style: TextStyle(color: kSecondaryTextColor)),
                                 Text(
                                   percentNoExcludeNA == 0 ? "00" : "",
                                   style: TextStyle(
@@ -233,7 +200,7 @@ class _ReviewDashboardState extends State<ReviewDashboard> {
   }
 
   Future<void> _deleteConfirmationDialog(
-      context, TrackerBloc myBloc, Tracker t) async {
+      context, TrackerBloc trackerBloc, Tracker t) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -259,9 +226,7 @@ class _ReviewDashboardState extends State<ReviewDashboard> {
               color: Colors.red,
               child: Text("Delete"),
               onPressed: () {
-                setState(() {
-                  myBloc.add(new EventTrackerRemove(t));
-                });
+                trackerBloc.add(new EventTrackerRemove(t));
                 Navigator.of(context).pop();
               },
             ),

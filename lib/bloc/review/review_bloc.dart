@@ -30,7 +30,6 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
   ) async* {
     if (event is EventReviewStart) {
       this.date = event.date;
-      ReviewGame game = trackerBrain.getReviewGame(date);
     }
     if (event is EventReviewNextQuestion) {
       ReviewGame game = trackerBrain.getReviewGame(date);

@@ -32,7 +32,6 @@ class TrackerBloc extends Bloc<TrackerEvent, TrackerState> {
     }
     if (event is EventTrackerRemove) {
       brain.remove(event.tracker);
-      brain.updateDates();
     }
     if (event is EventTrackerSort) {
       sortMethod = event.sortMethod;
