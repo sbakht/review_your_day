@@ -1,6 +1,5 @@
 import 'package:The_Friendly_Habit_Journal/TrackerBrain.dart';
-import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_bloc.dart';
-import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_event.dart';
+import 'package:The_Friendly_Habit_Journal/bloc/tracker/bloc.dart';
 import 'package:The_Friendly_Habit_Journal/constants.dart';
 import 'package:flutter/material.dart';
 

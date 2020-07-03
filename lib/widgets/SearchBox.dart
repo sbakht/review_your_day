@@ -1,5 +1,4 @@
-import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_bloc.dart';
-import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_event.dart';
+import 'package:The_Friendly_Habit_Journal/bloc/tracker/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

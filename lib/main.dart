@@ -1,7 +1,6 @@
 import 'package:The_Friendly_Habit_Journal/Navigation.dart';
 import 'package:The_Friendly_Habit_Journal/bloc/review/bloc.dart';
-import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_bloc.dart';
-import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_bloc_delegate.dart';
+import 'package:The_Friendly_Habit_Journal/bloc/tracker/bloc.dart';
 import 'package:The_Friendly_Habit_Journal/page/Reviewing.dart';
 import 'package:The_Friendly_Habit_Journal/page/Settings.dart';
 import 'package:flutter/material.dart';
