@@ -46,9 +46,3 @@ class StateReviewing extends ReviewState {
     return game.isNextQuestionIndex(i);
   }
 }
-
-class StateReviewFinished extends ReviewState {
-  @override
-  // TODO: implement props
-  List<Object> get props => throw UnimplementedError();
-}

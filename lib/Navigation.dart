@@ -1,5 +1,5 @@
-import 'package:The_Friendly_Habit_Journal/TrackerBrain.dart';
 import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_bloc.dart';
+import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_state.dart';
 import 'package:The_Friendly_Habit_Journal/page/CreateTracker.dart';
 import 'package:The_Friendly_Habit_Journal/page/ReviewDashboard.dart';
 import 'package:flutter/material.dart';
@@ -43,8 +43,7 @@ class _NavigationState extends State<Navigation> {
 //          ],
         ),
         drawer: buildDrawer(context),
-        body: BlocBuilder<TrackerBloc, TrackerBrain>(
-            builder: (context, trackerBrain) => buildPageView(trackerBrain)),
+        body: buildPageView(),
         bottomNavigationBar: BottomNavigationBar(
           onTap: (tappedItemIndex) => setState(() {
             _index = tappedItemIndex;
@@ -71,9 +70,17 @@ class _NavigationState extends State<Navigation> {
     ];
   }
 
-  Widget buildPageView(trackerBrain) {
+  Widget buildPageView() {
     if (_index == 0) {
-      return Review(trackerBrain: trackerBrain);
+      return BlocBuilder<TrackerBloc, TrackerState>(builder: (context, state) {
+        if (state is StateTrackerLoading) {
+          return Container();
+        }
+        if (state is StateTracker) {
+          return ReviewDashboard(state: state);
+        }
+        return Container(); //TODO: this line should never run
+      });
     } else if (_index == 1) {
       return CreateTracker();
     }

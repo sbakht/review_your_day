@@ -1,27 +1,27 @@
 import 'package:The_Friendly_Habit_Journal/TrackerBrain.dart';
 import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_bloc.dart';
 import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_event.dart';
+import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_state.dart';
 import 'package:The_Friendly_Habit_Journal/constants.dart';
 import 'package:The_Friendly_Habit_Journal/data/Percentage.dart';
 import 'package:The_Friendly_Habit_Journal/data/Tracker.dart';
-import 'package:The_Friendly_Habit_Journal/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class Review extends StatefulWidget {
-  final TrackerBrain trackerBrain;
+class ReviewDashboard extends StatefulWidget {
+  final StateTracker state;
 
-  Review({this.trackerBrain});
+  ReviewDashboard({this.state});
 
   @override
-  _ReviewState createState() => _ReviewState();
+  _ReviewDashboardState createState() => _ReviewDashboardState();
 }
 
-class _ReviewState extends State<Review> {
+class _ReviewDashboardState extends State<ReviewDashboard> {
   String searchTerm = "";
   final TextEditingController _filter = new TextEditingController();
 
-  _ReviewState() {
+  _ReviewDashboardState() {
     _filter.addListener(() {
       if (_filter.text.isEmpty) {
         setState(() {
@@ -35,16 +35,17 @@ class _ReviewState extends State<Review> {
     });
   }
 
-  List<Tracker> sortAndSearch(trackerBrain) {
-    List<Tracker> sorted = trackerBrain.sort(SortBy.DescPercentYes);
+  List<Tracker> sortAndSearch(StateTracker state) {
+    List<Tracker> sorted = state.sorted;
     return List.from(
         sorted.where((t) => t.title.toLowerCase().contains(searchTerm)));
   }
 
   @override
   Widget build(BuildContext context) {
-    final TrackerBloc myBloc = BlocProvider.of<TrackerBloc>(context);
-    TrackerBrain trackerBrain = widget.trackerBrain;
+    final TrackerBloc trackerBloc = BlocProvider.of<TrackerBloc>(context);
+    StateTracker state = widget.state;
+    TrackerBrain trackerBrain = state.trackerBrain;
 
     trackerBrain.updateDates();
 
@@ -53,7 +54,7 @@ class _ReviewState extends State<Review> {
     int remainingCardCountFromYesterday =
         trackerBrain.getReviewGame(DATE.Yesterday).getNumCards();
 
-    List<Tracker> cards = sortAndSearch(trackerBrain);
+    List<Tracker> cards = sortAndSearch(state);
 
     Widget startReview(text, dateENUM, remainingCardCount) {
       return Column(
@@ -177,7 +178,7 @@ class _ReviewState extends State<Review> {
                         subtitle: GestureDetector(
                           child: Text("Delete", style: TextStyle(fontSize: 11)),
                           onTap: () {
-                            _deleteConfirmationDialog(context, myBloc, t);
+                            _deleteConfirmationDialog(context, trackerBloc, t);
                           },
                         ),
                         trailing: Container(

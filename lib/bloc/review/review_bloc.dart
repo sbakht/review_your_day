@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:The_Friendly_Habit_Journal/TrackerBrain.dart';
 import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_bloc.dart';
 import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_event.dart';
+import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_state.dart';
 import 'package:The_Friendly_Habit_Journal/data/ReviewGame.dart';
 import 'package:bloc/bloc.dart';
 
@@ -17,7 +18,10 @@ class ReviewBloc extends Bloc<ReviewEvent, ReviewState> {
 
   ReviewBloc({this.trackerBloc}) {
     //TODO: fix this hardcoded trackerBrain grab
-    trackerBrain = trackerBloc.state;
+    TrackerState state = trackerBloc.state;
+    if (state is StateTracker) {
+      trackerBrain = state.trackerBrain;
+    }
   }
 
   @override

@@ -1,11 +1,15 @@
 import 'package:The_Friendly_Habit_Journal/TrackerBrain.dart';
 import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_event.dart';
+import 'package:The_Friendly_Habit_Journal/bloc/tracker/tracker_state.dart';
+import 'package:The_Friendly_Habit_Journal/enums.dart';
 import 'package:bloc/bloc.dart';
 
-class TrackerBloc extends Bloc<TrackerEvent, TrackerBrain> {
+class TrackerBloc extends Bloc<TrackerEvent, TrackerState> {
   TrackerBrain brain = new TrackerBrain([]);
+  SortBy sortMethod = SortBy.DescPercentYes;
+
   @override
-  TrackerBrain get initialState => brain;
+  TrackerState get initialState => StateTrackerLoading();
 
   TrackerBloc() {
     TrackerBrain.fetch().then((TrackerBrain brain) async {
@@ -15,11 +19,11 @@ class TrackerBloc extends Bloc<TrackerEvent, TrackerBrain> {
   }
 
   @override
-  Stream<TrackerBrain> mapEventToState(
+  Stream<TrackerState> mapEventToState(
     TrackerEvent event,
   ) async* {
     if (event is EventTrackerInitialized) {
-      yield brain;
+//      yield StateTracker(trackerBrain: brain);
     }
     if (event is EventAddTracker) {
       brain.add(event.toString());
@@ -30,5 +34,13 @@ class TrackerBloc extends Bloc<TrackerEvent, TrackerBrain> {
     if (event is EventSaveTracker) {
       brain.save();
     }
+    if (event is EventSortTracker) {
+      sortMethod = event.sortMethod;
+    }
+
+    yield StateTracker(
+      trackerBrain: brain,
+      sorted: brain.sort(sortMethod),
+    );
   }
 }

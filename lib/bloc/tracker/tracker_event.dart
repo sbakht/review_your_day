@@ -1,4 +1,5 @@
 import 'package:The_Friendly_Habit_Journal/data/Tracker.dart';
+import 'package:The_Friendly_Habit_Journal/enums.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
@@ -27,3 +28,9 @@ class EventRemoveTracker extends TrackerEvent {
 class EventTrackerInitialized extends TrackerEvent {}
 
 class EventSaveTracker extends TrackerEvent {}
+
+class EventSortTracker extends TrackerEvent {
+  final SortBy sortMethod;
+
+  EventSortTracker({this.sortMethod});
+}
